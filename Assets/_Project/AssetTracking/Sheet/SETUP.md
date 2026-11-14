@@ -12,7 +12,11 @@ Do this once per project. The person who owns the sheet runs steps 1 to 4. Every
 ## 2. Build the tabs
 
 1. Reload the sheet. An **Asset Tracker** menu appears; this can take a few seconds.
-2. Run **Asset Tracker > Set up tabs**. The first time, Google asks you to authorize the script. Accept, then run the menu item again if it stopped.
+2. Run **Asset Tracker > Set up tabs**. The first time, Google asks you to authorize the script:
+   1. Choose the Google account that owns the sheet.
+   2. Google warns that it **hasn't verified this app**. That is expected for your own script; verification is only for apps published to other people. Click **Advanced**, then **Go to (your project name) (unsafe)**.
+   3. Review the permissions (edit your spreadsheets, connect to an external service) and click **Allow**.
+   4. Run **Set up tabs** again if it stopped. You only authorize once.
 3. You now have **Art** and **Audio** tabs. Each one has the headers, a Status dropdown, status colors and grey Unity-owned columns. You can delete the empty default tab.
 
 ## 3. Create the sync secret
@@ -49,5 +53,6 @@ If you change the script later, use **Deploy > Manage deployments > Edit > Versi
 | Message | Fix |
 |---|---|
 | "did not return JSON" | Wrong URL, or **Who has access** is not **Anyone**. Some Google Workspace accounts don't allow Anyone; use a personal account for the sheet. |
+| "Google hasn't verified this app" with no **Advanced** link | A work or school account's admin blocks unverified apps: use a personal Google account for the sheet. Signed into several accounts? Authorize in a private window with only the sheet owner's account. |
 | "Wrong sync secret" | Someone generated a new secret. Get the current one. |
 | "Missing tab" or "has no ... column" | Run **Asset Tracker > Set up tabs** again. Renamed headers must be renamed back. |
