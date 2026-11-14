@@ -1,0 +1,3 @@
+Add a shader that takes on the shape of the piece, and have a single fade full running trhough it
+
+it needs to be flexible as to ffit any new bloc created
