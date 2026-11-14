@@ -7,8 +7,10 @@ namespace BlockDiggerz.Blocks
 {
     /// <summary>
     /// Runs the block dropper: spawns pieces from the bag, applies gravity, soft drop, hard drop, sideways moves with
-    /// auto repeat and clockwise or counter-clockwise rotation (no wall kicks), locks pieces, clears full rows and ends the run when a new
-    /// piece can't spawn. Reads input only through <see cref="GameInput"/>.
+    /// auto repeat and clockwise or counter-clockwise rotation (a blocked rotation is pushed clear by
+    /// <see cref="RotationPush"/>), locks pieces after a lock delay that moves and rotations can extend
+    /// (<see cref="LockDelayTimer"/>), clears full rows and ends the run when a new piece can't spawn.
+    /// Reads input only through <see cref="GameInput"/>.
     /// </summary>
     public sealed class BlocksGame : MonoBehaviour
     {
@@ -26,7 +28,7 @@ namespace BlockDiggerz.Blocks
         private float _shiftTimer;
         private bool _autoShifting;
         private float _fallTimer;
-        private float _lockTimer;
+        private readonly LockDelayTimer _lock = new();
 
         /// <summary>Raised after rows are cleared, with how many.</summary>
         public event Action<int> LinesCleared;
@@ -69,6 +71,15 @@ namespace BlockDiggerz.Blocks
 
         /// <summary>Increments whenever the board or falling piece changes, so views redraw only then.</summary>
         public int Version { get; private set; }
+
+        /// <summary>Seconds the falling piece has rested toward locking, after extensions.</summary>
+        public float LockElapsed => _lock.Elapsed;
+
+        /// <summary>Lock delay extensions the falling piece has used since it last reached a lower row.</summary>
+        public int LockExtensionsUsed => _lock.ExtensionsUsed;
+
+        /// <summary>True while the falling piece rests on the floor or the stack.</summary>
+        public bool IsResting => ActivePiece != null && !Board.Fits(ActiveCells, ActivePosition + Vector2Int.down);
 
         /// <summary>Box position where the falling piece would land if hard dropped now.</summary>
         public Vector2Int LandingPosition => ActivePiece != null ? Board.LandingOffset(ActiveCells, ActivePosition) : ActivePosition;
@@ -165,7 +176,10 @@ namespace BlockDiggerz.Blocks
             }
         }
 
-        /// <summary>Moves the falling piece by one step if the target is free.</summary>
+        /// <summary>
+        /// Moves the falling piece by one step if the target is free. A sideways move while resting extends the
+        /// lock delay.
+        /// </summary>
         public bool TryMove(Vector2Int step)
         {
             if (ActivePiece == null || State != BlocksGameState.Playing)
@@ -179,18 +193,19 @@ namespace BlockDiggerz.Blocks
                 return false;
             }
 
+            bool sidewaysWhileResting = step.y == 0 && IsResting;
             ActivePosition = target;
-            Version++;
+            AfterPieceChanged(sidewaysWhileResting);
             return true;
         }
 
-        /// <summary>Rotates the falling piece a quarter turn clockwise if the rotated cells are free. No wall kicks.</summary>
+        /// <summary>Rotates the falling piece a quarter turn clockwise, pushing it clear if the turn is blocked.</summary>
         public bool TryRotateClockwise()
         {
             return TryRotate(1);
         }
 
-        /// <summary>Rotates the falling piece a quarter turn counter-clockwise if the rotated cells are free. No wall kicks.</summary>
+        /// <summary>Rotates the falling piece a quarter turn counter-clockwise, pushing it clear if the turn is blocked.</summary>
         public bool TryRotateCounterClockwise()
         {
             return TryRotate(-1);
@@ -204,14 +219,40 @@ namespace BlockDiggerz.Blocks
             }
 
             int rotation = PieceDefinition.Wrap(ActiveRotation + quarterTurns);
-            if (!Board.Fits(ActivePiece.GetCells(rotation), ActivePosition))
+            if (!RotationPush.TryFind(Board, ActivePiece.GetCells(rotation), ActivePosition,
+                    _rules.MaxSidewaysPush, _rules.MaxUpPush, out Vector2Int position))
             {
                 return false;
             }
 
+            bool wasResting = IsResting;
             ActiveRotation = rotation;
-            Version++;
+            ActivePosition = position;
+            AfterPieceChanged(wasResting);
             return true;
+        }
+
+        private void AfterPieceChanged(bool extendLock)
+        {
+            if (extendLock)
+            {
+                _lock.TryExtend(_rules.LockExtensionBonus, _rules.MaxLockExtensions);
+            }
+
+            _lock.ReachRow(BottomRow());
+            Version++;
+        }
+
+        private int BottomRow()
+        {
+            IReadOnlyList<Vector2Int> cells = ActiveCells;
+            int bottom = int.MaxValue;
+            for (int i = 0; i < cells.Count; i++)
+            {
+                bottom = Mathf.Min(bottom, cells[i].y);
+            }
+
+            return ActivePosition.y + (cells.Count > 0 ? bottom : 0);
         }
 
         /// <summary>Drops the falling piece as far as it goes and locks it at once.</summary>
@@ -301,10 +342,9 @@ namespace BlockDiggerz.Blocks
 
         private void UpdateFalling(float deltaTime, bool softDrop)
         {
-            if (!Board.Fits(ActiveCells, ActivePosition + Vector2Int.down))
+            if (IsResting)
             {
-                _lockTimer += deltaTime;
-                if (_lockTimer >= _rules.LockDelay)
+                if (_lock.Tick(deltaTime, _rules.LockDelay))
                 {
                     LockPiece();
                 }
@@ -312,7 +352,6 @@ namespace BlockDiggerz.Blocks
                 return;
             }
 
-            _lockTimer = 0f;
             if (GravityPaused && !softDrop)
             {
                 _fallTimer = 0f;
@@ -359,7 +398,7 @@ namespace BlockDiggerz.Blocks
         private void ResetTimers()
         {
             _fallTimer = 0f;
-            _lockTimer = 0f;
+            _lock.Reset(BottomRow());
         }
 
         private int PickSeed()

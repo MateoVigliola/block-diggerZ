@@ -26,8 +26,21 @@ namespace BlockDiggerz.Blocks
         [field: SerializeField, Min(0.005f), Tooltip("Seconds per row while soft drop is held.")]
         public float SoftDropInterval { get; private set; } = 0.05f;
 
-        [field: SerializeField, Min(0f), Tooltip("Seconds a piece can rest on the stack before it locks. Resets when it falls a row.")]
+        [field: SerializeField, Min(0f), Tooltip("Seconds a piece can rest on the stack before it locks. Restarts when it reaches a lower row than before.")]
         public float LockDelay { get; private set; } = 0.5f;
+
+        [field: SerializeField, Min(0f), Tooltip("Seconds a sideways move or rotation gives back while the piece rests. The time left never exceeds Lock Delay.")]
+        public float LockExtensionBonus { get; private set; } = 0.25f;
+
+        [field: SerializeField, Min(0), Tooltip("How many times per piece a move or rotation can extend the lock delay. Restarts when the piece reaches a lower row.")]
+        public int MaxLockExtensions { get; private set; } = 15;
+
+        [field: Header("Rotation push")]
+        [field: SerializeField, Min(0), Tooltip("How many cells sideways a blocked rotation may push the piece.")]
+        public int MaxSidewaysPush { get; private set; } = 2;
+
+        [field: SerializeField, Min(0), Tooltip("How many cells up a blocked rotation may push the piece. Pieces are never pushed down.")]
+        public int MaxUpPush { get; private set; } = 1;
 
         [field: Header("Sideways movement")]
         [field: SerializeField, Min(0f), Tooltip("Seconds a move key must be held before the piece starts sliding on its own.")]
