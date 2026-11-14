@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b0b9b1f9838eca478dd55c167731f95, type: 3}
+  m_Name: StandardPieceSet
+  m_EditorClassIdentifier: BlockDiggerz.Blocks::BlockDiggerz.Blocks.PieceSet
+  _pieces:
+  - {fileID: 11400000, guid: a7fb2450938fcea4aa7406571c8fe731, type: 2}
+  - {fileID: 11400000, guid: e0f9adb48a253194b98af8cc5e1e30d2, type: 2}
+  - {fileID: 11400000, guid: 18c3254f469b76e4cb916c7d24f47b04, type: 2}
+  - {fileID: 11400000, guid: 68145e48ed49c4341a64bba5ca133c9f, type: 2}
+  - {fileID: 11400000, guid: a84139d0ef6310a4a96e8ac959419ed6, type: 2}
+  - {fileID: 11400000, guid: 91c6bf568e2599c4ea89158a1096af71, type: 2}
+  - {fileID: 11400000, guid: e9b2ab14f4e37344c812303441853265, type: 2}

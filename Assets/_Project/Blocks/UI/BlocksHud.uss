@@ -1,0 +1,57 @@
+.hud-root {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.hud-stats {
+    position: absolute;
+    left: 64%;
+    top: 8%;
+}
+
+.hud-caption {
+    font-size: 28px;
+    color: rgb(170, 170, 190);
+}
+
+.hud-value {
+    font-size: 56px;
+    -unity-font-style: bold;
+    color: rgb(240, 240, 250);
+}
+
+.hud-game-over {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.65);
+    display: none;
+}
+
+.hud-game-over-title {
+    font-size: 96px;
+    -unity-font-style: bold;
+    color: rgb(255, 90, 90);
+}
+
+.hud-game-over-row {
+    flex-direction: row;
+    align-items: center;
+}
+
+.hud-game-over-row .hud-value {
+    margin-left: 16px;
+}
+
+.hud-hint {
+    margin-top: 24px;
+    font-size: 32px;
+    color: rgb(220, 220, 230);
+}

@@ -12,5 +12,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37ac4358b77484948b191618e16e47d3, type: 3}
   m_Name: AssetTrackerDatabase
   m_EditorClassIdentifier: BlockDiggerz.AssetTracking.Editor::BlockDiggerz.AssetTracking.AssetTrackerDatabase
-  _entries: []
+  _entries:
+  - _id: 2a0076a675774b7abb27a3606b06aef7
+    _category: 0
+    _area: Blocks
+    _name: BlockCell
+    _description: 
+    _requirements: 
+    _status: 1
+    _notes: 
+    _assetGuid: e3ca962d378332f46a357f69b0db67bb
+    _assetPath: Assets/_Project/Blocks/Art/BlockCell.png
+    _assetType: Texture2D
+    _unityUpdated: 2026-11-14 11:43 UTC
+    _syncedOnce: 1
+    _dirtyFields: 0
   _removedIds: []
