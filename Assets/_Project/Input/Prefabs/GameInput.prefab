@@ -50,4 +50,5 @@ MonoBehaviour:
   _hardDrop: {fileID: 793026921886341728, guid: 9835f5279a8038b40b130f68083ddf81, type: 3}
   _rotateClockwise: {fileID: 3396204747912952715, guid: 9835f5279a8038b40b130f68083ddf81, type: 3}
   _rotateCounterClockwise: {fileID: 964888347546926450, guid: 9835f5279a8038b40b130f68083ddf81, type: 3}
+  _storePiece: {fileID: 4080720959007885719, guid: 9835f5279a8038b40b130f68083ddf81, type: 3}
   _restart: {fileID: -5858012279432459172, guid: 9835f5279a8038b40b130f68083ddf81, type: 3}

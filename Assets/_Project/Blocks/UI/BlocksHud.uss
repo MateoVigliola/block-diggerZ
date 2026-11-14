@@ -12,6 +12,43 @@
     top: 8%;
 }
 
+.hud-store {
+    position: absolute;
+    right: 64%;
+    top: 8%;
+    align-items: flex-end;
+}
+
+.hud-store--locked {
+    opacity: 0.35;
+}
+
+.hud-next-caption {
+    margin-top: 24px;
+}
+
+.hud-piece-box {
+    position: relative;
+    width: 128px;
+    height: 128px;
+    margin-top: 8px;
+    background-color: rgba(30, 30, 40, 0.6);
+    border-width: 1px;
+    border-color: rgb(60, 60, 75);
+}
+
+.hud-piece-cell {
+    position: absolute;
+    background-image: url("project://database/Assets/_Project/Blocks/Art/BlockCell.png");
+    -unity-background-scale-mode: stretch-to-fill;
+}
+
+.hud-key-hint {
+    margin-top: 8px;
+    font-size: 24px;
+    color: rgb(200, 200, 215);
+}
+
 .hud-caption {
     font-size: 28px;
     color: rgb(170, 170, 190);

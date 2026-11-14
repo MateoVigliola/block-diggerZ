@@ -29,6 +29,7 @@ namespace BlockDiggerz.Blocks
         private bool _autoShifting;
         private float _fallTimer;
         private readonly LockDelayTimer _lock = new();
+        private readonly PieceStore _store = new();
 
         /// <summary>Raised after rows are cleared, with how many.</summary>
         public event Action<int> LinesCleared;
@@ -87,6 +88,15 @@ namespace BlockDiggerz.Blocks
         /// <summary>The piece the bag deals next.</summary>
         public PieceDefinition NextPiece => _bag?.Peek();
 
+        /// <summary>The stored piece, or null if nothing is stored.</summary>
+        public PieceDefinition StoredPiece => _store.Stored;
+
+        /// <summary>False from a store until the next piece locks.</summary>
+        public bool CanStore => _store.CanStore;
+
+        /// <summary>Input wrapper the game reads; the HUD uses it for key hints.</summary>
+        public GameInput GameInput => _input;
+
         /// <summary>Cells of the falling piece in its current rotation, relative to <see cref="ActivePosition"/>.</summary>
         public IReadOnlyList<Vector2Int> ActiveCells => ActivePiece != null ? ActivePiece.GetCells(ActiveRotation) : Array.Empty<Vector2Int>();
 
@@ -118,6 +128,11 @@ namespace BlockDiggerz.Blocks
                 return;
             }
 
+            if (_input.StorePiecePressed)
+            {
+                TryStorePiece();
+            }
+
             float deltaTime = Time.deltaTime;
             UpdateSideways(deltaTime);
 
@@ -147,6 +162,7 @@ namespace BlockDiggerz.Blocks
             _bag.Reset(PickSeed());
             TotalLinesCleared = 0;
             PiecesLocked = 0;
+            _store.Reset();
             State = BlocksGameState.Playing;
             ResetTimers();
             RunStarted?.Invoke();
@@ -253,6 +269,26 @@ namespace BlockDiggerz.Blocks
             }
 
             return ActivePosition.y + (cells.Count > 0 ? bottom : 0);
+        }
+
+        /// <summary>
+        /// Stores the falling piece and brings in the stored one at the spawn spot (or the next piece from the bag
+        /// if nothing was stored). Locked from a store until the next piece locks.
+        /// </summary>
+        public bool TryStorePiece()
+        {
+            if (ActivePiece == null || State != BlocksGameState.Playing)
+            {
+                return false;
+            }
+
+            if (!_store.TryStore(ActivePiece, out PieceDefinition released))
+            {
+                return false;
+            }
+
+            SpawnPiece(released != null ? released : _bag.Next());
+            return true;
         }
 
         /// <summary>Drops the falling piece as far as it goes and locks it at once.</summary>
@@ -375,6 +411,7 @@ namespace BlockDiggerz.Blocks
         {
             Board.Place(ActiveCells, ActivePosition, ActivePiece);
             PiecesLocked++;
+            _store.OnPieceLocked();
             ActivePiece = null;
             Version++;
 

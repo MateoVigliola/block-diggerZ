@@ -29,6 +29,9 @@ namespace BlockDiggerz.Blocks
         /// <summary>Label of the restart button.</summary>
         public const string RestartLabel = "Restart run";
 
+        /// <summary>Label of the store piece button (same rules as the store key).</summary>
+        public const string StorePieceLabel = "Store piece";
+
         /// <summary>Prefix of the per-piece spawn buttons, followed by the piece id.</summary>
         public const string SpawnLabelPrefix = "Spawn ";
 
@@ -54,13 +57,16 @@ namespace BlockDiggerz.Blocks
                     .Readout("Extensions used", () => $"{_game.LockExtensionsUsed}/{_game.Rules.MaxLockExtensions}")
                     .Readout("Tags", DescribeTags)
                     .Readout("Next", () => _game.NextPiece != null ? _game.NextPiece.Id : "-")
+                    .Readout("Stored", () => _game.StoredPiece != null ? _game.StoredPiece.Id : "-")
+                    .Readout("Can store", () => _game.CanStore ? "yes" : "no")
                     .Readout("Lines", () => _game.TotalLinesCleared.ToString())
                     .Readout("Pieces locked", () => _game.PiecesLocked.ToString())
                     .Toggle(PauseGravityLabel, () => _game.GravityPaused, v => _game.GravityPaused = v)
                     .Button(ClearBoardLabel, _game.ClearBoard)
                     .Button(FillBottomRowLabel, FillBottomRowWithIGap)
                     .Button(GameOverLabel, _game.ForceGameOver)
-                    .Button(RestartLabel, _game.StartRun);
+                    .Button(RestartLabel, _game.StartRun)
+                    .Button(StorePieceLabel, () => _game.TryStorePiece());
 
                 foreach (PieceDefinition piece in _game.PieceSet.Pieces)
                 {

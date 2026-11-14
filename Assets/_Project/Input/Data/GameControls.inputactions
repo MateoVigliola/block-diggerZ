@@ -67,6 +67,16 @@
                     "priority": 0
                 },
                 {
+                    "name": "StorePiece",
+                    "type": "Button",
+                    "id": "b8eafd1d-e3fb-4580-9b9e-2c3d4e5f6a09",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
+                },
+                {
                     "name": "Restart",
                     "type": "Button",
                     "id": "f6c8ebfb-c1d9-436e-9f7c-0a1b2c3d4e07",
@@ -229,6 +239,28 @@
                     "processors": "",
                     "groups": "Gamepad",
                     "action": "RotateClockwise",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "11111111-0008-4000-8000-000000000001",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "StorePiece",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "11111111-0008-4000-8000-000000000002",
+                    "path": "<Gamepad>/leftShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "StorePiece",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

@@ -1,9 +1,16 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
     <Style src="BlocksHud.uss" />
     <ui:VisualElement name="hud-root" picking-mode="Ignore" class="hud-root">
+        <ui:VisualElement name="store" picking-mode="Ignore" class="hud-store">
+            <ui:Label text="STORE" class="hud-caption" />
+            <ui:VisualElement name="store-preview" picking-mode="Ignore" class="hud-piece-box" />
+            <ui:Label text="Space" name="store-key" class="hud-key-hint" />
+        </ui:VisualElement>
         <ui:VisualElement name="stats" picking-mode="Ignore" class="hud-stats">
             <ui:Label text="LINES" class="hud-caption" />
             <ui:Label text="0" name="lines-value" class="hud-value" />
+            <ui:Label text="NEXT" class="hud-caption hud-next-caption" />
+            <ui:VisualElement name="next-preview" picking-mode="Ignore" class="hud-piece-box" />
         </ui:VisualElement>
         <ui:VisualElement name="game-over" picking-mode="Ignore" class="hud-game-over">
             <ui:Label text="GAME OVER" class="hud-game-over-title" />

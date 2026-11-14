@@ -28,6 +28,9 @@ namespace BlockDiggerz.Input
         [SerializeField, Tooltip("Pressed to rotate the piece counter-clockwise.")]
         private InputActionReference _rotateCounterClockwise;
 
+        [SerializeField, Tooltip("Pressed to store the falling piece, or swap it with the stored one.")]
+        private InputActionReference _storePiece;
+
         [SerializeField, Tooltip("Pressed on the game over screen to start a new run.")]
         private InputActionReference _restart;
 
@@ -48,6 +51,13 @@ namespace BlockDiggerz.Input
 
         /// <summary>True on the frame the rotate counter-clockwise action was pressed.</summary>
         public bool RotateCounterClockwisePressed => WasPressed(_rotateCounterClockwise);
+
+        /// <summary>True on the frame the store piece action was pressed.</summary>
+        public bool StorePiecePressed => WasPressed(_storePiece);
+
+        /// <summary>Display text of the store piece bindings (for example "Space"), for UI hints.</summary>
+        public string StorePieceBindingText =>
+            _storePiece != null && _storePiece.action != null ? _storePiece.action.GetBindingDisplayString() : string.Empty;
 
         /// <summary>True on the frame the restart action was pressed.</summary>
         public bool RestartPressed => WasPressed(_restart);
@@ -87,6 +97,7 @@ namespace BlockDiggerz.Input
             SetEnabled(_hardDrop, enabled);
             SetEnabled(_rotateClockwise, enabled);
             SetEnabled(_rotateCounterClockwise, enabled);
+            SetEnabled(_storePiece, enabled);
             SetEnabled(_restart, enabled);
         }
 
