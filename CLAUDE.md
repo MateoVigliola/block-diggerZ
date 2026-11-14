@@ -2,6 +2,7 @@
 
 ## Game overview
 A 2D falling-block roguelike in the spirit of classic block-stacking puzzlers. The core loop: pieces fall onto a grid, the player moves and rotates them to complete and clear lines, and between rounds the player picks upgrades, special pieces or modifiers that change how a run plays. Runs end on a top-out; meta progression carries between runs. Target platform: Windows PC (to be confirmed). Input: keyboard, with gamepad support planned. Claude: fill in and keep current as the design firms up.
+Built so far: the core block dropper (10 x 20 board, the 7 standard pieces from a 7-bag, A/D and arrows to move, E/Up and Q for simple clockwise and counter-clockwise rotation, S/Down soft drop, Space hard drop, line clears, game over with R to restart) and a piece tag system with only a "Basic" tag for now.
 
 ## Tech stack
 - Unity 6000.6.9f1, URP 17.6.0 (2D renderer), Input System 1.20.1, 2D Tilemap + Tilemap Extras, 2D Sprite, Shader Graph, UI Toolkit, Unity Test Framework 1.8.0.
@@ -27,13 +28,19 @@ A 2D falling-block roguelike in the spirit of classic block-stacking puzzlers. T
 |---|---|
 | `Assets/_Project/` | Game code and content, one subfolder per feature |
 | `Assets/_Project/AssetTracking/` | Editor-only art/audio tracker synced with a Google Sheet |
-| `Assets/Scenes/` | Scenes (template `SampleScene` for now) |
+| `Assets/_Project/Blocks/` | Core block dropper: pieces, tags, board, game loop, HUD |
+| `Assets/_Project/Input/` | `GameInput` wrapper and the `GameControls` actions asset |
+| `Assets/_Project/DebugTools/` | In-game debug menu (backquote) and its `unity command debugmenu list/do` CLI |
+| `Assets/_Project/Playtest/` | Editor window (Tools > BlockDiggerz > Playtest Checklist) for `Docs/PlaytestChecklist.md` |
+| `Assets/_Project/Shared/Testing/` | Shared test helpers (`InputTestBase`, `DebugMenuDriver`) |
+| `Assets/Scenes/` | `Game` (main scene, build index 0) and template `SampleScene` |
 | `Assets/Settings/` | URP pipeline and 2D renderer assets |
 | `Assets/Editor/` | Template editor scripts |
 | `Assets/Welcome/` | Unity template welcome content; safe to remove later |
 
 Feature CLAUDE.md files:
 - [Assets/_Project/AssetTracking/CLAUDE.md](Assets/_Project/AssetTracking/CLAUDE.md): asset tracker and Google Sheet sync.
+- [Assets/_Project/Blocks/CLAUDE.md](Assets/_Project/Blocks/CLAUDE.md): core block dropper, pieces and tags.
 
 ## Unity rules
 - Input only through the Input System (via a single wrapper class), never UnityEngine.Input.
@@ -67,6 +74,7 @@ Feature CLAUDE.md files:
 ## Playtesting (mine, not Claude's)
 - Leave all playtesting and game feel testing to me. Don't play the game to judge feel, balance, difficulty, pacing, juice, readability or fun, and don't tune those values on your own judgment.
 - Instead, after each feature, add a section to `Docs/PlaytestChecklist.md` (create it if missing) with the feature name, date, and a checkbox list of what I should test: what to try, what should happen, and which tunables (with their asset or component path) to adjust if it feels off.
+- Keep the item format the checklist window (`Assets/_Project/Playtest/`) parses: `## Feature, date` headings, items as `- [ ] **Title:** text` on one line, each followed by `  - Notes:`. Further notes lines are indented four spaces. I tick items in the window and press Confirm, which writes `[x]`; `[x]` items are done.
 - Keep working on the next feature while I playtest. I write my notes under each item; read them at the start of the next session or when I point you at them, and turn them into fixes or tuning changes.
 - Automated tests (PlayMode, EditMode, input tests) are still your job; this split covers only how the game plays and feels.
 

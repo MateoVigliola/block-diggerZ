@@ -1,0 +1,25 @@
+{
+    "name": "BlockDiggerz.Blocks.Tests.PlayMode",
+    "rootNamespace": "BlockDiggerz.Blocks.Tests",
+    "references": [
+        "BlockDiggerz.Blocks",
+        "BlockDiggerz.DebugTools",
+        "BlockDiggerz.Testing",
+        "Unity.InputSystem",
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "nunit.framework.dll"
+    ],
+    "autoReferenced": false,
+    "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

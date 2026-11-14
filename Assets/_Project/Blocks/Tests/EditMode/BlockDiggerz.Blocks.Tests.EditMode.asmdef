@@ -1,0 +1,24 @@
+{
+    "name": "BlockDiggerz.Blocks.Tests.EditMode",
+    "rootNamespace": "BlockDiggerz.Blocks.Tests",
+    "references": [
+        "BlockDiggerz.Blocks",
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "nunit.framework.dll"
+    ],
+    "autoReferenced": false,
+    "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

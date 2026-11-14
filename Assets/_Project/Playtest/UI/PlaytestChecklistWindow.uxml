@@ -1,0 +1,23 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
+    <Style src="PlaytestChecklistWindow.uss" />
+    <uie:Toolbar>
+        <uie:ToolbarButton name="reload-button" text="Reload" tooltip="Read Docs/PlaytestChecklist.md again" />
+        <uie:ToolbarButton name="open-file-button" text="Open File" tooltip="Open the Markdown file in your text editor" />
+        <ui:VisualElement class="toolbar-flex" />
+        <uie:ToolbarSearchField name="search" class="toolbar-search" />
+    </uie:Toolbar>
+    <ui:TabView name="tabs" class="tabs">
+        <ui:Tab name="pending-tab" label="To check">
+            <ui:ScrollView name="pending-list" class="item-list" />
+            <ui:VisualElement class="footer">
+                <ui:Label name="selection-label" class="footer-label" />
+                <ui:Button name="select-none-button" text="Clear" />
+                <ui:Button name="confirm-button" text="Confirm checked" class="confirm-button" tooltip="Mark the checked items done and move them to the Done tab" />
+            </ui:VisualElement>
+        </ui:Tab>
+        <ui:Tab name="done-tab" label="Done">
+            <ui:ScrollView name="done-list" class="item-list" />
+        </ui:Tab>
+    </ui:TabView>
+    <ui:Label name="status-bar" class="status-bar" />
+</ui:UXML>

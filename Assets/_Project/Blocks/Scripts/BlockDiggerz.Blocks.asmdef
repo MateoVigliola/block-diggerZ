@@ -1,0 +1,17 @@
+{
+    "name": "BlockDiggerz.Blocks",
+    "rootNamespace": "BlockDiggerz.Blocks",
+    "references": [
+        "BlockDiggerz.Input",
+        "BlockDiggerz.DebugTools"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
