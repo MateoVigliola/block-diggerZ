@@ -64,13 +64,19 @@ Feature CLAUDE.md files:
 - Always exit Play mode after a manual test, because recompiles are deferred while playing.
 - If something can't be tested automatically, say so and list what must be checked by hand.
 
+## Playtesting (mine, not Claude's)
+- Leave all playtesting and game feel testing to me. Don't play the game to judge feel, balance, difficulty, pacing, juice, readability or fun, and don't tune those values on your own judgment.
+- Instead, after each feature, add a section to `Docs/PlaytestChecklist.md` (create it if missing) with the feature name, date, and a checkbox list of what I should test: what to try, what should happen, and which tunables (with their asset or component path) to adjust if it feels off.
+- Keep working on the next feature while I playtest. I write my notes under each item; read them at the start of the next session or when I point you at them, and turn them into fixes or tuning changes.
+- Automated tests (PlayMode, EditMode, input tests) are still your job; this split covers only how the game plays and feels.
+
 ## Unity CLI and shell
 - Write custom CLI commands instead of script eval, and put repeated tasks in reusable scripts under Tools/.
 - Never use heredocs (quotes and apostrophes break them). Write files with Write, change them with Edit, and run longer scripts from a file by path.
 - On Windows PowerShell, pass C# to `unity command script eval` with `--file <path>`, not inline code: PowerShell splits quoted inline code into separate arguments.
 
 ## Git
-- The project is not a git repository yet; initialize it (with a Unity .gitignore, LFS and the merge driver below) before the first commit.
+- The repository is on branch main with a Unity .gitignore, LFS and the merge driver below already configured. No remote yet.
 - Assume multiple contributors. Short-lived feature branches off main; merge main in before finishing.
 - Split scenes and prefabs per feature so two people rarely edit the same file.
 - Commit .meta files with their assets. Never commit Library/, Temp/, Logs/, UserSettings/.
