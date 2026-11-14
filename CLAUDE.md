@@ -27,6 +27,7 @@ A 2D falling-block roguelike in the spirit of classic block-stacking puzzlers. T
 |---|---|
 | `Assets/_Project/` | Game code and content, one subfolder per feature |
 | `Assets/_Project/AssetTracking/` | Editor-only art/audio tracker synced with a Google Sheet |
+| `Assets/_Project/Playtest/` | Editor window (Tools > BlockDiggerz > Playtest Checklist) for `Docs/PlaytestChecklist.md` |
 | `Assets/Scenes/` | Scenes (template `SampleScene` for now) |
 | `Assets/Settings/` | URP pipeline and 2D renderer assets |
 | `Assets/Editor/` | Template editor scripts |
@@ -67,6 +68,7 @@ Feature CLAUDE.md files:
 ## Playtesting (mine, not Claude's)
 - Leave all playtesting and game feel testing to me. Don't play the game to judge feel, balance, difficulty, pacing, juice, readability or fun, and don't tune those values on your own judgment.
 - Instead, after each feature, add a section to `Docs/PlaytestChecklist.md` (create it if missing) with the feature name, date, and a checkbox list of what I should test: what to try, what should happen, and which tunables (with their asset or component path) to adjust if it feels off.
+- Keep the item format the checklist window (`Assets/_Project/Playtest/`) parses: `## Feature, date` headings, items as `- [ ] **Title:** text` on one line, each followed by `  - Notes:`. Further notes lines are indented four spaces. I tick items in the window and press Confirm, which writes `[x]`; `[x]` items are done.
 - Keep working on the next feature while I playtest. I write my notes under each item; read them at the start of the next session or when I point you at them, and turn them into fixes or tuning changes.
 - Automated tests (PlayMode, EditMode, input tests) are still your job; this split covers only how the game plays and feels.
 

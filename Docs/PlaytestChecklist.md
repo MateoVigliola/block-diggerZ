@@ -26,3 +26,24 @@ Editor tooling, so this is a hands-on check of the workflow rather than game fee
   - Notes:
 - [ ] **Window layout:** is the list and details split comfortable, are the filters and buttons where you expect them? Layout lives in `Assets/_Project/AssetTracking/UI/AssetTrackerWindow.uxml` and `.uss`.
   - Notes:
+
+## Playtest Checklist window (editor tool), 2026-11-14
+
+Open Tools > BlockDiggerz > Playtest Checklist. It reads and writes this file. Layout: `Assets/_Project/Playtest/UI/PlaytestChecklistWindow.uxml` and `.uss`.
+
+- [ ] **Tabs:** expect a To check tab and a Done tab, each showing its item count, with items grouped under collapsible feature headings.
+  - Notes:
+- [ ] **Tick and confirm:** tick two items (click the box or the text). Expect them highlighted green and the button to read Confirm checked (2). Press it. Expect both to move to the Done tab and show `[x]` in this file.
+  - Notes:
+- [ ] **Clear:** tick a few items, press Clear. Expect all ticks removed and nothing moved.
+  - Notes:
+- [ ] **Reopen:** in the Done tab, press Reopen on an item. Expect it back in To check and `[ ]` in this file.
+  - Notes:
+- [ ] **Notes:** type a note (several lines too) under an item and click elsewhere. Expect "Notes saved." and the text under that item's Notes line here.
+  - Notes:
+- [ ] **Outside edits:** edit this file in a text editor (add an item or a note), save, then click back into the window. Expect the change to show without pressing Reload.
+  - Notes:
+- [ ] **Search:** type in the search box. Expect only items whose text, notes or feature name match.
+  - Notes:
+- [ ] **Readability:** are the rows, highlight color, note fields and footer comfortable to use?
+  - Notes:

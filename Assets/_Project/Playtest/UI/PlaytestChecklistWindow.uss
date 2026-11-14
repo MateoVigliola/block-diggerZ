@@ -1,0 +1,140 @@
+.toolbar-flex {
+    flex-grow: 1;
+}
+
+.toolbar-search {
+    width: 180px;
+}
+
+.tabs {
+    flex-grow: 1;
+}
+
+.tabs .unity-tab-view__content-container {
+    flex-grow: 1;
+}
+
+.tabs .unity-tab__content-container {
+    flex-grow: 1;
+}
+
+.item-list {
+    flex-grow: 1;
+    flex-shrink: 1;
+    min-height: 0;
+    padding: 4px 8px;
+}
+
+.section {
+    margin-top: 6px;
+    margin-bottom: 4px;
+}
+
+.section .unity-foldout__text {
+    -unity-font-style: bold;
+    font-size: 13px;
+}
+
+.section-description {
+    white-space: normal;
+    opacity: 0.7;
+    margin: 0 0 6px 4px;
+}
+
+.item-row {
+    padding: 6px;
+    margin-bottom: 4px;
+    border-radius: 4px;
+    border-width: 1px;
+    border-color: rgba(128, 128, 128, 0.25);
+    background-color: rgba(128, 128, 128, 0.06);
+}
+
+.item-row--selected {
+    border-color: rgba(80, 170, 90, 0.8);
+    background-color: rgba(80, 170, 90, 0.15);
+}
+
+.item-header {
+    flex-direction: row;
+    align-items: flex-start;
+}
+
+.item-toggle {
+    margin: 2px 6px 0 0;
+}
+
+.item-text {
+    flex-grow: 1;
+    flex-shrink: 1;
+    white-space: normal;
+    margin-top: 2px;
+}
+
+.item-done-text {
+    opacity: 0.75;
+}
+
+.reopen-button {
+    flex-shrink: 0;
+}
+
+.notes-field {
+    margin: 4px 0 0 0;
+}
+
+.notes-field .unity-label {
+    min-width: 50px;
+    width: 50px;
+}
+
+.notes-field TextInput {
+    min-height: 20px;
+    white-space: normal;
+}
+
+.empty-label {
+    white-space: normal;
+    opacity: 0.6;
+    margin: 12px 4px;
+}
+
+.footer {
+    flex-direction: row;
+    align-items: center;
+    flex-shrink: 0;
+    min-height: 40px;
+    padding: 6px 8px;
+    border-top-width: 1px;
+    border-top-color: rgba(0, 0, 0, 0.3);
+}
+
+.footer-label {
+    flex-grow: 1;
+    flex-shrink: 1;
+}
+
+.footer Button {
+    flex-shrink: 0;
+    min-height: 28px;
+    padding: 4px 14px;
+    margin-left: 6px;
+}
+
+.confirm-button {
+    -unity-font-style: bold;
+    min-width: 150px;
+}
+
+.status-bar {
+    flex-shrink: 0;
+    padding: 2px 8px;
+    border-top-width: 1px;
+    border-top-color: rgba(0, 0, 0, 0.3);
+    opacity: 0.8;
+}
+
+.status-bar--error {
+    color: rgb(230, 90, 80);
+    opacity: 1;
+}
