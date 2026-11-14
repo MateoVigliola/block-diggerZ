@@ -43,6 +43,7 @@ namespace BlockDiggerz.Blocks
         private Label _finalLines;
         private VisualElement _gameOverPanel;
         private VisualElement _storePanel;
+        private Label _storeKey;
         private PiecePreviewView _nextPreview;
         private PiecePreviewView _storePreview;
         private int _shownLines = -1;
@@ -81,14 +82,34 @@ namespace BlockDiggerz.Blocks
             _stateShown = false;
             _piecesShown = false;
 
-            Label storeKey = root.Q<Label>(StoreKeyName);
-            if (storeKey != null && _game != null && _game.GameInput != null)
+            _storeKey = root.Q<Label>(StoreKeyName);
+            if (_game != null && _game.GameInput != null)
             {
-                string keys = _game.GameInput.StorePieceBindingText;
-                if (!string.IsNullOrEmpty(keys))
-                {
-                    storeKey.text = keys;
-                }
+                _game.GameInput.BindingsChanged += RefreshStoreKey;
+            }
+
+            RefreshStoreKey();
+        }
+
+        private void OnDisable()
+        {
+            if (_game != null && _game.GameInput != null)
+            {
+                _game.GameInput.BindingsChanged -= RefreshStoreKey;
+            }
+        }
+
+        private void RefreshStoreKey()
+        {
+            if (_storeKey == null || _game == null || _game.GameInput == null)
+            {
+                return;
+            }
+
+            string keys = _game.GameInput.StorePieceBindingText;
+            if (!string.IsNullOrEmpty(keys))
+            {
+                _storeKey.text = keys;
             }
         }
 

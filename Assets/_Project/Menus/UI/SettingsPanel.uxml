@@ -1,0 +1,21 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
+    <ui:VisualElement name="settings-panel" class="menu-panel settings-panel">
+        <ui:Label text="SETTINGS" class="menu-title" />
+        <ui:VisualElement class="settings-tabs">
+            <ui:Button text="Controls" name="tab-controls" class="settings-tab" />
+            <ui:Button text="Sound" name="tab-sound" class="settings-tab" />
+        </ui:VisualElement>
+        <ui:VisualElement name="page-controls" class="settings-page">
+            <ui:Label text="Click a key, then press the new key. Esc cancels." class="settings-hint" />
+            <ui:ScrollView name="controls-list" class="controls-list" />
+            <ui:Button text="Reset to defaults" name="controls-reset" class="menu-button menu-button--small" />
+        </ui:VisualElement>
+        <ui:VisualElement name="page-sound" class="settings-page">
+            <ui:Slider label="Music" name="music-slider" low-value="0" high-value="100" value="80" show-input-field="true" class="settings-slider" />
+            <ui:Slider label="Sound effects" name="sfx-slider" low-value="0" high-value="100" value="80" show-input-field="true" class="settings-slider" />
+            <ui:Label text="Volumes are saved; audio is not in the game yet." class="settings-hint" />
+            <ui:Button text="Reset to defaults" name="sound-reset" class="menu-button menu-button--small" />
+        </ui:VisualElement>
+        <ui:Button text="Back" name="settings-back" class="menu-button" />
+    </ui:VisualElement>
+</ui:UXML>
