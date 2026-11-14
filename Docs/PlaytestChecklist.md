@@ -80,3 +80,18 @@ Open Tools > BlockDiggerz > Playtest Checklist. It reads and writes this file. L
   - Notes: tetete
 - [x] **Readability:** are the rows, highlight color, note fields and footer comfortable to use?
   - Notes:
+
+## Landing ghost, 2026-11-14
+
+A see-through copy of the falling piece shows where it will land, in the piece color, each cell fading from bottom to top. Settings on the BoardView component of `Assets/_Project/Blocks/Prefabs/BlocksGame.prefab` (Landing ghost header).
+
+- [ ] **Follows the piece:** move and rotate a piece. Expect the ghost to stay directly below it, resting on the floor or the stack, and to match its shape and color.
+  - Notes:
+- [ ] **Matches hard drop:** press Space. Expect the piece to lock exactly where the ghost was.
+  - Notes:
+- [ ] **Overlap:** soft drop until the piece reaches the ghost. Expect the solid piece to cover the ghost with no flicker.
+  - Notes:
+- [ ] **Readability:** can you tell the ghost from real blocks at a glance? Tune `Ghost Opacity` on BoardView, or the fade itself in `Assets/_Project/Blocks/Art/GhostCell.png` (solid outline, bottom about 100% to top about 12%). Untick `Show Ghost` to compare without it.
+  - Notes:
+- [ ] **Game over:** top out. Expect the ghost to disappear on the game over screen.
+  - Notes:

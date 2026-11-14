@@ -82,6 +82,18 @@ namespace BlockDiggerz.Blocks.Tests
         }
 
         [Test]
+        public void LandingOffset_RestsOnFloorOrStack_InSameColumn()
+        {
+            var o = _filler.GetCells(0);
+            Assert.AreEqual(new Vector2Int(4, 0), _board.LandingOffset(o, new Vector2Int(4, 18)), "empty board: floor");
+
+            _board.Set(5, 3, _other);
+            Assert.AreEqual(new Vector2Int(4, 4), _board.LandingOffset(o, new Vector2Int(4, 18)), "rests on top of the stack");
+
+            Assert.AreEqual(new Vector2Int(4, 4), _board.LandingOffset(o, new Vector2Int(4, 4)), "already resting stays put");
+        }
+
+        [Test]
         public void LockedCells_KeepTheirPieceAndTags()
         {
             _board.Place(_other.GetCells(0), new Vector2Int(3, 0), _other);

@@ -68,6 +68,21 @@ namespace BlockDiggerz.Blocks
             return true;
         }
 
+        /// <summary>
+        /// Where cells at <paramref name="offset"/> come to rest when dropped straight down: the lowest offset in the
+        /// same column that still fits. Returns <paramref name="offset"/> itself if it can't move down.
+        /// </summary>
+        public Vector2Int LandingOffset(IReadOnlyList<Vector2Int> cells, Vector2Int offset)
+        {
+            Vector2Int landing = offset;
+            while (Fits(cells, landing + Vector2Int.down))
+            {
+                landing += Vector2Int.down;
+            }
+
+            return landing;
+        }
+
         /// <summary>Fills the cells, shifted by <paramref name="offset"/>, with <paramref name="piece"/>.</summary>
         public void Place(IReadOnlyList<Vector2Int> cells, Vector2Int offset, PieceDefinition piece)
         {

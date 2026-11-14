@@ -49,6 +49,7 @@ namespace BlockDiggerz.Blocks
                     .Readout("Piece", () => _game.ActivePiece != null ? _game.ActivePiece.Id : "-")
                     .Readout("Position", () => $"{_game.ActivePosition.x},{_game.ActivePosition.y}")
                     .Readout("Rotation", () => _game.ActiveRotation.ToString())
+                    .Readout("Landing", () => $"{_game.LandingPosition.x},{_game.LandingPosition.y}")
                     .Readout("Tags", DescribeTags)
                     .Readout("Next", () => _game.NextPiece != null ? _game.NextPiece.Id : "-")
                     .Readout("Lines", () => _game.TotalLinesCleared.ToString())

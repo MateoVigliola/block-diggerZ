@@ -70,6 +70,9 @@ namespace BlockDiggerz.Blocks
         /// <summary>Increments whenever the board or falling piece changes, so views redraw only then.</summary>
         public int Version { get; private set; }
 
+        /// <summary>Box position where the falling piece would land if hard dropped now.</summary>
+        public Vector2Int LandingPosition => ActivePiece != null ? Board.LandingOffset(ActiveCells, ActivePosition) : ActivePosition;
+
         /// <summary>The piece the bag deals next.</summary>
         public PieceDefinition NextPiece => _bag?.Peek();
 
@@ -219,10 +222,8 @@ namespace BlockDiggerz.Blocks
                 return;
             }
 
-            while (TryMove(Vector2Int.down))
-            {
-            }
-
+            ActivePosition = LandingPosition;
+            Version++;
             LockPiece();
         }
 

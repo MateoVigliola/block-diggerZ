@@ -10,10 +10,10 @@ Namespace `BlockDiggerz.Blocks`, asmdef `BlockDiggerz.Blocks` (references `Block
 ## Rules and loop
 - `BlocksRules` (`Data/BlocksRules.asset`): 10 x 20 board plus 2 hidden rows, gravity, soft drop, lock delay, auto shift delay and repeat, seed.
 - `BlocksGame`: spawn centered with the top row on the top visible row; simple rotation, clockwise (E/Up) or counter-clockwise (Q), refused if blocked, no kicks; hard drop locks at once; full rows clear; spawn overlap means game over; R restarts. Reads input only through `GameInput`.
-- `BoardView` draws with two tilemaps (background and blocks), redrawing when `BlocksGame.Version` changes. `BlocksHud` (UI Toolkit) shows lines and the game over panel.
+- `BoardView` draws with three tilemaps (Background order 0, Ghost order 1, Blocks order 2), redrawing when `BlocksGame.Version` changes. The Ghost layer is a see-through copy of the falling piece at `BlocksGame.LandingPosition` (from `BoardGrid.LandingOffset`), tinted with the piece color; its sprite `Art/GhostCell.png` holds the bottom-up fade. `BlocksHud` (UI Toolkit) shows lines and the game over panel.
 
 ## Debug menu section "Blocks"
-Readouts: State, Piece, Position, Rotation, Tags, Next, Lines, Pieces locked. Toggle: Pause gravity. Buttons: Clear board, Fill bottom row (I gap), Game over, Restart run, Spawn I/O/T/S/Z/J/L.
+Readouts: State, Piece, Position, Rotation, Landing, Tags, Next, Lines, Pieces locked. Toggle: Pause gravity. Buttons: Clear board, Fill bottom row (I gap), Game over, Restart run, Spawn I/O/T/S/Z/J/L.
 
 ## Tests
 - `Tests/EditMode`: board, rotation, bag, piece data and tags.
