@@ -5,11 +5,13 @@ namespace BlockDiggerz.Blocks
 {
     /// <summary>
     /// The board's locked cells. Column x runs left to right from 0, row y bottom to top from 0. Each filled cell
-    /// keeps the <see cref="PieceDefinition"/> it came from, so its color and tags survive locking.
+    /// keeps the <see cref="PieceDefinition"/> it came from (so its tags survive locking) and its
+    /// <see cref="BlockColor"/>.
     /// </summary>
     public sealed class BoardGrid
     {
         private readonly PieceDefinition[] _cells;
+        private readonly BlockColor[] _colors;
 
         /// <summary>Creates an empty board.</summary>
         public BoardGrid(int width, int height)
@@ -17,6 +19,7 @@ namespace BlockDiggerz.Blocks
             Width = width;
             Height = height;
             _cells = new PieceDefinition[width * height];
+            _colors = new BlockColor[width * height];
         }
 
         /// <summary>Columns.</summary>
@@ -37,18 +40,26 @@ namespace BlockDiggerz.Blocks
             return IsInside(x, y) ? _cells[Index(x, y)] : null;
         }
 
+        /// <summary>The color of a cell's block, or null if it is empty, unpainted or off the board.</summary>
+        public BlockColor GetColor(int x, int y)
+        {
+            return IsInside(x, y) ? _colors[Index(x, y)] : null;
+        }
+
         /// <summary>True if the cell is filled.</summary>
         public bool IsOccupied(int x, int y)
         {
             return Get(x, y) != null;
         }
 
-        /// <summary>Fills or empties one cell.</summary>
-        public void Set(int x, int y, PieceDefinition piece)
+        /// <summary>Fills or empties one cell (an unpainted block when no color is given).</summary>
+        public void Set(int x, int y, PieceDefinition piece, BlockColor color = null)
         {
             if (IsInside(x, y))
             {
-                _cells[Index(x, y)] = piece;
+                int index = Index(x, y);
+                _cells[index] = piece;
+                _colors[index] = piece != null ? color : null;
             }
         }
 
@@ -83,78 +94,34 @@ namespace BlockDiggerz.Blocks
             return landing;
         }
 
-        /// <summary>Fills the cells, shifted by <paramref name="offset"/>, with <paramref name="piece"/>.</summary>
-        public void Place(IReadOnlyList<Vector2Int> cells, Vector2Int offset, PieceDefinition piece)
+        /// <summary>
+        /// Fills the cells, shifted by <paramref name="offset"/>, with <paramref name="piece"/>. Cell i gets color i
+        /// of <paramref name="colors"/> when given.
+        /// </summary>
+        public void Place(IReadOnlyList<Vector2Int> cells, Vector2Int offset, PieceDefinition piece,
+            IReadOnlyList<BlockColor> colors = null)
         {
             for (int i = 0; i < cells.Count; i++)
             {
-                Set(cells[i].x + offset.x, cells[i].y + offset.y, piece);
+                BlockColor color = colors != null && i < colors.Count ? colors[i] : null;
+                Set(cells[i].x + offset.x, cells[i].y + offset.y, piece, color);
             }
         }
 
-        /// <summary>True if every cell in the row is filled.</summary>
-        public bool IsRowFull(int y)
+        /// <summary>Empties the given cells. Blocks above are left in place; <see cref="BlockGravity"/> drops them.</summary>
+        public void Remove(IReadOnlyList<Vector2Int> cells)
         {
-            for (int x = 0; x < Width; x++)
+            for (int i = 0; i < cells.Count; i++)
             {
-                if (_cells[Index(x, y)] == null)
-                {
-                    return false;
-                }
+                Set(cells[i].x, cells[i].y, null);
             }
-
-            return true;
-        }
-
-        /// <summary>Removes every full row, moves the rows above down, and returns how many were removed.</summary>
-        public int ClearFullRows()
-        {
-            int cleared = 0;
-            int write = 0;
-            for (int read = 0; read < Height; read++)
-            {
-                if (IsRowFull(read))
-                {
-                    cleared++;
-                    continue;
-                }
-
-                if (write != read)
-                {
-                    CopyRow(read, write);
-                }
-
-                write++;
-            }
-
-            for (int y = write; y < Height; y++)
-            {
-                ClearRow(y);
-            }
-
-            return cleared;
         }
 
         /// <summary>Empties the whole board.</summary>
         public void Clear()
         {
             System.Array.Clear(_cells, 0, _cells.Length);
-        }
-
-        private void CopyRow(int from, int to)
-        {
-            for (int x = 0; x < Width; x++)
-            {
-                _cells[Index(x, to)] = _cells[Index(x, from)];
-            }
-        }
-
-        private void ClearRow(int y)
-        {
-            for (int x = 0; x < Width; x++)
-            {
-                _cells[Index(x, y)] = null;
-            }
+            System.Array.Clear(_colors, 0, _colors.Length);
         }
 
         private int Index(int x, int y)

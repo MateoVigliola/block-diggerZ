@@ -223,6 +223,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: BlockDiggerz.Blocks::BlockDiggerz.Blocks.BlocksGame
   _rules: {fileID: 11400000, guid: c0763a6d24019ac40acb6d584bfab57e, type: 2}
   _pieceSet: {fileID: 11400000, guid: d4f7ba90177a0534780d6e80391a8e0b, type: 2}
+  _palette: {fileID: 11400000, guid: 60c6ad24e54ebad46a0e3aff4f044e80, type: 2}
   _input: {fileID: 0}
 --- !u!114 &2244446747927611551
 MonoBehaviour:
@@ -258,6 +259,9 @@ MonoBehaviour:
   _ghostTile: {fileID: 11400000, guid: 065e75bc9f8dcd848ab0a829d918ca58, type: 2}
   _showGhost: 1
   _ghostOpacity: 0.3
+  _unpaintedColor: {r: 0.6, g: 0.6, b: 0.65, a: 1}
+  _clearFlashColor: {r: 1, g: 1, b: 1, a: 1}
+  _clearFlashAmount: 0.6
 --- !u!1 &4273816091179968729
 GameObject:
   m_ObjectHideFlags: 0

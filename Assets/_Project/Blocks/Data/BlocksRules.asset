@@ -12,12 +12,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b264f591836a5b346a282043dae2217f, type: 3}
   m_Name: BlocksRules
   m_EditorClassIdentifier: BlockDiggerz.Blocks::BlockDiggerz.Blocks.BlocksRules
-  <BoardWidth>k__BackingField: 10
-  <VisibleHeight>k__BackingField: 20
+  <BoardWidth>k__BackingField: 15
+  <VisibleHeight>k__BackingField: 15
   <BufferRows>k__BackingField: 2
   <GravityInterval>k__BackingField: 1
+  <PlacedFallSpeedMultiplier>k__BackingField: 2
   <SoftDropInterval>k__BackingField: 0.05
   <LockDelay>k__BackingField: 0.5
+  <LockExtensionBonus>k__BackingField: 0.25
+  <MaxLockExtensions>k__BackingField: 15
+  <MaxSidewaysPush>k__BackingField: 2
+  <MaxUpPush>k__BackingField: 1
   <AutoShiftDelay>k__BackingField: 0.167
   <AutoRepeatInterval>k__BackingField: 0.033
+  <ColorCount>k__BackingField: 4
+  <MinColorMatch>k__BackingField: 3
+  <ClearStepDuration>k__BackingField: 0.25
+  <ColorBlockScore>k__BackingField: 10
   <RandomSeed>k__BackingField: 0

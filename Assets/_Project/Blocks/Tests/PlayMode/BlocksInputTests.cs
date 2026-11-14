@@ -19,6 +19,7 @@ namespace BlockDiggerz.Blocks.Tests
         private const float SceneLoadTimeout = 15f;
         private const string Section = BlocksDebugControls.SectionTitle;
         private const int MaxDropsBeforeTopOut = 40;
+        private const float MaxSettleSeconds = 60f;
 
         private BlocksGame _game;
 
@@ -138,22 +139,25 @@ namespace BlockDiggerz.Blocks.Tests
         }
 
         [UnityTest]
-        public IEnumerator FullRow_IsCleared_AndHudCountsIt()
+        public IEnumerator FullRow_StaysOnBoard_OnlyColorMatchesClear()
         {
             DebugMenuDriver.Press(Section, BlocksDebugControls.FillBottomRowLabel);
             Spawn("I");
 
             yield return Tap(Keyboard.wKey);
+            yield return WaitWhileSettling();
             yield return null;
 
-            Assert.AreEqual(1, _game.TotalLinesCleared);
+            int blocks = 0;
             for (int x = 0; x < _game.Board.Width; x++)
             {
-                Assert.IsNull(_game.Board.Get(x, 0), $"bottom row cell {x} should be cleared");
+                blocks += _game.Board.IsOccupied(x, 0) ? 1 : 0;
             }
 
-            Label lines = HudRoot().Q<Label>(BlocksHud.LinesValueName);
-            Assert.AreEqual("1", lines.text);
+            Assert.AreEqual(_game.Board.Width - _game.ColorBlocksCleared, blocks,
+                "the full row is not cleared; only blocks in a color match (if the I's colors made one) are gone");
+            Label score = HudRoot().Q<Label>(BlocksHud.ScoreValueName);
+            Assert.AreEqual(_game.Score.ToString(), score.text);
         }
 
         [UnityTest]
@@ -175,6 +179,7 @@ namespace BlockDiggerz.Blocks.Tests
             for (int i = 0; i < MaxDropsBeforeTopOut && _game.State == BlocksGameState.Playing; i++)
             {
                 yield return Tap(Keyboard.wKey);
+                yield return WaitWhileSettling();
             }
 
             Assert.AreEqual(BlocksGameState.GameOver, _game.State, "stacking in the middle must top out");
@@ -186,7 +191,6 @@ namespace BlockDiggerz.Blocks.Tests
             yield return Frames(2);
 
             Assert.AreEqual(BlocksGameState.Playing, _game.State);
-            Assert.AreEqual(0, _game.TotalLinesCleared);
             Assert.AreEqual(0, _game.PiecesLocked);
             Assert.IsNotNull(_game.ActivePiece);
             Assert.IsFalse(hud.IsGameOverShown, "game over panel hidden after restart");
@@ -195,6 +199,15 @@ namespace BlockDiggerz.Blocks.Tests
         private static void Spawn(string pieceId)
         {
             DebugMenuDriver.Press(Section, BlocksDebugControls.SpawnLabelPrefix + pieceId);
+        }
+
+        private IEnumerator WaitWhileSettling()
+        {
+            int limit = FramesFor(MaxSettleSeconds);
+            for (int i = 0; i < limit && _game.IsSettling; i++)
+            {
+                yield return null;
+            }
         }
 
         private static int FramesFor(float gameSeconds)

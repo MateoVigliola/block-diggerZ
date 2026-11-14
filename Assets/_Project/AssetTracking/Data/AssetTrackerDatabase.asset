@@ -90,7 +90,7 @@ MonoBehaviour:
     _description: Plays when one or more full rows are cleared.
     _requirements: Satisfying burst, 0.5 to 1 s. Ideally variants or rising pitch for 1, 2, 3 and 4 rows.
     _status: 0
-    _notes: 
+    _notes: 'Obsolete since 2026-11-14: full rows no longer clear, only color matches (see Color Match).'
     _assetGuid: 
     _assetPath: 
     _assetType: 
@@ -132,7 +132,7 @@ MonoBehaviour:
     _description: Backing panel behind the LINES label and count, right of the board. Currently plain text with no panel.
     _requirements: 9-slice sprite, about 240 x 160 px at 1920 x 1080.
     _status: 0
-    _notes: 
+    _notes: 'Obsolete since 2026-11-14: the LINES counter was removed; see Score Panel.'
     _assetGuid: 
     _assetPath: 
     _assetType: 
@@ -223,4 +223,606 @@ MonoBehaviour:
     _unityUpdated: 
     _syncedOnce: 1
     _dirtyFields: 0
+  - _id: beb36a6b21ab455996705921d570cb09
+    _category: 0
+    _area: Blocks
+    _name: Block Red
+    _description: Board, ghost and preview block for the Red color (BlockColor asset Data/Colors/Red). Currently the white BlockCell sprite tinted red.
+    _requirements: 32 x 32 px block sprite, reads clearly as red next to the other colors. Should also work tinted at about 60 percent opacity for the ghost.
+    _status: 0
+    _notes: 
+    _assetGuid: 
+    _assetPath: 
+    _assetType: 
+    _unityUpdated: 
+    _syncedOnce: 1
+    _dirtyFields: 0
+  - _id: a1074cafabf84fc1b6c9b9cb750ecd6f
+    _category: 0
+    _area: Blocks
+    _name: Block Blue
+    _description: Board, ghost and preview block for the Blue color (Data/Colors/Blue). Currently BlockCell tinted blue.
+    _requirements: 32 x 32 px, same style as the other block colors, clearly blue.
+    _status: 0
+    _notes: 
+    _assetGuid: 
+    _assetPath: 
+    _assetType: 
+    _unityUpdated: 
+    _syncedOnce: 1
+    _dirtyFields: 0
+  - _id: dc47f8cb0b834c7595f73887b3bf6a0c
+    _category: 0
+    _area: Blocks
+    _name: Block Green
+    _description: Board, ghost and preview block for the Green color (Data/Colors/Green). Currently BlockCell tinted green.
+    _requirements: 32 x 32 px, same style as the other block colors, clearly green.
+    _status: 0
+    _notes: 
+    _assetGuid: 
+    _assetPath: 
+    _assetType: 
+    _unityUpdated: 
+    _syncedOnce: 1
+    _dirtyFields: 0
+  - _id: 90ba885abe214d2ba4fc3f95625a3fb3
+    _category: 0
+    _area: Blocks
+    _name: Block Yellow
+    _description: Board, ghost and preview block for the Yellow color (Data/Colors/Yellow). Currently BlockCell tinted yellow.
+    _requirements: 32 x 32 px, same style as the other block colors, clearly yellow.
+    _status: 0
+    _notes: 
+    _assetGuid: 
+    _assetPath: 
+    _assetType: 
+    _unityUpdated: 
+    _syncedOnce: 1
+    _dirtyFields: 0
+  - _id: 92fa1fa5a7ca44b6a28df09645d3ab79
+    _category: 0
+    _area: Blocks
+    _name: Block Purple
+    _description: Block for the Purple color (Data/Colors/Purple). Not in play at the default 4 colors; used by harder modes.
+    _requirements: 32 x 32 px, same style as the other block colors, clearly purple. Must stay distinct from Blue and Red.
+    _status: 0
+    _notes: 
+    _assetGuid: 
+    _assetPath: 
+    _assetType: 
+    _unityUpdated: 
+    _syncedOnce: 1
+    _dirtyFields: 0
+  - _id: 7eb141db5c134afca2c4cebf642b07fc
+    _category: 0
+    _area: Blocks
+    _name: Block Orange
+    _description: Block for the Orange color (Data/Colors/Orange). Not in play at the default 4 colors; used by harder modes.
+    _requirements: 32 x 32 px, same style as the other block colors, clearly orange. Must stay distinct from Red and Yellow.
+    _status: 0
+    _notes: 
+    _assetGuid: 
+    _assetPath: 
+    _assetType: 
+    _unityUpdated: 
+    _syncedOnce: 1
+    _dirtyFields: 0
+  - _id: a75890736860477aadca581fe3ad1d6d
+    _category: 0
+    _area: Blocks
+    _name: Color Match Flash
+    _description: Effect on blocks in a color match while they flash before being deleted (0.25 s per clear step). Currently the block tint blends toward white.
+    _requirements: Overlay sprite or short flipbook for a 32 x 32 cell, or a VFX Graph burst. Must read on every block color.
+    _status: 0
+    _notes: 
+    _assetGuid: 
+    _assetPath: 
+    _assetType: 
+    _unityUpdated: 
+    _syncedOnce: 1
+    _dirtyFields: 0
+  - _id: d0c6f95bfc4c475cb3ff09277952e722
+    _category: 0
+    _area: Blocks
+    _name: Score Panel
+    _description: Backing panel behind the SCORE label and value, right of the board (replaces the old LINES counter). Currently plain text.
+    _requirements: 9-slice sprite, about 240 x 160 px at 1920 x 1080.
+    _status: 0
+    _notes: 
+    _assetGuid: 
+    _assetPath: 
+    _assetType: 
+    _unityUpdated: 
+    _syncedOnce: 1
+    _dirtyFields: 0
+  - _id: afb44dbde3b241648f6768c499da9120
+    _category: 0
+    _area: Blocks
+    _name: Next Piece Box
+    _description: Frame for the NEXT preview, right of the board under the score. Currently a plain dark box.
+    _requirements: 9-slice sprite, about 160 x 160 px at 1920 x 1080 (fits a 4 x 4 cell preview).
+    _status: 0
+    _notes: 
+    _assetGuid: 
+    _assetPath: 
+    _assetType: 
+    _unityUpdated: 
+    _syncedOnce: 1
+    _dirtyFields: 0
+  - _id: 7265f1759cbd42599c280cfc4f6baaf7
+    _category: 0
+    _area: Blocks
+    _name: Store Piece Box
+    _description: Frame for the STORE preview, left of the board. Dimmed while storing is locked. Currently a plain dark box.
+    _requirements: 9-slice sprite matching Next Piece Box. Should still look right at the dimmed opacity, or provide a separate locked variant.
+    _status: 0
+    _notes: 
+    _assetGuid: 
+    _assetPath: 
+    _assetType: 
+    _unityUpdated: 
+    _syncedOnce: 1
+    _dirtyFields: 0
+  - _id: 5def488f4c4d42d6a0aeba411bba80bf
+    _category: 0
+    _area: Blocks
+    _name: Store Key Prompt
+    _description: Key icon under the STORE box showing the store key (Space by default, follows rebinding). Currently plain text.
+    _requirements: Keycap icon set for at least Space and letter keys, about 64 px tall. Gamepad icons later.
+    _status: 0
+    _notes: 
+    _assetGuid: 
+    _assetPath: 
+    _assetType: 
+    _unityUpdated: 
+    _syncedOnce: 1
+    _dirtyFields: 0
+  - _id: b82c4bbaefc54080992cd54e2f49ed8f
+    _category: 1
+    _area: Blocks
+    _name: Color Match
+    _description: Plays when a color match flashes (3 or more same-colored blocks in a straight row or column).
+    _requirements: Satisfying pop or chime, 0.3 to 0.6 s. Ideally rising pitch for longer lines and crosses.
+    _status: 0
+    _notes: 
+    _assetGuid: 
+    _assetPath: 
+    _assetType: 
+    _unityUpdated: 
+    _syncedOnce: 1
+    _dirtyFields: 0
+  - _id: c543adc134f94847b9fe15b14f597a8b
+    _category: 1
+    _area: Blocks
+    _name: Chain Step
+    _description: Plays on each further clear step of a chain (a match made by blocks falling after an earlier match).
+    _requirements: Variant of Color Match that rises in pitch or intensity per chain step, at least 4 steps.
+    _status: 0
+    _notes: 
+    _assetGuid: 
+    _assetPath: 
+    _assetType: 
+    _unityUpdated: 
+    _syncedOnce: 1
+    _dirtyFields: 0
+  - _id: 2d2db962fe4e4e32a465fbdc20092a11
+    _category: 1
+    _area: Blocks
+    _name: Blocks Falling
+    _description: Plays while placed blocks fall after losing support (one row per 0.5 s).
+    _requirements: Soft, short tick or slide, under 0.1 s, mono. Can repeat many times per settle, so keep it quiet.
+    _status: 0
+    _notes: 
+    _assetGuid: 
+    _assetPath: 
+    _assetType: 
+    _unityUpdated: 
+    _syncedOnce: 1
+    _dirtyFields: 0
+  - _id: 7ad85f195ebe42669c38cc9df35f9b07
+    _category: 1
+    _area: Blocks
+    _name: Blocks Land
+    _description: Plays when a falling group of placed blocks comes to rest.
+    _requirements: Light thud, under 0.25 s, mono. Softer than Piece Land.
+    _status: 0
+    _notes: 
+    _assetGuid: 
+    _assetPath: 
+    _assetType: 
+    _unityUpdated: 
+    _syncedOnce: 1
+    _dirtyFields: 0
+  - _id: 823c61a554d74a938f653bc917cf4843
+    _category: 1
+    _area: Blocks
+    _name: Piece Store
+    _description: Plays when the falling piece is stored (Space) or swapped with the stored piece.
+    _requirements: Quick whoosh or click, under 0.2 s.
+    _status: 0
+    _notes: 
+    _assetGuid: 
+    _assetPath: 
+    _assetType: 
+    _unityUpdated: 
+    _syncedOnce: 1
+    _dirtyFields: 0
+  - _id: 48ab378e76024545a8b09b95316643aa
+    _category: 1
+    _area: Blocks
+    _name: Store Locked
+    _description: Plays when the store key is pressed but storing is locked until the next piece locks.
+    _requirements: Short muted buzz or tick, under 0.15 s, clearly a refusal.
+    _status: 0
+    _notes: 
+    _assetGuid: 
+    _assetPath: 
+    _assetType: 
+    _unityUpdated: 
+    _syncedOnce: 1
+    _dirtyFields: 0
+  - _id: 325d30c029e643a7bf375abb058af6ac
+    _category: 1
+    _area: Blocks
+    _name: Gameplay Music
+    _description: Background music during a run. Volume follows the Music slider in Settings.
+    _requirements: Loopable track, 2 to 4 minutes, seamless loop point. Not tiring over long runs.
+    _status: 0
+    _notes: 
+    _assetGuid: 
+    _assetPath: 
+    _assetType: 
+    _unityUpdated: 
+    _syncedOnce: 1
+    _dirtyFields: 0
+  - _id: 2fbe9e2e46564b48ba5016142957fa94
+    _category: 0
+    _area: Menus
+    _name: Main Menu Background
+    _description: Full-screen background of the main menu. Currently a flat near-black camera color.
+    _requirements: 1920 x 1080 image or tileable pattern; the centered menu panel sits on top.
+    _status: 0
+    _notes: 
+    _assetGuid: 
+    _assetPath: 
+    _assetType: 
+    _unityUpdated: 
+    _syncedOnce: 1
+    _dirtyFields: 0
+  - _id: 3eb86fa90f28454ba70f418838a6b2a1
+    _category: 0
+    _area: Menus
+    _name: Game Logo
+    _description: BLOCKDIGGERZ title on the main menu. Currently plain text.
+    _requirements: Wordmark image about 1000 x 240 px, transparent background.
+    _status: 0
+    _notes: 
+    _assetGuid: 
+    _assetPath: 
+    _assetType: 
+    _unityUpdated: 
+    _syncedOnce: 1
+    _dirtyFields: 0
+  - _id: f873fd13cec0486da050f57b4293d8f1
+    _category: 0
+    _area: Menus
+    _name: Menu Panel
+    _description: Panel behind the main menu, pause menu and settings. Currently a flat dark rectangle with a thin border.
+    _requirements: 9-slice sprite; used from about 420 x 400 px (menus) to 900 x 820 px (settings) at 1920 x 1080.
+    _status: 0
+    _notes: 
+    _assetGuid: 
+    _assetPath: 
+    _assetType: 
+    _unityUpdated: 
+    _syncedOnce: 1
+    _dirtyFields: 0
+  - _id: aa7255438ae94a5183fad30a2b08655f
+    _category: 0
+    _area: Menus
+    _name: Pause Overlay
+    _description: Dim layer over the game while paused. Currently a flat semi-transparent black.
+    _requirements: Full-screen dim texture or vignette, or confirm the flat dim is fine.
+    _status: 0
+    _notes: 
+    _assetGuid: 
+    _assetPath: 
+    _assetType: 
+    _unityUpdated: 
+    _syncedOnce: 1
+    _dirtyFields: 0
+  - _id: dd2d172bb38e49438a8645ccc3eb3325
+    _category: 0
+    _area: Menus
+    _name: Menu Button
+    _description: 'Buttons on the menus: Play, Settings, Quit, Continue, Main menu, Back. Currently flat colored rectangles.'
+    _requirements: 9-slice sprites for normal, hover, pressed and keyboard focused states, about 360 x 64 px at 1920 x 1080.
+    _status: 0
+    _notes: 
+    _assetGuid: 
+    _assetPath: 
+    _assetType: 
+    _unityUpdated: 
+    _syncedOnce: 1
+    _dirtyFields: 0
+  - _id: 6d835d1ccb4947b69920487a1e199cf4
+    _category: 0
+    _area: Menus
+    _name: Small Button
+    _description: Smaller buttons such as Reset to defaults in Settings.
+    _requirements: 9-slice sprites for normal, hover, pressed and focused, about 240 x 44 px. Same style as Menu Button.
+    _status: 0
+    _notes: 
+    _assetGuid: 
+    _assetPath: 
+    _assetType: 
+    _unityUpdated: 
+    _syncedOnce: 1
+    _dirtyFields: 0
+  - _id: ade789740c094c91877778876b626f65
+    _category: 0
+    _area: Menus
+    _name: Settings Tab
+    _description: Controls and Sound tabs at the top of Settings. Currently flat buttons with a highlighted selected tab.
+    _requirements: 9-slice sprites for unselected, hover and selected, about 200 x 52 px.
+    _status: 0
+    _notes: 
+    _assetGuid: 
+    _assetPath: 
+    _assetType: 
+    _unityUpdated: 
+    _syncedOnce: 1
+    _dirtyFields: 0
+  - _id: 5b7b72f3e89a4c3c9e5968736d5ed368
+    _category: 0
+    _area: Menus
+    _name: Key Binding Button
+    _description: 'Primary and Alternate key buttons on the Controls tab. States: normal, hover or focus, listening (Press a key), and empty (dash).'
+    _requirements: 9-slice sprites, about 200 x 44 px, one per state. Listening must stand out clearly.
+    _status: 0
+    _notes: 
+    _assetGuid: 
+    _assetPath: 
+    _assetType: 
+    _unityUpdated: 
+    _syncedOnce: 1
+    _dirtyFields: 0
+  - _id: 205ab13c1ad8466991daa73227965f81
+    _category: 0
+    _area: Menus
+    _name: Volume Slider
+    _description: Music and Sound effects sliders on the Sound tab. Currently Unity's default slider.
+    _requirements: Track, fill and handle sprites; track about 500 x 12 px, handle about 32 x 32 px.
+    _status: 0
+    _notes: 
+    _assetGuid: 
+    _assetPath: 
+    _assetType: 
+    _unityUpdated: 
+    _syncedOnce: 1
+    _dirtyFields: 0
+  - _id: 8578fd932e194e9fa86468272be55d11
+    _category: 0
+    _area: Menus
+    _name: Settings Scrollbar
+    _description: Scrollbar of the Controls list when it doesn't fit. Currently Unity's default scroller.
+    _requirements: Track and thumb sprites, about 12 px wide, matching the menu panel.
+    _status: 0
+    _notes: 
+    _assetGuid: 
+    _assetPath: 
+    _assetType: 
+    _unityUpdated: 
+    _syncedOnce: 1
+    _dirtyFields: 0
+  - _id: 7e21220aa3c543e1bdedf30f791c0919
+    _category: 1
+    _area: Menus
+    _name: UI Focus Move
+    _description: Plays when keyboard or gamepad focus moves to another button, tab or slider.
+    _requirements: Very short soft tick, under 0.08 s.
+    _status: 0
+    _notes: 
+    _assetGuid: 
+    _assetPath: 
+    _assetType: 
+    _unityUpdated: 
+    _syncedOnce: 1
+    _dirtyFields: 0
+  - _id: 11ca1123df2644e4a42a156653cc0c76
+    _category: 1
+    _area: Menus
+    _name: UI Confirm
+    _description: Plays when a button is clicked or activated (Play, Continue, Settings, tabs, key buttons).
+    _requirements: Short positive click, under 0.2 s.
+    _status: 0
+    _notes: 
+    _assetGuid: 
+    _assetPath: 
+    _assetType: 
+    _unityUpdated: 
+    _syncedOnce: 1
+    _dirtyFields: 0
+  - _id: 66a3072a100d4470873c56d210668087
+    _category: 1
+    _area: Menus
+    _name: UI Back
+    _description: Plays on Back or Esc going back a page in the menus.
+    _requirements: Short, lower than UI Confirm, under 0.2 s.
+    _status: 0
+    _notes: 
+    _assetGuid: 
+    _assetPath: 
+    _assetType: 
+    _unityUpdated: 
+    _syncedOnce: 1
+    _dirtyFields: 0
+  - _id: c3401c212440406d8e9bdb6d39241aa7
+    _category: 1
+    _area: Menus
+    _name: Pause Open
+    _description: Plays when Esc pauses the game.
+    _requirements: Short sting or muffle-in, under 0.4 s.
+    _status: 0
+    _notes: 
+    _assetGuid: 
+    _assetPath: 
+    _assetType: 
+    _unityUpdated: 
+    _syncedOnce: 1
+    _dirtyFields: 0
+  - _id: 7f37f699928946fe87aed6221473a572
+    _category: 1
+    _area: Menus
+    _name: Pause Close
+    _description: Plays when the game resumes (Continue or Esc).
+    _requirements: Short, the reverse of Pause Open, under 0.4 s.
+    _status: 0
+    _notes: 
+    _assetGuid: 
+    _assetPath: 
+    _assetType: 
+    _unityUpdated: 
+    _syncedOnce: 1
+    _dirtyFields: 0
+  - _id: 608d7930f64146f6b380b34656280304
+    _category: 1
+    _area: Menus
+    _name: Rebind Listening
+    _description: Plays when a key button starts listening for a new key.
+    _requirements: Short rising blip, under 0.2 s.
+    _status: 0
+    _notes: 
+    _assetGuid: 
+    _assetPath: 
+    _assetType: 
+    _unityUpdated: 
+    _syncedOnce: 1
+    _dirtyFields: 0
+  - _id: 7b3637bb1354440f990630b29842f424
+    _category: 1
+    _area: Menus
+    _name: Rebind Applied
+    _description: Plays when a new key is assigned, swapped or cleared on the Controls tab.
+    _requirements: Short confirm blip, under 0.2 s. Optional softer variant for Esc cancel.
+    _status: 0
+    _notes: 
+    _assetGuid: 
+    _assetPath: 
+    _assetType: 
+    _unityUpdated: 
+    _syncedOnce: 1
+    _dirtyFields: 0
+  - _id: 2cd16a0b4aa34121bb5fd2889fb704bf
+    _category: 1
+    _area: Menus
+    _name: Slider Tick
+    _description: Plays while the Sound effects slider moves, so the player hears the new volume.
+    _requirements: Very short tick, under 0.08 s, played at the slider's volume.
+    _status: 0
+    _notes: 
+    _assetGuid: 
+    _assetPath: 
+    _assetType: 
+    _unityUpdated: 
+    _syncedOnce: 1
+    _dirtyFields: 0
+  - _id: 69aff5b4f5df4d619cb52f16212b02be
+    _category: 1
+    _area: Menus
+    _name: Main Menu Music
+    _description: Music on the main menu. Volume follows the Music slider.
+    _requirements: Loopable track, 1 to 3 minutes, seamless loop.
+    _status: 0
+    _notes: 
+    _assetGuid: 
+    _assetPath: 
+    _assetType: 
+    _unityUpdated: 
+    _syncedOnce: 1
+    _dirtyFields: 0
+  - _id: 8d77ed1007f14f2ca6b4e8082af51c3b
+    _category: 0
+    _area: Blocks
+    _name: Piece2
+    _description: 
+    _requirements: 
+    _status: 1
+    _notes: 
+    _assetGuid: db0d55c61bd69cd4b914c689a72814a2
+    _assetPath: Assets/_Project/Blocks/Art/Piece2.png
+    _assetType: Texture2D
+    _unityUpdated: 2026-11-14 22:03 UTC
+    _syncedOnce: 0
+    _dirtyFields: 31
+  - _id: fb7eb21f24e64363b1f6f8b6e974fcf2
+    _category: 0
+    _area: Blocks
+    _name: Piece6
+    _description: 
+    _requirements: 
+    _status: 1
+    _notes: 
+    _assetGuid: 0a1666c4de6401c4ea641b7c7bdcd0ad
+    _assetPath: Assets/_Project/Blocks/Art/Piece6.png
+    _assetType: Texture2D
+    _unityUpdated: 2026-11-14 22:03 UTC
+    _syncedOnce: 0
+    _dirtyFields: 31
+  - _id: e83a46d841d64129a3bb6abac757683b
+    _category: 0
+    _area: Blocks
+    _name: Piece3
+    _description: 
+    _requirements: 
+    _status: 1
+    _notes: 
+    _assetGuid: 1a45748ed9d185440a9e647320cdd3de
+    _assetPath: Assets/_Project/Blocks/Art/Piece3.png
+    _assetType: Texture2D
+    _unityUpdated: 2026-11-14 22:03 UTC
+    _syncedOnce: 0
+    _dirtyFields: 31
+  - _id: aae49a661abb45ec97d36333b2ca6948
+    _category: 0
+    _area: Blocks
+    _name: Piece5
+    _description: 
+    _requirements: 
+    _status: 1
+    _notes: 
+    _assetGuid: 180f0f97306683b489a375484ce9dc71
+    _assetPath: Assets/_Project/Blocks/Art/Piece5.png
+    _assetType: Texture2D
+    _unityUpdated: 2026-11-14 22:03 UTC
+    _syncedOnce: 0
+    _dirtyFields: 31
+  - _id: 6ee1c7ad0d9c4d76873f6dff99afe519
+    _category: 0
+    _area: Blocks
+    _name: Piece1
+    _description: 
+    _requirements: 
+    _status: 1
+    _notes: 
+    _assetGuid: 0d5a6dc89d5fdaf41914fcc0014404cd
+    _assetPath: Assets/_Project/Blocks/Art/Piece1.png
+    _assetType: Texture2D
+    _unityUpdated: 2026-11-14 22:03 UTC
+    _syncedOnce: 0
+    _dirtyFields: 31
+  - _id: aadb4ed15e4745a0b011e25f23139f7a
+    _category: 0
+    _area: Blocks
+    _name: Piece4
+    _description: 
+    _requirements: 
+    _status: 1
+    _notes: 
+    _assetGuid: 51936722d3401d14292cad0c1c2199e0
+    _assetPath: Assets/_Project/Blocks/Art/Piece4.png
+    _assetType: Texture2D
+    _unityUpdated: 2026-11-14 22:03 UTC
+    _syncedOnce: 0
+    _dirtyFields: 31
   _removedIds: []

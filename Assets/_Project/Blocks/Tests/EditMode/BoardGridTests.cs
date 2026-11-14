@@ -35,53 +35,6 @@ namespace BlockDiggerz.Blocks.Tests
         }
 
         [Test]
-        public void ClearFullRows_RemovesFullRowAndShiftsRowsAboveDown()
-        {
-            FillRow(0, _filler);
-            _board.Set(3, 1, _other);
-
-            int cleared = _board.ClearFullRows();
-
-            Assert.AreEqual(1, cleared);
-            Assert.AreEqual(_other, _board.Get(3, 0), "row above moved down");
-            Assert.IsNull(_board.Get(3, 1));
-            Assert.IsFalse(_board.IsRowFull(0));
-        }
-
-        [Test]
-        public void ClearFullRows_ClearsSeveralNonAdjacentRows()
-        {
-            FillRow(0, _filler);
-            _board.Set(5, 1, _other);
-            FillRow(2, _filler);
-            FillRow(3, _filler);
-            _board.Set(7, 4, _other);
-
-            int cleared = _board.ClearFullRows();
-
-            Assert.AreEqual(3, cleared);
-            Assert.AreEqual(_other, _board.Get(5, 0));
-            Assert.AreEqual(_other, _board.Get(7, 1));
-            for (int y = 2; y < Height; y++)
-            {
-                for (int x = 0; x < Width; x++)
-                {
-                    Assert.IsNull(_board.Get(x, y), $"cell {x},{y} should be empty");
-                }
-            }
-        }
-
-        [Test]
-        public void ClearFullRows_IgnoresRowWithOneGap()
-        {
-            FillRow(0, _filler);
-            _board.Set(4, 0, null);
-
-            Assert.AreEqual(0, _board.ClearFullRows());
-            Assert.AreEqual(_filler, _board.Get(0, 0));
-        }
-
-        [Test]
         public void LandingOffset_RestsOnFloorOrStack_InSameColumn()
         {
             var o = _filler.GetCells(0);
@@ -101,14 +54,6 @@ namespace BlockDiggerz.Blocks.Tests
             PieceDefinition cell = _board.Get(4, 1);
             Assert.AreEqual(_other, cell);
             Assert.IsTrue(cell.HasTag(BlocksTestAssets.BasicTag));
-        }
-
-        private void FillRow(int y, PieceDefinition piece)
-        {
-            for (int x = 0; x < Width; x++)
-            {
-                _board.Set(x, y, piece);
-            }
         }
     }
 }

@@ -36,11 +36,11 @@ namespace BlockDiggerz.Blocks.Tests
         }
 
         [Test]
-        public void Rules_MatchClassicBoardSize()
+        public void Rules_DefaultBoardSize_IsInsideTheLimits()
         {
             BlocksRules rules = BlocksTestAssets.Rules;
-            Assert.AreEqual(10, rules.BoardWidth);
-            Assert.AreEqual(20, rules.VisibleHeight);
+            Vector2Int size = new Vector2Int(rules.BoardWidth, rules.VisibleHeight);
+            Assert.AreEqual(size, BoardLayout.ClampSize(size.x, size.y));
         }
 
         [Test]

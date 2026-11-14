@@ -178,3 +178,85 @@ Open `Assets/Scenes/MainMenu.unity` and press Play (the Game scene can still be 
   - Notes:
 - [ ] **Look and size:** are the panels, buttons, tabs and rows comfortable to read at your screen size? Tune Menus.uss.
   - Notes:
+
+## Colored blocks, color matches and score, 2026-11-14
+
+Tunables in `Assets/_Project/Blocks/Data/BlocksRules.asset` (Colors: Color Count, Min Color Match, Clear Step Duration; Scoring: Color Block Score). Colors are assets in `Assets/_Project/Blocks/Data/Colors/`, ordered in `Data/BlockPalette.asset` (the first Color Count are used). Flash look on the BlocksGame prefab's BoardView (Clear Flash Color, Clear Flash Amount, Unpainted Color). The debug menu Blocks section shows Block colors, Next and Stored colors, Score, Settling, and has Color match (3) and Color chain (2 steps) buttons.
+
+- [ ] **Painted pieces:** play a few pieces. Expect each piece to have 2 or 3 colors, any repeated color on 2 touching blocks, never 3 of one color. T pieces always have 3 colors.
+  - Notes:
+- [ ] **Colors stick to blocks:** rotate a piece with E and Q, store it with Space and bring it back. Expect every block to keep its color. The ghost, NEXT and STORE show the same colors.
+  - Notes:
+- [ ] **Color match:** line up 3 same-colored blocks in a row or column. Expect them to flash, then disappear, blocks above them to fall, and SCORE to go up 30 (10 per block). No new piece falls until it's done.
+  - Notes:
+- [ ] **No bends:** make an L of 3 same-colored blocks. Expect nothing to happen.
+  - Notes:
+- [ ] **Long line and cross:** a line of 4 gives 40. A plus shape (3 across and 3 down sharing the middle) deletes 5 blocks and gives 60.
+  - Notes:
+- [ ] **Chains:** press Color chain (2 steps) in the debug menu. Expect a red line to flash and go, the blue blocks to fall and match, then 60 total. Each step flashes for Clear Step Duration.
+  - Notes:
+- [ ] **Score display:** SCORE above NEXT (no LINES any more), and on the game over panel. R restarts at 0.
+  - Notes:
+- [ ] **Pause while clearing:** press Esc during a flash. Expect everything to freeze, and Continue to finish the clear.
+  - Notes:
+- [ ] **Color count feel:** with 4 colors, do matches happen too often or too rarely? Try Color Count 5 or 6 (at least 3 is needed).
+  - Notes:
+- [ ] **Color readability:** can you tell the 4 colors apart quickly, and is the flash clear? Tune the color assets' Tint and the flash fields.
+  - Notes:
+
+## Block gravity (full rows no longer clear), 2026-11-14
+
+Placed blocks fall in same-colored groups at twice the piece fall speed (`Assets/_Project/Blocks/Data/BlocksRules.asset`, Falling: Placed Fall Speed Multiplier, applied to Gravity Interval). The next piece waits until the board has settled. The debug menu Blocks section shows Settling (blocks falling, clearing, or a dash).
+
+- [ ] **Pieces split on landing:** drop a piece so part of it hangs over a gap (for example a flat I on a single block). Expect each color group with nothing under it to keep falling on its own, and touching blocks of the same color to stay together.
+  - Notes:
+- [ ] **Groups across pieces:** land a block next to a same-colored block of another piece, then remove what holds one of them up. Expect them to fall together.
+  - Notes:
+- [ ] **Holes fill:** clear a color line above a hole. Expect everything above to fall all the way into the hole.
+  - Notes:
+- [ ] **No player piece while settling:** after a lock, expect no new piece (and store and moves to do nothing) until all blocks have stopped and every match has cleared. Then the next piece spawns.
+  - Notes:
+- [ ] **Full rows stay:** fill a whole row (Fill bottom row (I gap), then drop an I flat). Expect the row to stay; only color matches in it clear.
+  - Notes:
+- [ ] **Chains with gravity:** press Color chain (2 steps). Expect the red line to clear, the blue pair to fall one row, then the three blues to clear: 60 in total.
+  - Notes:
+- [ ] **Fall speed feel:** placed blocks fall at 2x the piece speed (0.5 s per row). Does waiting for long falls feel right? Tune Placed Fall Speed Multiplier.
+  - Notes:
+- [ ] **Pause while settling:** press Esc while blocks fall. Expect them to freeze, and Continue to carry on.
+  - Notes:
+- [ ] **Deleting before falling (added 2026-11-14):** make a match land while other blocks are still falling elsewhere. Expect the match to flash and clear right away, with the other blocks frozen in the air until it is gone, then falling resumes.
+  - Notes:
+- [ ] **Falling blocks don't stick (added 2026-11-14):** let a falling block slide past a resting block of its color. Expect it to keep falling, not to stop beside it.
+  - Notes:
+- [ ] **Falling blocks don't match (added 2026-11-14):** let a falling block pass right next to two same-colored resting blocks in a row. Expect no delete while it passes; it can only match where it lands.
+  - Notes:
+
+## Block color sprites, 2026-11-14
+
+Each color asset in `Assets/_Project/Blocks/Data/Colors/` has a Sprite slot. Put the art in `Assets/_Project/Blocks/Art/` (tracked), import as Sprite (2D and UI) at 32 pixels per unit, and drag it into the color's Sprite field.
+
+- [ ] **Board and falling piece:** with sprites set, expect each block drawn with its color's art, untinted. Colors without a sprite keep the tinted white block.
+  - Notes:
+- [ ] **NEXT and STORE:** expect the previews to show the same sprites, and the STORE box to dim them while locked.
+  - Notes:
+- [ ] **Ghost:** the landing ghost still uses the fade sprite tinted with the color's Tint. Does it still match your art? Adjust each color's Tint, or ask for the ghost to use the color sprites.
+  - Notes:
+- [ ] **Match flash:** matched blocks blend toward the flash color on top of your art. Check it reads well (BoardView: Clear Flash Color, Clear Flash Amount on the BlocksGame prefab).
+  - Notes:
+
+## Live board size and side UI, 2026-11-14
+
+Debug menu (backquote), Blocks section: Board size readout and Board width -1 / +1, Board height -1 / +1, Board size reset buttons. Each change restarts the run. Limits 4-30 wide, 8-40 tall. Default size: `Assets/_Project/Blocks/Data/BlocksRules.asset` (Board Width, Visible Height). Gap between board and side UI: BlocksHud prefab, Side Gap. The camera doesn't move or zoom (camera features come later).
+
+- [ ] **Centered:** make the board wider, narrower, taller and shorter. Expect it to stay centered on screen every time.
+  - Notes:
+- [ ] **Side UI follows:** expect STORE to stay just left of the board and SCORE / NEXT just right of it, both lined up with the board's top row, at every size.
+  - Notes:
+- [ ] **Window resize:** resize the Game view (or change its aspect) while playing. Expect the side UI to stay beside the board.
+  - Notes:
+- [ ] **Pieces at small sizes:** at 4 wide, expect every piece to spawn centered and rotate (with pushes) without getting stuck.
+  - Notes:
+- [ ] **Big boards:** at 30 x 40, the board runs off screen with this camera. Confirm that's fine until camera features exist.
+  - Notes:
+- [ ] **Side gap feel:** is the gap between board and side UI right? Tune Side Gap.
+  - Notes:

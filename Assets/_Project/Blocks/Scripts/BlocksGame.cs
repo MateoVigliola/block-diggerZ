@@ -9,8 +9,14 @@ namespace BlockDiggerz.Blocks
     /// Runs the block dropper: spawns pieces from the bag, applies gravity, soft drop, hard drop, sideways moves with
     /// auto repeat and clockwise or counter-clockwise rotation (a blocked rotation is pushed clear by
     /// <see cref="RotationPush"/>), locks pieces after a lock delay that moves and rotations can extend
-    /// (<see cref="LockDelayTimer"/>), clears full rows and ends the run when a new piece can't spawn.
-    /// Reads input only through <see cref="GameInput"/>.
+    /// (<see cref="LockDelayTimer"/>) and ends the run when a new piece can't spawn. Every piece's blocks are
+    /// painted with <see cref="PiecePainter"/>. After a piece locks the board settles before the next piece spawns:
+    /// same-colored groups with space below fall one row per <see cref="BlocksRules.PlacedFallInterval"/>
+    /// (<see cref="BlockGravity"/>; a falling group never sticks to resting blocks of its color). After every change,
+    /// color matches among resting blocks (<see cref="ClearResolver"/>) flash for
+    /// <see cref="BlocksRules.ClearStepDuration"/> and are removed before anything falls further; falling blocks
+    /// never match. Full rows
+    /// don't clear. Reads input only through <see cref="GameInput"/>.
     /// </summary>
     public sealed class BlocksGame : MonoBehaviour
     {
@@ -20,9 +26,26 @@ namespace BlockDiggerz.Blocks
         [SerializeField, Tooltip("Pieces the bag deals.")]
         private PieceSet _pieceSet;
 
+        [SerializeField, Tooltip("Block colors; a run uses the first Color Count of them (Blocks Rules).")]
+        private BlockPalette _palette;
+
         [SerializeField, Tooltip("Input wrapper the game reads.")]
         private GameInput _input;
 
+        private readonly List<BlockColor> _activeColors = new();
+        private readonly List<BlockColor> _paintBuffer = new();
+        private readonly ClearStep _clearStep = new();
+        private ClearResolver _resolver;
+        private System.Random _paintRandom;
+        private PaintedPiece _active;
+        private PaintedPiece _next;
+        private PaintedPiece _resumePiece;
+        private bool _settling;
+        private bool _flashing;
+        private bool _fallingChecked;
+        private bool _hasFalling;
+        private bool[] _fallState;
+        private float _settleTimer;
         private PieceBag _bag;
         private int _heldDirection;
         private float _shiftTimer;
@@ -31,14 +54,23 @@ namespace BlockDiggerz.Blocks
         private readonly LockDelayTimer _lock = new();
         private readonly PieceStore _store = new();
 
-        /// <summary>Raised after rows are cleared, with how many.</summary>
-        public event Action<int> LinesCleared;
+        /// <summary>Raised after a color match is deleted, with the scored block count.</summary>
+        public event Action<int> ColorsCleared;
 
         /// <summary>Raised when the run ends.</summary>
         public event Action GameOver;
 
         /// <summary>Raised when a new run starts.</summary>
         public event Action RunStarted;
+
+        /// <summary>Raised after <see cref="SetBoardSize"/> changes the board size, before the new run starts.</summary>
+        public event Action BoardResized;
+
+        /// <summary>Columns of the current board (from <see cref="BlocksRules.BoardWidth"/> until changed).</summary>
+        public int BoardWidth { get; private set; }
+
+        /// <summary>Visible rows of the current board (from <see cref="BlocksRules.VisibleHeight"/> until changed).</summary>
+        public int VisibleHeight { get; private set; }
 
         /// <summary>Board size and timing in use.</summary>
         public BlocksRules Rules => _rules;
@@ -52,17 +84,44 @@ namespace BlockDiggerz.Blocks
         /// <summary>Whether the run is in progress or over.</summary>
         public BlocksGameState State { get; private set; } = BlocksGameState.Playing;
 
-        /// <summary>The falling piece, or null between runs.</summary>
-        public PieceDefinition ActivePiece { get; private set; }
+        /// <summary>Block colors in play this run (the first <see cref="BlocksRules.ColorCount"/> of the palette).</summary>
+        public IReadOnlyList<BlockColor> ActiveColors => _activeColors;
+
+        /// <summary>Shape of the falling piece, or null while clearing or between runs.</summary>
+        public PieceDefinition ActivePiece => _active?.Definition;
+
+        /// <summary>The falling piece with its block colors, or null.</summary>
+        public PaintedPiece ActivePainted => _active;
+
+        /// <summary>Colors of the falling piece's blocks, in the order of <see cref="ActiveCells"/>.</summary>
+        public IReadOnlyList<BlockColor> ActiveBlockColors => _active != null ? _active.Colors : Array.Empty<BlockColor>();
+
+        /// <summary>Points this run.</summary>
+        public int Score { get; private set; }
+
+        /// <summary>Blocks deleted by color matches this run.</summary>
+        public int ColorBlocksCleared { get; private set; }
+
+        /// <summary>
+        /// True from a lock until the board has settled: placed blocks are falling or matches are flashing, and the
+        /// player has no piece.
+        /// </summary>
+        public bool IsSettling => _settling;
+
+        /// <summary>True while placed blocks with space below are falling.</summary>
+        public bool IsBlocksFalling => _settling && !_flashing && _fallingChecked && _hasFalling;
+
+        /// <summary>True while matched blocks flash before they are removed.</summary>
+        public bool IsClearing => _settling && _flashing;
+
+        /// <summary>Cells about to be removed by the current clear step (empty when not clearing).</summary>
+        public IReadOnlyList<Vector2Int> ClearingCells => IsClearing ? _clearStep.Cells : Array.Empty<Vector2Int>();
 
         /// <summary>Rotation state of the falling piece (0 = spawn, 1 = one clockwise turn, and so on).</summary>
         public int ActiveRotation { get; private set; }
 
         /// <summary>Board position of the falling piece's box (its bottom-left corner).</summary>
         public Vector2Int ActivePosition { get; private set; }
-
-        /// <summary>Rows cleared this run.</summary>
-        public int TotalLinesCleared { get; private set; }
 
         /// <summary>Pieces locked this run.</summary>
         public int PiecesLocked { get; private set; }
@@ -85,11 +144,11 @@ namespace BlockDiggerz.Blocks
         /// <summary>Box position where the falling piece would land if hard dropped now.</summary>
         public Vector2Int LandingPosition => ActivePiece != null ? Board.LandingOffset(ActiveCells, ActivePosition) : ActivePosition;
 
-        /// <summary>The piece the bag deals next.</summary>
-        public PieceDefinition NextPiece => _bag?.Peek();
+        /// <summary>The piece that spawns next, already painted.</summary>
+        public PaintedPiece NextPiece => _next;
 
         /// <summary>The stored piece, or null if nothing is stored.</summary>
-        public PieceDefinition StoredPiece => _store.Stored;
+        public PaintedPiece StoredPiece => _store.Stored;
 
         /// <summary>False from a store until the next piece locks.</summary>
         public bool CanStore => _store.CanStore;
@@ -102,8 +161,41 @@ namespace BlockDiggerz.Blocks
 
         private void Awake()
         {
-            Board = new BoardGrid(_rules.BoardWidth, _rules.TotalHeight);
+            Vector2Int size = BoardLayout.ClampSize(_rules.BoardWidth, _rules.VisibleHeight);
+            CreateBoard(size.x, size.y);
             _bag = new PieceBag(_pieceSet.Pieces, PickSeed());
+            _resolver = new ClearResolver(_rules.ColorBlockScore, _rules.MinColorMatch);
+        }
+
+        /// <summary>
+        /// Changes the board to <paramref name="width"/> columns and <paramref name="visibleHeight"/> visible rows
+        /// (clamped to <see cref="BoardLayout"/> limits, plus the rules' buffer rows) and starts a new run. Levels
+        /// call this at level start; the debug menu calls it to tune sizes.
+        /// </summary>
+        public void SetBoardSize(int width, int visibleHeight)
+        {
+            Vector2Int size = BoardLayout.ClampSize(width, visibleHeight);
+            if (Board != null && size.x == BoardWidth && size.y == VisibleHeight)
+            {
+                return;
+            }
+
+            CreateBoard(size.x, size.y);
+            BoardResized?.Invoke();
+            StartRun();
+        }
+
+        private void CreateBoard(int width, int visibleHeight)
+        {
+            BoardWidth = width;
+            VisibleHeight = visibleHeight;
+            Board = new BoardGrid(width, visibleHeight + _rules.BufferRows);
+            _fallState = new bool[Board.Width * Board.Height];
+            _active = null;
+            _settling = false;
+            _flashing = false;
+            _fallingChecked = false;
+            Version++;
         }
 
         private void Start()
@@ -120,6 +212,12 @@ namespace BlockDiggerz.Blocks
                     StartRun();
                 }
 
+                return;
+            }
+
+            if (_settling)
+            {
+                UpdateSettling(Time.deltaTime);
                 return;
             }
 
@@ -159,30 +257,63 @@ namespace BlockDiggerz.Blocks
         public void StartRun()
         {
             Board.Clear();
-            _bag.Reset(PickSeed());
-            TotalLinesCleared = 0;
+            Array.Clear(_fallState, 0, _fallState.Length);
+            int seed = PickSeed();
+            _bag.Reset(seed);
+            _paintRandom = new System.Random(seed);
+            _palette?.GetActive(_rules.ColorCount, _activeColors);
             PiecesLocked = 0;
+            Score = 0;
+            ColorBlocksCleared = 0;
+            _settling = false;
+            _flashing = false;
+            _fallingChecked = false;
+            _resumePiece = null;
+            _clearStep.Reset();
             _store.Reset();
             State = BlocksGameState.Playing;
             ResetTimers();
             RunStarted?.Invoke();
-            SpawnPiece(_bag.Next());
+            _next = Paint(_bag.Next());
+            SpawnPiece(TakeNext());
+        }
+
+        /// <summary>Paints <paramref name="piece"/> with this run's colors.</summary>
+        public PaintedPiece Paint(PieceDefinition piece)
+        {
+            if (piece == null)
+            {
+                return null;
+            }
+
+            _paintRandom ??= new System.Random(PickSeed());
+            PiecePainter.Paint(piece.GetCells(0), _activeColors, _paintRandom, _paintBuffer);
+            return new PaintedPiece(piece, _paintBuffer);
+        }
+
+        /// <summary>
+        /// Paints <paramref name="piece"/> and makes it the falling piece at the spawn position. Debug and tests.
+        /// </summary>
+        public void SpawnPiece(PieceDefinition piece)
+        {
+            SpawnPiece(Paint(piece));
         }
 
         /// <summary>
         /// Replaces the falling piece with <paramref name="piece"/> at the spawn position. Ends the run if it
-        /// doesn't fit.
+        /// doesn't fit. Ignored while clearing.
         /// </summary>
-        public void SpawnPiece(PieceDefinition piece)
+        public void SpawnPiece(PaintedPiece piece)
         {
-            if (piece == null || State == BlocksGameState.GameOver)
+            if (piece == null || State == BlocksGameState.GameOver || _settling)
             {
                 return;
             }
 
-            ActivePiece = piece;
+            PieceDefinition definition = piece.Definition;
+            _active = piece;
             ActiveRotation = 0;
-            ActivePosition = SpawnPosition(piece);
+            ActivePosition = SpawnPosition(definition);
             ResetTimers();
             Version++;
 
@@ -282,12 +413,12 @@ namespace BlockDiggerz.Blocks
                 return false;
             }
 
-            if (!_store.TryStore(ActivePiece, out PieceDefinition released))
+            if (!_store.TryStore(_active, out PaintedPiece released))
             {
                 return false;
             }
 
-            SpawnPiece(released != null ? released : _bag.Next());
+            SpawnPiece(released ?? TakeNext());
             return true;
         }
 
@@ -308,19 +439,47 @@ namespace BlockDiggerz.Blocks
         public void ClearBoard()
         {
             Board.Clear();
-            Version++;
+            Array.Clear(_fallState, 0, _fallState.Length);
+            BoardChanged();
         }
 
-        /// <summary>Fills one row except the given columns. Debug and tests.</summary>
+        /// <summary>
+        /// Fills one row except the given columns. Colors step through the active colors, shifted by the row, so
+        /// filled rows never form a color match by themselves. Debug and tests.
+        /// </summary>
         public void FillRow(int row, int gapStart, int gapLength, PieceDefinition filler)
         {
             for (int x = 0; x < Board.Width; x++)
             {
                 bool inGap = x >= gapStart && x < gapStart + gapLength;
-                Board.Set(x, row, inGap ? null : filler);
+                BlockColor color = _activeColors.Count > 0 ? _activeColors[(x + row) % _activeColors.Count] : null;
+                Board.Set(x, row, inGap ? null : filler, color);
             }
 
-            Version++;
+            BoardChanged();
+        }
+
+        /// <summary>Puts one block on the board. Debug and tests; call <see cref="ClearBoardNow"/> to resolve.</summary>
+        public void PlaceBlock(int x, int y, PieceDefinition piece, BlockColor color)
+        {
+            Board.Set(x, y, piece, color);
+            BoardChanged();
+        }
+
+        /// <summary>
+        /// Settles the board as if a piece had just landed (blocks fall, matches flash and clear, chains). The
+        /// falling piece is set aside and comes back afterwards. Debug and tests.
+        /// </summary>
+        public void ClearBoardNow()
+        {
+            if (State != BlocksGameState.Playing || _settling)
+            {
+                return;
+            }
+
+            PaintedPiece resume = _active;
+            _active = null;
+            BeginSettling(resume);
         }
 
         /// <summary>Ends the run as if the stack had reached the top. Debug and tests.</summary>
@@ -335,8 +494,8 @@ namespace BlockDiggerz.Blocks
         /// <summary>Box position where <paramref name="piece"/> spawns: centered, its top row on the top visible row.</summary>
         public Vector2Int SpawnPosition(PieceDefinition piece)
         {
-            int x = (_rules.BoardWidth - piece.BoxSize) / 2;
-            int y = _rules.VisibleHeight - 1 - piece.GetTopRow(0);
+            int x = (BoardWidth - piece.BoxSize) / 2;
+            int y = VisibleHeight - 1 - piece.GetTopRow(0);
             return new Vector2Int(x, y);
         }
 
@@ -409,20 +568,107 @@ namespace BlockDiggerz.Blocks
 
         private void LockPiece()
         {
-            Board.Place(ActiveCells, ActivePosition, ActivePiece);
+            Board.Place(ActiveCells, ActivePosition, ActivePiece, ActiveBlockColors);
             PiecesLocked++;
             _store.OnPieceLocked();
-            ActivePiece = null;
+            _active = null;
             Version++;
+            BeginSettling(null);
+        }
 
-            int cleared = Board.ClearFullRows();
-            if (cleared > 0)
+        private void BeginSettling(PaintedPiece resume)
+        {
+            _resumePiece = resume;
+            _settling = true;
+            _flashing = false;
+            _settleTimer = 0f;
+            _fallingChecked = false;
+            _clearStep.Reset();
+            Version++;
+            UpdateSettling(0f);
+        }
+
+        private void UpdateSettling(float deltaTime)
+        {
+            _settleTimer += deltaTime;
+            while (_settling)
             {
-                TotalLinesCleared += cleared;
-                LinesCleared?.Invoke(cleared);
-            }
+                if (_flashing)
+                {
+                    if (_settleTimer < _rules.ClearStepDuration)
+                    {
+                        return;
+                    }
 
-            SpawnPiece(_bag.Next());
+                    _settleTimer -= _rules.ClearStepDuration;
+                    ApplyClearStep();
+                    continue;
+                }
+
+                if (!_fallingChecked)
+                {
+                    _hasFalling = BlockGravity.UpdateFalling(Board, _fallState);
+                    _fallingChecked = true;
+                    if (_resolver.TryFindStep(Board, _clearStep, _fallState))
+                    {
+                        _flashing = true;
+                        _settleTimer = 0f;
+                        Version++;
+                        continue;
+                    }
+                }
+
+                if (!_hasFalling)
+                {
+                    FinishSettling();
+                    return;
+                }
+
+                if (_settleTimer < _rules.PlacedFallInterval)
+                {
+                    return;
+                }
+
+                _settleTimer -= _rules.PlacedFallInterval;
+                BlockGravity.Step(Board, _fallState);
+                BoardChanged();
+            }
+        }
+
+        private void ApplyClearStep()
+        {
+            _resolver.Apply(Board, _clearStep);
+            Score += _clearStep.Score;
+            ColorBlocksCleared += _clearStep.Cells.Count;
+            int scored = _clearStep.ScoredBlocks;
+            _clearStep.Reset();
+            _flashing = false;
+            _settleTimer = 0f;
+            BoardChanged();
+            ColorsCleared?.Invoke(scored);
+        }
+
+        private void FinishSettling()
+        {
+            _settling = false;
+            _flashing = false;
+            _clearStep.Reset();
+            PaintedPiece piece = _resumePiece ?? TakeNext();
+            _resumePiece = null;
+            SpawnPiece(piece);
+        }
+
+        private void BoardChanged()
+        {
+            _fallingChecked = false;
+            Version++;
+        }
+
+        private PaintedPiece TakeNext()
+        {
+            PaintedPiece piece = _next;
+            _next = Paint(_bag.Next());
+            return piece;
         }
 
         private void EndRun()
