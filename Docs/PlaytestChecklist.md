@@ -260,3 +260,22 @@ Debug menu (backquote), Blocks section: Board size readout and Board width -1 / 
   - Notes:
 - [ ] **Side gap feel:** is the gap between board and side UI right? Tune Side Gap.
   - Notes:
+
+## Level start columns, 2026-11-14
+
+Tunables in `Assets/_Project/Blocks/Data/BlocksRules.asset`, Level start: Start Column Min Height, Start Column Max Height, Start Fill Duration, Start Fill Fall Interval. Color Count is now 6. Starting blocks count as the BlocksGame prefab's Start Block Piece (empty: first piece of the set).
+
+- [ ] **Drop in:** start a run. Expect columns to drop in one at a time from left to right, each falling fast from the top, taking about 3 seconds in all. No piece appears until they all rest.
+  - Notes:
+- [ ] **Heights:** expect every column to hold 1 to 4 blocks, different each run.
+  - Notes:
+- [ ] **No deletes at start:** expect no straight line of 3 same-colored blocks in the starting rubble, so nothing flashes or clears and the score stays 0.
+  - Notes:
+- [ ] **Every start:** press R after a game over, and resize the board from the debug menu. Expect fresh rubble each time.
+  - Notes:
+- [ ] **Six colors:** expect pieces and rubble to use all six colors. Are matches still frequent enough to play? Tune Color Count.
+  - Notes:
+- [ ] **Pace:** is 3 seconds of drop-in too long or too short, and does the fast fall read well? Tune Start Fill Duration and Start Fill Fall Interval.
+  - Notes:
+- [ ] **Pause during drop-in:** press Esc while columns drop. Expect them to freeze, and Continue to carry on.
+  - Notes:

@@ -62,6 +62,19 @@ namespace BlockDiggerz.Blocks
         [field: SerializeField, Min(0f), Tooltip("Seconds matched blocks flash before they are removed, per clear step (each chain step flashes again). 0 clears instantly.")]
         public float ClearStepDuration { get; private set; } = 0.25f;
 
+        [field: Header("Level start")]
+        [field: SerializeField, Min(0), Tooltip("Fewest single blocks a column starts with. 0 allows empty columns.")]
+        public int StartColumnMinHeight { get; private set; } = 1;
+
+        [field: SerializeField, Min(0), Tooltip("Most single blocks a column starts with (capped at the board height).")]
+        public int StartColumnMaxHeight { get; private set; } = 4;
+
+        [field: SerializeField, Min(0f), Tooltip("Seconds over which the starting columns drop in, one column at a time from left to right.")]
+        public float StartFillDuration { get; private set; } = 3f;
+
+        [field: SerializeField, Min(0.005f), Tooltip("Seconds per row the starting blocks fall while dropping in.")]
+        public float StartFillFallInterval { get; private set; } = 0.02f;
+
         [field: Header("Scoring")]
         [field: SerializeField, Min(0), Tooltip("Points per block deleted by a color match. A block in a cross counts for both lines.")]
         public int ColorBlockScore { get; private set; } = 10;

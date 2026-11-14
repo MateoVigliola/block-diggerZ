@@ -29,6 +29,14 @@ namespace BlockDiggerz.Blocks
         [SerializeField, Tooltip("Block colors; a run uses the first Color Count of them (Blocks Rules).")]
         private BlockPalette _palette;
 
+        [SerializeField, Tooltip("Piece the starting rubble blocks count as (for tags). Empty uses the first piece of the piece set.")]
+        private PieceDefinition _startBlockPiece;
+
+        private readonly List<List<BlockColor>> _startColumns = new();
+        private int _startColumnsPlaced;
+        private float _startFillTimer;
+        private bool _startingFill;
+
         [SerializeField, Tooltip("Input wrapper the game reads.")]
         private GameInput _input;
 
@@ -107,6 +115,14 @@ namespace BlockDiggerz.Blocks
         /// player has no piece.
         /// </summary>
         public bool IsSettling => _settling;
+
+        /// <summary>True while the starting columns drop in at the start of a run (no player piece yet).</summary>
+        public bool IsStartingFill => _settling && _startingFill;
+
+        /// <summary>Starting blocks this run that had no color safe from making a line (placed anyway).</summary>
+        public int StartBlocksWithoutSafeColor { get; private set; }
+
+        private bool IsStartColumnsPending => _startingFill && _startColumnsPlaced < _startColumns.Count;
 
         /// <summary>True while placed blocks with space below are falling.</summary>
         public bool IsBlocksFalling => _settling && !_flashing && _fallingChecked && _hasFalling;
@@ -274,8 +290,61 @@ namespace BlockDiggerz.Blocks
             State = BlocksGameState.Playing;
             ResetTimers();
             RunStarted?.Invoke();
+            BeginStartFill();
             _next = Paint(_bag.Next());
-            SpawnPiece(TakeNext());
+            if (_startingFill)
+            {
+                BeginSettling(null);
+            }
+            else
+            {
+                SpawnPiece(TakeNext());
+            }
+        }
+
+        private void BeginStartFill()
+        {
+            _startColumnsPlaced = 0;
+            _startFillTimer = 0f;
+            int forced = StartColumnsGenerator.Generate(BoardWidth, _rules.StartColumnMinHeight,
+                _rules.StartColumnMaxHeight, VisibleHeight, _rules.MinColorMatch, _activeColors, _paintRandom,
+                _startColumns);
+            StartBlocksWithoutSafeColor = forced;
+            _startingFill = false;
+            foreach (List<BlockColor> column in _startColumns)
+            {
+                _startingFill |= column.Count > 0;
+            }
+        }
+
+        private void UpdateStartFill(float deltaTime)
+        {
+            if (!_startingFill || _startColumnsPlaced >= _startColumns.Count)
+            {
+                return;
+            }
+
+            _startFillTimer += deltaTime;
+            float interval = _startColumns.Count > 0 ? _rules.StartFillDuration / _startColumns.Count : 0f;
+            while (_startColumnsPlaced < _startColumns.Count && _startFillTimer >= _startColumnsPlaced * interval)
+            {
+                DropStartColumn(_startColumnsPlaced);
+                _startColumnsPlaced++;
+            }
+        }
+
+        private void DropStartColumn(int x)
+        {
+            List<BlockColor> column = _startColumns[x];
+            PieceDefinition piece = _startBlockPiece != null ? _startBlockPiece : _pieceSet.Pieces[0];
+            int bottom = VisibleHeight - column.Count;
+            for (int i = 0; i < column.Count; i++)
+            {
+                Board.Set(x, bottom + i, piece, column[i]);
+                _fallState[(bottom + i) * Board.Width + x] = true;
+            }
+
+            BoardChanged();
         }
 
         /// <summary>Paints <paramref name="piece"/> with this run's colors.</summary>
@@ -591,6 +660,8 @@ namespace BlockDiggerz.Blocks
         private void UpdateSettling(float deltaTime)
         {
             _settleTimer += deltaTime;
+            UpdateStartFill(deltaTime);
+            float fallInterval = _startingFill ? _rules.StartFillFallInterval : _rules.PlacedFallInterval;
             while (_settling)
             {
                 if (_flashing)
@@ -620,16 +691,20 @@ namespace BlockDiggerz.Blocks
 
                 if (!_hasFalling)
                 {
-                    FinishSettling();
+                    if (!IsStartColumnsPending)
+                    {
+                        FinishSettling();
+                    }
+
                     return;
                 }
 
-                if (_settleTimer < _rules.PlacedFallInterval)
+                if (_settleTimer < fallInterval)
                 {
                     return;
                 }
 
-                _settleTimer -= _rules.PlacedFallInterval;
+                _settleTimer -= fallInterval;
                 BlockGravity.Step(Board, _fallState);
                 BoardChanged();
             }
@@ -651,6 +726,7 @@ namespace BlockDiggerz.Blocks
         private void FinishSettling()
         {
             _settling = false;
+            _startingFill = false;
             _flashing = false;
             _clearStep.Reset();
             PaintedPiece piece = _resumePiece ?? TakeNext();

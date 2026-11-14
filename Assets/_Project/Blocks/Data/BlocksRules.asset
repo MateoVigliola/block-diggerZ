@@ -25,8 +25,12 @@ MonoBehaviour:
   <MaxUpPush>k__BackingField: 1
   <AutoShiftDelay>k__BackingField: 0.167
   <AutoRepeatInterval>k__BackingField: 0.033
-  <ColorCount>k__BackingField: 4
+  <ColorCount>k__BackingField: 6
   <MinColorMatch>k__BackingField: 3
   <ClearStepDuration>k__BackingField: 0.25
+  <StartColumnMinHeight>k__BackingField: 1
+  <StartColumnMaxHeight>k__BackingField: 4
+  <StartFillDuration>k__BackingField: 3
+  <StartFillFallInterval>k__BackingField: 0.02
   <ColorBlockScore>k__BackingField: 10
   <RandomSeed>k__BackingField: 0
