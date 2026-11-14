@@ -23,6 +23,9 @@ namespace BlockDiggerz.Blocks
         [field: SerializeField, Min(0.01f), Tooltip("Seconds per row the piece falls on its own.")]
         public float GravityInterval { get; private set; } = 1f;
 
+        [field: SerializeField, Min(0.01f), Tooltip("How many times faster than the piece placed blocks with space below fall. 2 means twice as fast.")]
+        public float PlacedFallSpeedMultiplier { get; private set; } = 2f;
+
         [field: SerializeField, Min(0.005f), Tooltip("Seconds per row while soft drop is held.")]
         public float SoftDropInterval { get; private set; } = 0.05f;
 
@@ -49,9 +52,26 @@ namespace BlockDiggerz.Blocks
         [field: SerializeField, Min(0.005f), Tooltip("Seconds between moves while sliding.")]
         public float AutoRepeatInterval { get; private set; } = 0.033f;
 
+        [field: Header("Colors")]
+        [field: SerializeField, Min(PiecePainter.MaxColorsPerPiece), Tooltip("How many palette colors a run uses (the first N of the Block Palette). Fewer colors make matches more frequent. A difficulty mode will set this later.")]
+        public int ColorCount { get; private set; } = 4;
+
+        [field: SerializeField, Min(2), Tooltip("Shortest straight row or column of same-colored blocks that gets deleted.")]
+        public int MinColorMatch { get; private set; } = 3;
+
+        [field: SerializeField, Min(0f), Tooltip("Seconds matched blocks flash before they are removed, per clear step (each chain step flashes again). 0 clears instantly.")]
+        public float ClearStepDuration { get; private set; } = 0.25f;
+
+        [field: Header("Scoring")]
+        [field: SerializeField, Min(0), Tooltip("Points per block deleted by a color match. A block in a cross counts for both lines.")]
+        public int ColorBlockScore { get; private set; } = 10;
+
         [field: Header("Randomizer")]
-        [field: SerializeField, Tooltip("Seed for the piece bag. 0 picks a new seed each run.")]
+        [field: SerializeField, Tooltip("Seed for the piece bag and block painting. 0 picks a new seed each run.")]
         public int RandomSeed { get; private set; }
+
+        /// <summary>Seconds per row placed blocks fall: <see cref="GravityInterval"/> divided by <see cref="PlacedFallSpeedMultiplier"/>.</summary>
+        public float PlacedFallInterval => GravityInterval / PlacedFallSpeedMultiplier;
 
         /// <summary>Visible rows plus buffer rows.</summary>
         public int TotalHeight => VisibleHeight + BufferRows;

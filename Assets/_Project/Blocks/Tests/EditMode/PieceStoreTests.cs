@@ -5,21 +5,21 @@ namespace BlockDiggerz.Blocks.Tests
     public class PieceStoreTests
     {
         private PieceStore _store;
-        private PieceDefinition _t;
-        private PieceDefinition _i;
+        private PaintedPiece _t;
+        private PaintedPiece _i;
 
         [SetUp]
         public void SetUp()
         {
             _store = new PieceStore();
-            _t = BlocksTestAssets.Piece("T");
-            _i = BlocksTestAssets.Piece("I");
+            _t = new PaintedPiece(BlocksTestAssets.Piece("T"), System.Array.Empty<BlockColor>());
+            _i = new PaintedPiece(BlocksTestAssets.Piece("I"), System.Array.Empty<BlockColor>());
         }
 
         [Test]
         public void FirstStore_KeepsPiece_AndReleasesNothing()
         {
-            Assert.IsTrue(_store.TryStore(_t, out PieceDefinition released));
+            Assert.IsTrue(_store.TryStore(_t, out PaintedPiece released));
             Assert.IsNull(released, "nothing stored yet, so the next piece comes from the bag");
             Assert.AreEqual(_t, _store.Stored);
         }
@@ -30,7 +30,7 @@ namespace BlockDiggerz.Blocks.Tests
             _store.TryStore(_t, out _);
 
             Assert.IsFalse(_store.CanStore);
-            Assert.IsFalse(_store.TryStore(_i, out PieceDefinition released));
+            Assert.IsFalse(_store.TryStore(_i, out PaintedPiece released));
             Assert.IsNull(released);
             Assert.AreEqual(_t, _store.Stored, "refused store leaves the slot alone");
         }
@@ -41,7 +41,7 @@ namespace BlockDiggerz.Blocks.Tests
             _store.TryStore(_t, out _);
             _store.OnPieceLocked();
 
-            Assert.IsTrue(_store.TryStore(_i, out PieceDefinition released));
+            Assert.IsTrue(_store.TryStore(_i, out PaintedPiece released));
             Assert.AreEqual(_t, released);
             Assert.AreEqual(_i, _store.Stored);
             Assert.IsFalse(_store.CanStore);

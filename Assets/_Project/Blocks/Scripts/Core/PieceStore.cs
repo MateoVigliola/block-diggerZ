@@ -1,14 +1,14 @@
 namespace BlockDiggerz.Blocks
 {
     /// <summary>
-    /// The store (hold) slot. Storing puts the falling piece in the slot and hands back what was there (null the
-    /// first time, meaning "take the next piece from the bag"). After a store, storing stays locked until a piece
-    /// locks into the board, so the player can't swap back and forth.
+    /// The store (hold) slot. Storing puts the falling piece (with its block colors) in the slot and hands back what
+    /// was there (null the first time, meaning "take the next piece"). After a store, storing stays locked until a
+    /// piece locks into the board, so the player can't swap back and forth.
     /// </summary>
     public sealed class PieceStore
     {
         /// <summary>The stored piece, or null if the slot is empty.</summary>
-        public PieceDefinition Stored { get; private set; }
+        public PaintedPiece Stored { get; private set; }
 
         /// <summary>False from a store until the next piece locks.</summary>
         public bool CanStore { get; private set; } = true;
@@ -17,7 +17,7 @@ namespace BlockDiggerz.Blocks
         /// Stores <paramref name="current"/> and returns the piece that comes out (null if the slot was empty).
         /// Returns false and changes nothing while storing is locked.
         /// </summary>
-        public bool TryStore(PieceDefinition current, out PieceDefinition released)
+        public bool TryStore(PaintedPiece current, out PaintedPiece released)
         {
             released = null;
             if (!CanStore || current == null)

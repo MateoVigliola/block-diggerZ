@@ -7,16 +7,16 @@
             <ui:Label text="Space" name="store-key" class="hud-key-hint" />
         </ui:VisualElement>
         <ui:VisualElement name="stats" picking-mode="Ignore" class="hud-stats">
-            <ui:Label text="LINES" class="hud-caption" />
-            <ui:Label text="0" name="lines-value" class="hud-value" />
+            <ui:Label text="SCORE" class="hud-caption" />
+            <ui:Label text="0" name="score-value" class="hud-value" />
             <ui:Label text="NEXT" class="hud-caption hud-next-caption" />
             <ui:VisualElement name="next-preview" picking-mode="Ignore" class="hud-piece-box" />
         </ui:VisualElement>
         <ui:VisualElement name="game-over" picking-mode="Ignore" class="hud-game-over">
             <ui:Label text="GAME OVER" class="hud-game-over-title" />
             <ui:VisualElement picking-mode="Ignore" class="hud-game-over-row">
-                <ui:Label text="Lines" class="hud-caption" />
-                <ui:Label text="0" name="final-lines" class="hud-value" />
+                <ui:Label text="Score" class="hud-caption" />
+                <ui:Label text="0" name="final-score" class="hud-value" />
             </ui:VisualElement>
             <ui:Label text="Press R to restart" class="hud-hint" />
         </ui:VisualElement>

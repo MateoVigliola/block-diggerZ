@@ -6,7 +6,7 @@ namespace BlockDiggerz.Blocks
 {
     /// <summary>
     /// Draws one piece inside a HUD preview box (a square VisualElement). Creates its cell elements once and only
-    /// moves and tints them when the shown piece changes. Cell look comes from the "hud-piece-cell" USS class.
+    /// moves and tints them (one color per block) when the shown piece changes. Cell look comes from the "hud-piece-cell" USS class.
     /// </summary>
     public sealed class PiecePreviewView
     {
@@ -27,10 +27,10 @@ namespace BlockDiggerz.Blocks
         }
 
         /// <summary>The piece currently drawn, or null.</summary>
-        public PieceDefinition Shown { get; private set; }
+        public PaintedPiece Shown { get; private set; }
 
         /// <summary>Draws <paramref name="piece"/> in spawn orientation, or clears the box for null.</summary>
-        public void Show(PieceDefinition piece)
+        public void Show(PaintedPiece piece)
         {
             Shown = piece;
             if (_box == null)
@@ -44,7 +44,7 @@ namespace BlockDiggerz.Blocks
             }
             else
             {
-                PiecePreviewLayout.Layout(piece.GetCells(0), _positions);
+                PiecePreviewLayout.Layout(piece.Definition.GetCells(0), _positions);
             }
 
             EnsureCells(_positions.Count);
@@ -63,7 +63,11 @@ namespace BlockDiggerz.Blocks
                 cell.style.top = Length.Percent(_positions[i].y * cellPercent);
                 cell.style.width = Length.Percent(cellPercent);
                 cell.style.height = Length.Percent(cellPercent);
-                cell.style.unityBackgroundImageTintColor = piece.Color;
+                BlockColor color = i < piece.Colors.Count ? piece.Colors[i] : null;
+                cell.style.unityBackgroundImageTintColor = color != null ? color.DrawTint : Color.white;
+                cell.style.backgroundImage = color != null && color.Sprite != null
+                    ? new StyleBackground(color.Sprite)
+                    : new StyleBackground(StyleKeyword.Null);
             }
         }
 

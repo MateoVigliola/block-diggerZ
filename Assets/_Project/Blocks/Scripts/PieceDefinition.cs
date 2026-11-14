@@ -6,7 +6,9 @@ namespace BlockDiggerz.Blocks
     /// <summary>
     /// One piece shape. Cells are given in its spawn orientation inside a square box of <see cref="BoxSize"/> cells
     /// (x to the right, y up, origin bottom-left). Rotating clockwise turns the whole box a quarter turn, so the
-    /// standard pieces use a 3x3 box, the I piece a 4x4 box and the O piece a 2x2 box.
+    /// standard pieces use a 3x3 box, the I piece a 4x4 box and the O piece a 2x2 box. Every rotation keeps the same
+    /// cell order, so per-block colors (<see cref="PaintedPiece"/>) follow their cells. Block colors are painted per
+    /// spawned piece, not stored here.
     /// </summary>
     [CreateAssetMenu(menuName = "BlockDiggerz/Blocks/Piece Definition", fileName = "Piece")]
     public sealed class PieceDefinition : ScriptableObject
@@ -16,9 +18,6 @@ namespace BlockDiggerz.Blocks
 
         [field: SerializeField, Tooltip("Short stable id, used by debug controls such as \"Spawn T\".")]
         public string Id { get; private set; } = "T";
-
-        [field: SerializeField, Tooltip("Color of the piece's cells on the board.")]
-        public Color Color { get; private set; } = Color.white;
 
         [field: SerializeField, Min(1), Tooltip("Side of the square box the cells sit in; the piece rotates around the box center.")]
         public int BoxSize { get; private set; } = 3;
