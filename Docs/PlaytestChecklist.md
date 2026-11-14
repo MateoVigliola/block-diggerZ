@@ -118,3 +118,22 @@ Tunables in `Assets/_Project/Blocks/Data/BlocksRules.asset` (Falling and Rotatio
   - Notes:
 - [ ] **Hard drop:** press W. Expect an instant lock, with no extension or delay.
   - Notes:
+
+## Next piece and store piece, 2026-11-14
+
+Layout and look in `Assets/_Project/Blocks/UI/BlocksHud.uss` (`.hud-piece-box` size, `.hud-store` position, `.hud-store--locked` dim opacity). Store key: `Assets/_Project/Input/Data/GameControls.inputactions` (Gameplay > StorePiece). The debug menu Blocks section shows Next, Stored and Can store, and has a Store piece button.
+
+- [ ] **Next preview:** play a few pieces. Expect a NEXT box below the LINES count showing the piece that spawns next, in its color and starting orientation, centered in the box.
+  - Notes:
+- [ ] **First store:** press Space. Expect the falling piece to appear in the STORE box (left of the board) and the next piece to spawn at the top.
+  - Notes:
+- [ ] **Store once per piece:** press Space again right away. Expect nothing to happen and the STORE box to look dimmed.
+  - Notes:
+- [ ] **Unlock after placing:** place the piece. Expect the STORE box to brighten; Space now swaps, with the stored piece entering at the top in its starting rotation.
+  - Notes:
+- [ ] **Key hint:** the STORE box shows the key under it (Space). Rebind StorePiece and restart Play. Expect the hint to follow the new key.
+  - Notes:
+- [ ] **Restart:** store a piece, top out, press R. Expect an empty STORE box and storing unlocked.
+  - Notes:
+- [ ] **Readability:** are the NEXT and STORE boxes easy to read at a glance, and is the dimmed look clear? Tune the box size, colors and dim opacity in BlocksHud.uss.
+  - Notes:

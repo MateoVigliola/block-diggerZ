@@ -2,7 +2,7 @@
 
 ## Game overview
 A 2D falling-block roguelike in the spirit of classic block-stacking puzzlers. The core loop: pieces fall onto a grid, the player moves and rotates them to complete and clear lines, and between rounds the player picks upgrades, special pieces or modifiers that change how a run plays. Runs end on a top-out; meta progression carries between runs. Target platform: Windows PC (to be confirmed). Input: keyboard, with gamepad support planned. Claude: fill in and keep current as the design firms up.
-Built so far: the core block dropper (10 x 20 board, the 7 standard pieces from a 7-bag, A/D and arrows to move, E/Up and Q for simple clockwise and counter-clockwise rotation, S/Down soft drop, W hard drop, line clears, game over with R to restart) and a piece tag system with only a "Basic" tag for now.
+Built so far: the core block dropper (10 x 20 board, the 7 standard pieces from a 7-bag, A/D and arrows to move, E/Up and Q for simple clockwise and counter-clockwise rotation, S/Down soft drop, W hard drop, Space to store a piece once per placed piece, a next piece preview, line clears, game over with R to restart) and a piece tag system with only a "Basic" tag for now.
 
 ## Tech stack
 - Unity 6000.6.9f1, URP 17.6.0 (2D renderer), Input System 1.20.1, 2D Tilemap + Tilemap Extras, 2D Sprite, Shader Graph, UI Toolkit, Unity Test Framework 1.8.0.
@@ -67,6 +67,7 @@ Feature CLAUDE.md files:
 ## Verification (a clean compile is NOT done)
 - Test only what was just added. Put the rules of a new feature in plain code and cover them with EditMode tests, running only the new tests (filter by test class), not whole suites.
 - Don't run PlayMode tests, and don't enter Play mode to check things, unless I ask. They take a long time and take over the Editor while I'm playtesting.
+- Run EditMode tests with `Tools/run-editmode-tests.sh <TestClass> [...]`. It checks Play mode first and never queues behind my playtest. If it reports Play mode (exit 3), or any Editor call hangs, tell me right away with a push notification and a plain line naming the reason, and keep working on things that don't need the Editor.
 - Regression runs (whole suites, PlayMode) only when I report a problem I found. Then also add a test that reproduces it.
 - If an existing test no longer matches a deliberate change, update it so it isn't left knowingly broken, but don't run it.
 - Input tests drive real Input System devices (queued state events), never autopilots or movement overrides.
