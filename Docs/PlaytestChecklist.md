@@ -137,3 +137,44 @@ Layout and look in `Assets/_Project/Blocks/UI/BlocksHud.uss` (`.hud-piece-box` s
   - Notes:
 - [ ] **Readability:** are the NEXT and STORE boxes easy to read at a glance, and is the dimmed look clear? Tune the box size, colors and dim opacity in BlocksHud.uss.
   - Notes:
+
+## Main menu, pause menu and settings, 2026-11-14
+
+Open `Assets/Scenes/MainMenu.unity` and press Play (the Game scene can still be played directly too). Layouts: `Assets/_Project/Menus/UI/` (MainMenu.uxml, PauseMenu.uxml, SettingsPanel.uxml, Menus.uss). Scene names on the MainMenu and PauseMenu prefabs (`Game Scene`, `Main Menu Scene`).
+
+- [ ] **Main menu:** expect BLOCKDIGGERZ with Play, Settings and Quit. Play starts a run. Quit closes a built game (does nothing in the Editor).
+  - Notes:
+- [ ] **Keyboard navigation:** use arrow keys or Tab and Enter on the menus. Expect a visible highlight and buttons that activate.
+  - Notes:
+- [ ] **Pause:** press Esc during a run. Expect PAUSED with Continue, Settings and Main menu, the piece frozen, and game keys (move, rotate, drop, store) doing nothing.
+  - Notes:
+- [ ] **Continue:** press Esc again or click Continue. Expect the run to carry on exactly where it was, including the lock timer.
+  - Notes:
+- [ ] **Back with Esc:** open Settings from the pause menu, press Esc. Expect the pause menu; Esc again continues the game. From the main menu, Esc in Settings returns to the main menu.
+  - Notes:
+- [ ] **Main menu from pause:** click Main menu. Expect the main menu; Play starts a fresh run.
+  - Notes:
+- [ ] **Game over:** top out, press Esc. Expect the pause menu; Continue returns to the game over screen where R restarts.
+  - Notes:
+- [ ] **Tabs:** in Settings, switch between Controls and Sound. Expect only one page visible and the selected tab highlighted.
+  - Notes:
+- [ ] **Rebind:** on Controls, click Rotate Clockwise's key, press F. Expect F to rotate in game. Click a key and press Esc instead. Expect no change.
+  - Notes:
+- [ ] **Swap on conflict:** set Rotate Clockwise to W (hard drop's key). Expect hard drop to take the old rotate key, and both rows to update.
+  - Notes:
+- [ ] **Controls layout:** on Controls, expect a header (Action, Primary, Alternate) and one row per action with its name and two key buttons. Hard Drop, Rotate Counter Clockwise, Store Piece and Restart show a dash under Alternate. Column widths: `.controls-action`, `.controls-column` and `.controls-key` in Menus.uss.
+  - Notes:
+- [ ] **Alternate key:** click Hard Drop's Alternate dash, press F. Expect both W and F to hard drop.
+  - Notes:
+- [ ] **Clear a key:** click a key, press Backspace. Expect a dash. Clearing a Primary while the Alternate has a key moves the Alternate key into Primary. Clearing an action's only key leaves it unbound (Reset to defaults restores it). Backspace itself can't be bound.
+  - Notes:
+- [ ] **Take a key into an empty slot:** set Hard Drop's Alternate to A (Move Left's Primary). Expect Move Left to keep only Left Arrow, now shown as its Primary.
+  - Notes:
+- [ ] **Store hint follows:** rebind Store Piece, then continue. Expect the key under the STORE box to show the new key.
+  - Notes:
+- [ ] **Saved between sessions:** change a key and both sliders, stop Play, start again. Expect the same keys and slider values. Reset to defaults puts each page back.
+  - Notes:
+- [ ] **Sound sliders:** move Music and Sound effects. Expect values 0 to 100 (default 80). No audio changes yet; these are placeholders.
+  - Notes:
+- [ ] **Look and size:** are the panels, buttons, tabs and rows comfortable to read at your screen size? Tune Menus.uss.
+  - Notes:

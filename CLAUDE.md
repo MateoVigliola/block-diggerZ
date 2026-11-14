@@ -2,7 +2,7 @@
 
 ## Game overview
 A 2D falling-block roguelike in the spirit of classic block-stacking puzzlers. The core loop: pieces fall onto a grid, the player moves and rotates them to complete and clear lines, and between rounds the player picks upgrades, special pieces or modifiers that change how a run plays. Runs end on a top-out; meta progression carries between runs. Target platform: Windows PC (to be confirmed). Input: keyboard, with gamepad support planned. Claude: fill in and keep current as the design firms up.
-Built so far: the core block dropper (10 x 20 board, the 7 standard pieces from a 7-bag, A/D and arrows to move, E/Up and Q for simple clockwise and counter-clockwise rotation, S/Down soft drop, W hard drop, Space to store a piece once per placed piece, a next piece preview, line clears, game over with R to restart) and a piece tag system with only a "Basic" tag for now.
+Built so far: the core block dropper (10 x 20 board, the 7 standard pieces from a 7-bag, A/D and arrows to move, E/Up and Q for simple clockwise and counter-clockwise rotation, S/Down soft drop, W hard drop, Space to store a piece once per placed piece, a next piece preview, line clears, game over with R to restart), a piece tag system with only a "Basic" tag for now, a main menu (Play, Settings, Quit), an Esc pause menu (Continue, Settings, Main menu) and a settings panel with keyboard rebinding and placeholder Music and SFX sliders.
 
 ## Tech stack
 - Unity 6000.6.9f1, URP 17.6.0 (2D renderer), Input System 1.20.1, 2D Tilemap + Tilemap Extras, 2D Sprite, Shader Graph, UI Toolkit, Unity Test Framework 1.8.0.
@@ -31,9 +31,10 @@ Built so far: the core block dropper (10 x 20 board, the 7 standard pieces from 
 | `Assets/_Project/Blocks/` | Core block dropper: pieces, tags, board, game loop, HUD |
 | `Assets/_Project/Input/` | `GameInput` wrapper and the `GameControls` actions asset |
 | `Assets/_Project/DebugTools/` | In-game debug menu (backquote) and its `unity command debugmenu list/do` CLI |
+| `Assets/_Project/Menus/` | Main menu, pause menu (Esc) and shared settings panel (rebinding, volume sliders) |
 | `Assets/_Project/Playtest/` | Editor window (Tools > BlockDiggerz > Playtest Checklist) for `Docs/PlaytestChecklist.md` |
 | `Assets/_Project/Shared/Testing/` | Shared test helpers (`InputTestBase`, `DebugMenuDriver`) |
-| `Assets/Scenes/` | `Game` (main scene, build index 0) and template `SampleScene` |
+| `Assets/Scenes/` | `MainMenu` (build index 0), `Game` (build index 1) and template `SampleScene` |
 | `Assets/Settings/` | URP pipeline and 2D renderer assets |
 | `Assets/Editor/` | Template editor scripts |
 | `Assets/Welcome/` | Unity template welcome content; safe to remove later |
@@ -41,6 +42,7 @@ Built so far: the core block dropper (10 x 20 board, the 7 standard pieces from 
 Feature CLAUDE.md files:
 - [Assets/_Project/AssetTracking/CLAUDE.md](Assets/_Project/AssetTracking/CLAUDE.md): asset tracker and Google Sheet sync.
 - [Assets/_Project/Blocks/CLAUDE.md](Assets/_Project/Blocks/CLAUDE.md): core block dropper, pieces and tags.
+- [Assets/_Project/Menus/CLAUDE.md](Assets/_Project/Menus/CLAUDE.md): main menu, pause menu and settings.
 
 ## Unity rules
 - Input only through the Input System (via a single wrapper class), never UnityEngine.Input.

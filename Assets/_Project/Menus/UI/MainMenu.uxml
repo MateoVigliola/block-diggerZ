@@ -1,0 +1,13 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
+    <Style src="Menus.uss" />
+    <ui:Template name="SettingsPanel" src="SettingsPanel.uxml" />
+    <ui:VisualElement name="main-menu" class="menu-screen menu-screen--opaque">
+        <ui:VisualElement name="main-root" class="menu-panel">
+            <ui:Label text="BLOCKDIGGERZ" class="menu-game-title" />
+            <ui:Button text="Play" name="play-button" class="menu-button" />
+            <ui:Button text="Settings" name="settings-button" class="menu-button" />
+            <ui:Button text="Quit" name="quit-button" class="menu-button" />
+        </ui:VisualElement>
+        <ui:Instance template="SettingsPanel" name="settings-page" class="menu-page" />
+    </ui:VisualElement>
+</ui:UXML>

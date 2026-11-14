@@ -1,15 +1,20 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace BlockDiggerz.Input
 {
     /// <summary>
-    /// The single wrapper the game reads input through. Each gameplay action is an
-    /// <see cref="InputActionReference"/> into the GameControls actions asset, so bindings are edited in that asset
-    /// and code only asks questions such as "is move left held" or "was hard drop pressed this frame".
+    /// The single wrapper the game reads input through. Each action is an <see cref="InputActionReference"/> into
+    /// the GameControls actions asset, so default bindings are edited in that asset and code only asks questions
+    /// such as "is move left held" or "was hard drop pressed this frame". Gameplay actions can be switched off
+    /// (for menus) while the pause action stays on.
     /// </summary>
     public sealed class GameInput : MonoBehaviour
     {
+        private const string BindingTextSeparator = " | ";
+
         [SerializeField, Tooltip("Held to move the piece left (auto repeats after a delay).")]
         private InputActionReference _moveLeft;
 
@@ -34,6 +39,15 @@ namespace BlockDiggerz.Input
         [SerializeField, Tooltip("Pressed on the game over screen to start a new run.")]
         private InputActionReference _restart;
 
+        [SerializeField, Tooltip("Pressed to open or close the pause menu, and to go back in menus. Not rebindable.")]
+        private InputActionReference _pause;
+
+        private static int _activeInstances;
+        private readonly List<InputAction> _gameplayActions = new();
+
+        /// <summary>Raised after bindings change (rebinding or reset), so key hints can refresh.</summary>
+        public event Action BindingsChanged;
+
         /// <summary>True while the move left action is held.</summary>
         public bool MoveLeftHeld => IsHeld(_moveLeft);
 
@@ -55,19 +69,43 @@ namespace BlockDiggerz.Input
         /// <summary>True on the frame the store piece action was pressed.</summary>
         public bool StorePiecePressed => WasPressed(_storePiece);
 
-        /// <summary>Display text of the store piece bindings (for example "Space"), for UI hints.</summary>
-        public string StorePieceBindingText =>
-            _storePiece != null && _storePiece.action != null ? _storePiece.action.GetBindingDisplayString() : string.Empty;
+        /// <summary>
+        /// Display text of the store piece bindings (for example "Space | LB"), for UI hints. Unbound key slots are
+        /// left out.
+        /// </summary>
+        public string StorePieceBindingText => BindingText(_storePiece);
 
         /// <summary>True on the frame the restart action was pressed.</summary>
         public bool RestartPressed => WasPressed(_restart);
 
-        private static int _activeInstances;
+        /// <summary>True on the frame the pause action was pressed.</summary>
+        public bool PausePressed => WasPressed(_pause);
+
+        /// <summary>Gameplay actions in display order; the controls page lets players rebind these.</summary>
+        public IReadOnlyList<InputAction> GameplayActions => _gameplayActions;
+
+        /// <summary>The actions asset every action belongs to; binding overrides are saved from and loaded into it.</summary>
+        public InputActionAsset Actions => _pause != null && _pause.action != null ? _pause.action.actionMap.asset : null;
+
+        /// <summary>False while menus have switched gameplay actions off.</summary>
+        public bool GameplayEnabled { get; private set; } = true;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void ResetStatics()
         {
             _activeInstances = 0;
+        }
+
+        private void Awake()
+        {
+            AddGameplay(_moveLeft);
+            AddGameplay(_moveRight);
+            AddGameplay(_softDrop);
+            AddGameplay(_hardDrop);
+            AddGameplay(_rotateClockwise);
+            AddGameplay(_rotateCounterClockwise);
+            AddGameplay(_storePiece);
+            AddGameplay(_restart);
         }
 
         /// <summary>
@@ -77,7 +115,9 @@ namespace BlockDiggerz.Input
         private void OnEnable()
         {
             _activeInstances++;
-            SetEnabled(true);
+            GameplayEnabled = true;
+            SetGameplayActions(true);
+            SetEnabled(_pause, true);
         }
 
         private void OnDisable()
@@ -85,11 +125,33 @@ namespace BlockDiggerz.Input
             _activeInstances = Mathf.Max(0, _activeInstances - 1);
             if (_activeInstances == 0)
             {
-                SetEnabled(false);
+                SetGameplayActions(false);
+                SetEnabled(_pause, false);
             }
         }
 
-        private void SetEnabled(bool enabled)
+        /// <summary>Switches gameplay actions on or off; the pause action is not affected.</summary>
+        public void SetGameplayEnabled(bool enabled)
+        {
+            GameplayEnabled = enabled;
+            SetGameplayActions(enabled);
+        }
+
+        /// <summary>Call after changing binding overrides so listeners refresh their key hints.</summary>
+        public void NotifyBindingsChanged()
+        {
+            BindingsChanged?.Invoke();
+        }
+
+        private void AddGameplay(InputActionReference reference)
+        {
+            if (reference != null && reference.action != null)
+            {
+                _gameplayActions.Add(reference.action);
+            }
+        }
+
+        private void SetGameplayActions(bool enabled)
         {
             SetEnabled(_moveLeft, enabled);
             SetEnabled(_moveRight, enabled);
@@ -126,6 +188,29 @@ namespace BlockDiggerz.Input
         private static bool WasPressed(InputActionReference reference)
         {
             return reference != null && reference.action != null && reference.action.WasPressedThisFrame();
+        }
+
+        private static string BindingText(InputActionReference reference)
+        {
+            if (reference == null || reference.action == null)
+            {
+                return string.Empty;
+            }
+
+            InputAction action = reference.action;
+            var parts = new List<string>();
+            for (int i = 0; i < action.bindings.Count; i++)
+            {
+                InputBinding binding = action.bindings[i];
+                if (binding.isPartOfComposite || string.IsNullOrEmpty(binding.effectivePath))
+                {
+                    continue;
+                }
+
+                parts.Add(action.GetBindingDisplayString(i));
+            }
+
+            return string.Join(BindingTextSeparator, parts);
         }
     }
 }

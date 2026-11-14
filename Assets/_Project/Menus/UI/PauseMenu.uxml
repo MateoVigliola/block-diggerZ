@@ -1,0 +1,14 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
+    <Style src="Menus.uss" />
+    <ui:Template name="SettingsPanel" src="SettingsPanel.uxml" />
+    <ui:VisualElement name="pause-overlay" class="menu-screen menu-screen--dim">
+        <ui:VisualElement name="pause-root" class="menu-panel">
+            <ui:Label text="PAUSED" class="menu-title" />
+            <ui:Button text="Continue" name="continue-button" class="menu-button" />
+            <ui:Button text="Settings" name="settings-button" class="menu-button" />
+            <ui:Button text="Main menu" name="main-menu-button" class="menu-button" />
+            <ui:Label text="Esc to continue" class="settings-hint" />
+        </ui:VisualElement>
+        <ui:Instance template="SettingsPanel" name="settings-page" class="menu-page" />
+    </ui:VisualElement>
+</ui:UXML>

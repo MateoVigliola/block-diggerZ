@@ -200,6 +200,17 @@
                 },
                 {
                     "name": "",
+                    "id": "11111111-0004-4000-8000-000000000003",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "HardDrop",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "11111111-0004-4000-8000-000000000002",
                     "path": "<Gamepad>/dpad/up",
                     "interactions": "",
@@ -255,6 +266,17 @@
                 },
                 {
                     "name": "",
+                    "id": "11111111-0008-4000-8000-000000000003",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "StorePiece",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "11111111-0008-4000-8000-000000000002",
                     "path": "<Gamepad>/leftShoulder",
                     "interactions": "",
@@ -277,8 +299,30 @@
                 },
                 {
                     "name": "",
+                    "id": "11111111-0007-4000-8000-000000000002",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "RotateCounterClockwise",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "11111111-0006-4000-8000-000000000001",
                     "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "Restart",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "11111111-0006-4000-8000-000000000003",
+                    "path": "",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard",
@@ -294,6 +338,46 @@
                     "processors": "",
                     "groups": "Gamepad",
                     "action": "Restart",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "Menu",
+            "id": "9c3f5e4a-6d74-4a0b-ae85-4f3d0b8c2a21",
+            "actions": [
+                {
+                    "name": "Pause",
+                    "type": "Button",
+                    "id": "ad4a6f5b-7e85-4b1c-bf96-5a4e1c9d3b22",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "33333333-0001-4000-8000-000000000001",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "Pause",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "33333333-0001-4000-8000-000000000002",
+                    "path": "<Gamepad>/start",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Pause",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
