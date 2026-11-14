@@ -91,13 +91,13 @@ namespace BlockDiggerz.Blocks.Tests
         }
 
         [UnityTest]
-        public IEnumerator Space_HardDropsAndLocksAtTheBottom()
+        public IEnumerator W_HardDropsAndLocksAtTheBottom()
         {
             Spawn("O");
             int locked = _game.PiecesLocked;
             PieceDefinition o = _game.ActivePiece;
 
-            yield return Tap(Keyboard.spaceKey);
+            yield return Tap(Keyboard.wKey);
 
             Assert.AreEqual(locked + 1, _game.PiecesLocked);
             Assert.AreEqual(o, _game.Board.Get(4, 0));
@@ -119,7 +119,7 @@ namespace BlockDiggerz.Blocks.Tests
         }
 
         [UnityTest]
-        public IEnumerator Rotation_AgainstWall_IsBlocked_WithoutWallKicks()
+        public IEnumerator Rotation_AgainstWall_PushesPieceAwayFromWall()
         {
             Spawn("I");
             yield return Tap(Keyboard.eKey);
@@ -133,8 +133,8 @@ namespace BlockDiggerz.Blocks.Tests
             Vector2Int atWall = _game.ActivePosition;
             yield return Tap(Keyboard.eKey);
 
-            Assert.AreEqual(1, _game.ActiveRotation, "lying flat would poke through the wall");
-            Assert.AreEqual(atWall, _game.ActivePosition, "simple rotation never shifts the piece");
+            Assert.AreEqual(2, _game.ActiveRotation, "lying flat is allowed by pushing");
+            Assert.AreEqual(atWall + new Vector2Int(2, 0), _game.ActivePosition, "pushed 2 cells right, away from the left wall");
         }
 
         [UnityTest]
@@ -143,7 +143,7 @@ namespace BlockDiggerz.Blocks.Tests
             DebugMenuDriver.Press(Section, BlocksDebugControls.FillBottomRowLabel);
             Spawn("I");
 
-            yield return Tap(Keyboard.spaceKey);
+            yield return Tap(Keyboard.wKey);
             yield return null;
 
             Assert.AreEqual(1, _game.TotalLinesCleared);
@@ -174,7 +174,7 @@ namespace BlockDiggerz.Blocks.Tests
         {
             for (int i = 0; i < MaxDropsBeforeTopOut && _game.State == BlocksGameState.Playing; i++)
             {
-                yield return Tap(Keyboard.spaceKey);
+                yield return Tap(Keyboard.wKey);
             }
 
             Assert.AreEqual(BlocksGameState.GameOver, _game.State, "stacking in the middle must top out");

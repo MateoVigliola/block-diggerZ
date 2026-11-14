@@ -50,6 +50,8 @@ namespace BlockDiggerz.Blocks
                     .Readout("Position", () => $"{_game.ActivePosition.x},{_game.ActivePosition.y}")
                     .Readout("Rotation", () => _game.ActiveRotation.ToString())
                     .Readout("Landing", () => $"{_game.LandingPosition.x},{_game.LandingPosition.y}")
+                    .Readout("Lock timer", () => $"{_game.LockElapsed:0.00}/{_game.Rules.LockDelay:0.00}s{(_game.IsResting ? " resting" : string.Empty)}")
+                    .Readout("Extensions used", () => $"{_game.LockExtensionsUsed}/{_game.Rules.MaxLockExtensions}")
                     .Readout("Tags", DescribeTags)
                     .Readout("Next", () => _game.NextPiece != null ? _game.NextPiece.Id : "-")
                     .Readout("Lines", () => _game.TotalLinesCleared.ToString())

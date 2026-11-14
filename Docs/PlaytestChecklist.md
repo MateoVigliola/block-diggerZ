@@ -39,7 +39,7 @@ Open `Assets/Scenes/Game.unity` and press Play. Tunables live in `Assets/_Projec
   - Notes:
 - [x] **Soft drop:** hold S / Down arrow. Expect a much faster fall that stops on release. Tune `Soft Drop Interval`.
   - Notes:
-- [x] **Hard drop:** press Space. Expect the piece to land and lock at once and the next piece to spawn.
+- [x] **Hard drop:** press W. Expect the piece to land and lock at once and the next piece to spawn.
   - Notes:
 - [x] **Lock delay:** let a piece land without hard dropping. Expect a brief moment to slide it sideways before it locks. Tune `Lock Delay`.
   - Notes:
@@ -87,11 +87,34 @@ A see-through copy of the falling piece shows where it will land, in the piece c
 
 - [ ] **Follows the piece:** move and rotate a piece. Expect the ghost to stay directly below it, resting on the floor or the stack, and to match its shape and color.
   - Notes:
-- [ ] **Matches hard drop:** press Space. Expect the piece to lock exactly where the ghost was.
+- [ ] **Matches hard drop:** press W. Expect the piece to lock exactly where the ghost was.
   - Notes:
 - [ ] **Overlap:** soft drop until the piece reaches the ghost. Expect the solid piece to cover the ghost with no flicker.
   - Notes:
 - [ ] **Readability:** can you tell the ghost from real blocks at a glance? Tune `Ghost Opacity` on BoardView, or the fade itself in `Assets/_Project/Blocks/Art/GhostCell.png` (solid outline, bottom about 100% to top about 12%). Untick `Show Ghost` to compare without it.
   - Notes:
 - [ ] **Game over:** top out. Expect the ghost to disappear on the game over screen.
+  - Notes:
+
+## Wall push and lock delay extension, 2026-11-14
+
+Tunables in `Assets/_Project/Blocks/Data/BlocksRules.asset` (Falling and Rotation push headers). The debug menu Blocks section shows Lock timer and Extensions used.
+
+- [ ] **Push off a wall:** stand an I piece up, move it against the left wall, rotate. Expect it to lie flat, pushed 2 cells right. Same on the right wall, pushed left. Tune `Max Sideways Push`.
+  - Notes:
+- [ ] **Push off blocks:** rotate a T or L right next to a stack of blocks. Expect it to turn and shift away from the blocks instead of refusing.
+  - Notes:
+- [ ] **Push up:** rotate a piece resting in a one-row dip so the turned shape would poke into the floor or stack. Expect it to pop up 1 row. Tune `Max Up Push`.
+  - Notes:
+- [ ] **No room:** wedge a piece where no push within the limits fits. Expect the rotation to do nothing.
+  - Notes:
+- [ ] **Extend by rotating:** let a piece land and keep rotating it. Expect it to stay unlocked longer than 0.5 s, then lock after about 15 rotations. Tune `Lock Extension Bonus` and `Max Lock Extensions`.
+  - Notes:
+- [ ] **Extend by sliding:** let a piece land on a flat stack and tap left and right. Expect the same extension as rotating.
+  - Notes:
+- [ ] **No banking:** rotate quickly several times right after landing, then stop. Expect the piece to lock no later than 0.5 s after your last input.
+  - Notes:
+- [ ] **Fresh count lower down:** use up extensions on a ledge, then slide off so the piece drops a row. Expect a full new lock delay and extension count there.
+  - Notes:
+- [ ] **Hard drop:** press W. Expect an instant lock, with no extension or delay.
   - Notes:
