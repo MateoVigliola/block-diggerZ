@@ -59,7 +59,7 @@ namespace BlockDiggerz.Blocks.Tests
         public IEnumerator HoldingRight_AutoRepeats_UntilTheWall()
         {
             Spawn("T");
-            int wallX = _game.Rules.BoardWidth - _game.ActivePiece.BoxSize;
+            int wallX = _game.BoardWidth - _game.ActivePiece.BoxSize;
 
             yield return Hold(Keyboard.dKey, FramesFor(0.7f));
 
@@ -126,7 +126,7 @@ namespace BlockDiggerz.Blocks.Tests
             yield return Tap(Keyboard.eKey);
             Assert.AreEqual(1, _game.ActiveRotation, "I piece stands up");
 
-            for (int i = 0; i < _game.Rules.BoardWidth; i++)
+            for (int i = 0; i < _game.BoardWidth; i++)
             {
                 yield return Tap(Keyboard.aKey);
             }

@@ -99,14 +99,14 @@ namespace BlockDiggerz.Blocks.Tests
         }
 
         [Test]
-        public void Rules_DefaultToFourColors_AndThePaletteHasSix()
+        public void Rules_UseAllSixPaletteColors()
         {
-            Assert.AreEqual(4, BlocksTestAssets.Rules.ColorCount);
+            Assert.AreEqual(6, BlocksTestAssets.Rules.ColorCount);
             var palette = UnityEditor.AssetDatabase.LoadAssetAtPath<BlockPalette>("Assets/_Project/Blocks/Data/BlockPalette.asset");
             Assert.AreEqual(6, palette.Colors.Count);
             var active = new List<BlockColor>();
             palette.GetActive(BlocksTestAssets.Rules.ColorCount, active);
-            CollectionAssert.AreEqual(palette.Colors.Take(4).ToList(), active);
+            CollectionAssert.AreEqual(palette.Colors.ToList(), active);
         }
     }
 }
