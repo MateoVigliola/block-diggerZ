@@ -1,0 +1,16 @@
+{
+    "name": "BlockDiggerz.AssetTracking.Editor",
+    "rootNamespace": "BlockDiggerz.AssetTracking",
+    "references": [],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

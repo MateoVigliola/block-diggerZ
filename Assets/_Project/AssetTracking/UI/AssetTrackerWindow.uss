@@ -1,0 +1,96 @@
+.toolbar-dropdown {
+    width: 130px;
+    margin-left: 2px;
+}
+
+.toolbar-search {
+    width: 180px;
+}
+
+.toolbar-flex {
+    flex-grow: 1;
+}
+
+.settings-panel {
+    display: none;
+    padding: 6px;
+    border-bottom-width: 1px;
+    border-bottom-color: rgba(0, 0, 0, 0.3);
+}
+
+.settings-panel--open {
+    display: flex;
+}
+
+.section-title {
+    -unity-font-style: bold;
+    margin-bottom: 4px;
+}
+
+.split {
+    flex-grow: 1;
+}
+
+.entry-list {
+    flex-grow: 1;
+}
+
+.details {
+    padding: 6px;
+    min-width: 260px;
+}
+
+.multiline TextInput {
+    min-height: 48px;
+    white-space: normal;
+}
+
+.hint {
+    color: rgb(140, 140, 140);
+    white-space: normal;
+    margin: 2px 3px;
+}
+
+.button-row {
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-top: 6px;
+}
+
+.danger {
+    color: rgb(230, 110, 100);
+}
+
+.status-bar {
+    padding: 3px 6px;
+    border-top-width: 1px;
+    border-top-color: rgba(0, 0, 0, 0.3);
+    white-space: normal;
+}
+
+.status-bar--error {
+    color: rgb(230, 110, 100);
+}
+
+.cell-label {
+    -unity-text-align: middle-left;
+    padding-left: 4px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.status-missing {
+    color: rgb(230, 110, 100);
+}
+
+.status-placeholder {
+    color: rgb(230, 190, 90);
+}
+
+.status-needsreplacement {
+    color: rgb(230, 150, 80);
+}
+
+.status-final {
+    color: rgb(110, 200, 120);
+}

@@ -1,0 +1,56 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
+    <Style src="AssetTrackerWindow.uss" />
+    <uie:Toolbar>
+        <ui:DropdownField name="category-filter" class="toolbar-dropdown" />
+        <ui:DropdownField name="status-filter" class="toolbar-dropdown" />
+        <uie:ToolbarSearchField name="search" class="toolbar-search" />
+        <uie:ToolbarSpacer class="toolbar-flex" />
+        <uie:ToolbarButton name="add-planned" text="Add Planned" tooltip="Add a row for an asset that doesn't exist yet" />
+        <uie:ToolbarButton name="rescan" text="Rescan" tooltip="Scan the Art and Audio folders for files the tracker missed" />
+        <uie:ToolbarButton name="sync" text="Sync" tooltip="Pull sheet edits, then push Unity changes" />
+        <uie:ToolbarButton name="open-sheet" text="Open Sheet" />
+        <uie:ToolbarToggle name="settings-toggle" text="Settings" />
+    </uie:Toolbar>
+    <ui:VisualElement name="settings-panel" class="settings-panel">
+        <ui:Label text="Sheet connection (stored in UserSettings, not committed)" class="section-title" />
+        <ui:TextField name="web-app-url" label="Web App URL" />
+        <ui:TextField name="secret" label="Sync Secret" password="true" />
+        <ui:VisualElement class="button-row">
+            <ui:Button name="save-settings" text="Save" />
+            <ui:Button name="copy-script" text="Copy Apps Script" tooltip="Copy the sheet script to the clipboard" />
+            <ui:Button name="open-guide" text="Setup Guide" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+    <ui:TwoPaneSplitView name="split" fixed-pane-index="1" fixed-pane-initial-dimension="340" orientation="Horizontal" class="split">
+        <ui:MultiColumnListView name="entry-list" show-alternating-row-backgrounds="ContentOnly" selection-type="Single" class="entry-list">
+            <ui:Columns>
+                <ui:Column name="name" title="Name" width="180" stretchable="true" />
+                <ui:Column name="category" title="Tab" width="60" />
+                <ui:Column name="area" title="Area" width="110" />
+                <ui:Column name="status" title="Status" width="120" />
+                <ui:Column name="path" title="Asset Path" width="220" stretchable="true" />
+                <ui:Column name="sync" title="Sync" width="70" />
+            </ui:Columns>
+        </ui:MultiColumnListView>
+        <ui:ScrollView name="details" class="details">
+            <ui:Label name="empty-details" text="Select an entry to edit it." class="hint" />
+            <ui:VisualElement name="detail-fields">
+                <ui:TextField name="entry-name" label="Name" is-delayed="true" />
+                <ui:DropdownField name="entry-category" label="Tab" />
+                <ui:TextField name="entry-area" label="Area" is-delayed="true" />
+                <ui:DropdownField name="entry-status" label="Status" />
+                <ui:TextField name="entry-description" label="Description" multiline="true" is-delayed="true" class="multiline" />
+                <ui:TextField name="entry-requirements" label="Requirements" multiline="true" is-delayed="true" class="multiline" />
+                <ui:TextField name="entry-notes" label="Notes" multiline="true" is-delayed="true" class="multiline" />
+                <uie:ObjectField name="entry-asset" label="Linked Asset" allow-scene-objects="false" />
+                <ui:Label name="entry-path" class="hint" />
+                <ui:Label name="entry-sync-state" class="hint" />
+                <ui:VisualElement class="button-row">
+                    <ui:Button name="ping-asset" text="Ping Asset" />
+                    <ui:Button name="remove-entry" text="Remove Entry" class="danger" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:ScrollView>
+    </ui:TwoPaneSplitView>
+    <ui:Label name="status-bar" class="status-bar" />
+</ui:UXML>

@@ -20,17 +20,20 @@ A 2D falling-block roguelike in the spirit of classic block-stacking puzzlers. T
 ## Project layout
 - The Unity project is the repository root.
 - Organize by feature: `Assets/_Project/<Feature>/{Scripts,Prefabs,Data,UI,Tests}`, each feature with its own asmdef.
+- Art and audio go in `Assets/_Project/<Feature>/Art|Audio/` or, when shared, `Assets/_Project/Shared/<Area>/Art|Audio/` (areas such as UI or Gameplay, created as needed). Only these folders are picked up by the asset tracker.
 - Larger features get their own CLAUDE.md; list them here. Cross-cutting rules stay in this file.
 
 | Folder | Contents |
 |---|---|
-| `Assets/_Project/` | Game code and content, one subfolder per feature (not created yet) |
+| `Assets/_Project/` | Game code and content, one subfolder per feature |
+| `Assets/_Project/AssetTracking/` | Editor-only art/audio tracker synced with a Google Sheet |
 | `Assets/Scenes/` | Scenes (template `SampleScene` for now) |
 | `Assets/Settings/` | URP pipeline and 2D renderer assets |
 | `Assets/Editor/` | Template editor scripts |
 | `Assets/Welcome/` | Unity template welcome content; safe to remove later |
 
-Feature CLAUDE.md files: none yet.
+Feature CLAUDE.md files:
+- [Assets/_Project/AssetTracking/CLAUDE.md](Assets/_Project/AssetTracking/CLAUDE.md): asset tracker and Google Sheet sync.
 
 ## Unity rules
 - Input only through the Input System (via a single wrapper class), never UnityEngine.Input.
