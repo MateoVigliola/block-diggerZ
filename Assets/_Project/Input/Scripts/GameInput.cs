@@ -13,6 +13,8 @@ namespace BlockDiggerz.Input
     /// </summary>
     public sealed class GameInput : MonoBehaviour
     {
+        private const string BindingTextSeparator = " | ";
+
         [SerializeField, Tooltip("Held to move the piece left (auto repeats after a delay).")]
         private InputActionReference _moveLeft;
 
@@ -67,9 +69,11 @@ namespace BlockDiggerz.Input
         /// <summary>True on the frame the store piece action was pressed.</summary>
         public bool StorePiecePressed => WasPressed(_storePiece);
 
-        /// <summary>Display text of the store piece bindings (for example "Space"), for UI hints.</summary>
-        public string StorePieceBindingText =>
-            _storePiece != null && _storePiece.action != null ? _storePiece.action.GetBindingDisplayString() : string.Empty;
+        /// <summary>
+        /// Display text of the store piece bindings (for example "Space | LB"), for UI hints. Unbound key slots are
+        /// left out.
+        /// </summary>
+        public string StorePieceBindingText => BindingText(_storePiece);
 
         /// <summary>True on the frame the restart action was pressed.</summary>
         public bool RestartPressed => WasPressed(_restart);
@@ -184,6 +188,29 @@ namespace BlockDiggerz.Input
         private static bool WasPressed(InputActionReference reference)
         {
             return reference != null && reference.action != null && reference.action.WasPressedThisFrame();
+        }
+
+        private static string BindingText(InputActionReference reference)
+        {
+            if (reference == null || reference.action == null)
+            {
+                return string.Empty;
+            }
+
+            InputAction action = reference.action;
+            var parts = new List<string>();
+            for (int i = 0; i < action.bindings.Count; i++)
+            {
+                InputBinding binding = action.bindings[i];
+                if (binding.isPartOfComposite || string.IsNullOrEmpty(binding.effectivePath))
+                {
+                    continue;
+                }
+
+                parts.Add(action.GetBindingDisplayString(i));
+            }
+
+            return string.Join(BindingTextSeparator, parts);
         }
     }
 }

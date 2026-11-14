@@ -124,8 +124,29 @@
     color: rgb(225, 225, 235);
 }
 
+.controls-row--header {
+    height: 36px;
+    border-bottom-width: 1px;
+    border-bottom-color: rgb(90, 90, 115);
+    margin-bottom: 6px;
+}
+
+.controls-row--header .controls-action,
+.controls-column {
+    font-size: 18px;
+    color: rgb(150, 150, 175);
+    -unity-font-style: bold;
+}
+
+.controls-column {
+    width: 200px;
+    margin: 0 6px;
+    -unity-text-align: middle-center;
+}
+
 .controls-key {
-    min-width: 160px;
+    width: 200px;
+    margin: 0 6px;
     height: 44px;
     font-size: 22px;
     color: rgb(235, 235, 245);
@@ -136,6 +157,10 @@
 .controls-key:hover,
 .controls-key:focus {
     border-color: rgb(170, 170, 220);
+}
+
+.controls-key--empty {
+    color: rgb(120, 120, 140);
 }
 
 .controls-key--listening {

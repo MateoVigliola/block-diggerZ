@@ -6,7 +6,7 @@
             <ui:Button text="Sound" name="tab-sound" class="settings-tab" />
         </ui:VisualElement>
         <ui:VisualElement name="page-controls" class="settings-page">
-            <ui:Label text="Click a key, then press the new key. Esc cancels." class="settings-hint" />
+            <ui:Label text="Click a key, then press the new key. Backspace clears, Esc cancels." class="settings-hint" />
             <ui:ScrollView name="controls-list" class="controls-list" />
             <ui:Button text="Reset to defaults" name="controls-reset" class="menu-button menu-button--small" />
         </ui:VisualElement>

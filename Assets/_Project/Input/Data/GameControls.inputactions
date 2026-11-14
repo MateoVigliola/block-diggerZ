@@ -200,6 +200,17 @@
                 },
                 {
                     "name": "",
+                    "id": "11111111-0004-4000-8000-000000000003",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "HardDrop",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "11111111-0004-4000-8000-000000000002",
                     "path": "<Gamepad>/dpad/up",
                     "interactions": "",
@@ -255,6 +266,17 @@
                 },
                 {
                     "name": "",
+                    "id": "11111111-0008-4000-8000-000000000003",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "StorePiece",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "11111111-0008-4000-8000-000000000002",
                     "path": "<Gamepad>/leftShoulder",
                     "interactions": "",
@@ -277,8 +299,30 @@
                 },
                 {
                     "name": "",
+                    "id": "11111111-0007-4000-8000-000000000002",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "RotateCounterClockwise",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "11111111-0006-4000-8000-000000000001",
                     "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "Restart",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "11111111-0006-4000-8000-000000000003",
+                    "path": "",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard",

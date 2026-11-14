@@ -162,6 +162,14 @@ Open `Assets/Scenes/MainMenu.unity` and press Play (the Game scene can still be 
   - Notes:
 - [ ] **Swap on conflict:** set Rotate Clockwise to W (hard drop's key). Expect hard drop to take the old rotate key, and both rows to update.
   - Notes:
+- [ ] **Controls layout:** on Controls, expect a header (Action, Primary, Alternate) and one row per action with its name and two key buttons. Hard Drop, Rotate Counter Clockwise, Store Piece and Restart show a dash under Alternate. Column widths: `.controls-action`, `.controls-column` and `.controls-key` in Menus.uss.
+  - Notes:
+- [ ] **Alternate key:** click Hard Drop's Alternate dash, press F. Expect both W and F to hard drop.
+  - Notes:
+- [ ] **Clear a key:** click a key, press Backspace. Expect a dash. Clearing a Primary while the Alternate has a key moves the Alternate key into Primary. Clearing an action's only key leaves it unbound (Reset to defaults restores it). Backspace itself can't be bound.
+  - Notes:
+- [ ] **Take a key into an empty slot:** set Hard Drop's Alternate to A (Move Left's Primary). Expect Move Left to keep only Left Arrow, now shown as its Primary.
+  - Notes:
 - [ ] **Store hint follows:** rebind Store Piece, then continue. Expect the key under the STORE box to show the new key.
   - Notes:
 - [ ] **Saved between sessions:** change a key and both sliders, stop Play, start again. Expect the same keys and slider values. Reset to defaults puts each page back.

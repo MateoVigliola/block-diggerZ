@@ -9,7 +9,8 @@ namespace BlockDiggerz.Menus
 {
     /// <summary>
     /// Drives the shared settings panel (SettingsPanel.uxml) inside the main menu and the pause menu: Controls and
-    /// Sound tabs, keyboard rebinding with key swap on conflict, volume sliders, reset buttons and Back.
+    /// Sound tabs, keyboard rebinding (one row per action with Primary and Alternate key buttons; a pressed key
+    /// swaps with any slot that used it, Backspace clears the slot), volume sliders, reset buttons and Back.
     /// Plain class owned by the menu screen component, which forwards Esc through <see cref="ConsumesPause"/>.
     /// </summary>
     public sealed class SettingsPanelController : IDisposable
@@ -30,12 +31,20 @@ namespace BlockDiggerz.Menus
         private const string BackButtonName = "settings-back";
         private const string SelectedTabClass = "settings-tab--selected";
         private const string RowClass = "controls-row";
+        private const string HeaderRowClass = "controls-row--header";
         private const string ActionLabelClass = "controls-action";
+        private const string ColumnLabelClass = "controls-column";
         private const string KeyButtonClass = "controls-key";
+        private const string EmptyKeyClass = "controls-key--empty";
         private const string ListeningClass = "controls-key--listening";
+        private const string ActionHeaderText = "Action";
+        private const string PrimaryHeaderText = "Primary";
+        private const string AlternateHeaderText = "Alternate";
         private const string ListeningText = "Press a key";
+        private const string EmptyKeyText = "-";
         private const string KeyboardPath = "<Keyboard>";
         private const string CancelPath = "<Keyboard>/escape";
+        private const string ClearPath = "<Keyboard>/backspace";
         private const string AnyKeyPath = "<Keyboard>/anyKey";
 
         private readonly GameInput _input;
@@ -148,6 +157,7 @@ namespace BlockDiggerz.Menus
 
             _controlsList.Clear();
             _keyButtons.Clear();
+            _controlsList.Add(BuildHeaderRow());
             foreach (InputAction action in _input.GameplayActions)
             {
                 var row = new VisualElement();
@@ -156,18 +166,21 @@ namespace BlockDiggerz.Menus
                 label.AddToClassList(ActionLabelClass);
                 row.Add(label);
 
-                for (int i = 0; i < action.bindings.Count; i++)
+                for (int slot = 0; slot < BindingSwapper.SlotCount; slot++)
                 {
-                    if (!BindingSwapper.IsKeyboardBinding(action.bindings[i]))
+                    int index = BindingSwapper.GetBindingIndex(action, slot);
+                    var button = new Button();
+                    button.AddToClassList(KeyButtonClass);
+                    row.Add(button);
+                    if (index == BindingSwapper.NoBinding)
                     {
+                        button.text = EmptyKeyText;
+                        button.AddToClassList(EmptyKeyClass);
+                        button.SetEnabled(false);
                         continue;
                     }
 
-                    int index = i;
-                    var button = new Button();
-                    button.AddToClassList(KeyButtonClass);
                     button.clicked += () => StartRebind(action, index, button);
-                    row.Add(button);
                     _keyButtons.Add((button, action, index));
                 }
 
@@ -177,13 +190,44 @@ namespace BlockDiggerz.Menus
             RefreshKeyLabels();
         }
 
+        private static VisualElement BuildHeaderRow()
+        {
+            var header = new VisualElement();
+            header.AddToClassList(RowClass);
+            header.AddToClassList(HeaderRowClass);
+            AddHeaderLabel(header, ActionHeaderText, ActionLabelClass);
+            AddHeaderLabel(header, PrimaryHeaderText, ColumnLabelClass);
+            AddHeaderLabel(header, AlternateHeaderText, ColumnLabelClass);
+            return header;
+        }
+
+        private static void AddHeaderLabel(VisualElement header, string text, string className)
+        {
+            var label = new Label(text);
+            label.AddToClassList(className);
+            header.Add(label);
+        }
+
         private void RefreshKeyLabels()
         {
             foreach ((Button button, InputAction action, int index) in _keyButtons)
             {
-                button.text = action.GetBindingDisplayString(index);
+                bool empty = BindingSwapper.IsEmpty(action.bindings[index]);
+                button.text = empty ? EmptyKeyText : action.GetBindingDisplayString(index);
+                button.EnableInClassList(EmptyKeyClass, empty);
                 button.RemoveFromClassList(ListeningClass);
             }
+        }
+
+        private void ApplyKey(InputAction action, int index, string path)
+        {
+            if (string.Equals(path, ClearPath, StringComparison.OrdinalIgnoreCase))
+            {
+                BindingSwapper.Clear(action, index);
+                return;
+            }
+
+            BindingSwapper.Assign(_input.GameplayActions, action, index, path);
         }
 
         private void StartRebind(InputAction action, int index, Button button)
@@ -202,7 +246,7 @@ namespace BlockDiggerz.Menus
                 .WithControlsHavingToMatchPath(KeyboardPath)
                 .WithControlsExcluding(AnyKeyPath)
                 .WithCancelingThrough(CancelPath)
-                .OnApplyBinding((op, path) => BindingSwapper.Assign(_input.GameplayActions, action, index, path))
+                .OnApplyBinding((op, path) => ApplyKey(action, index, path))
                 .OnComplete(op => FinishRebind(action, wasEnabled, true))
                 .OnCancel(op => FinishRebind(action, wasEnabled, false))
                 .Start();
