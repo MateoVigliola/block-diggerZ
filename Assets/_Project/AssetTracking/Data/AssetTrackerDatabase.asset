@@ -27,4 +27,200 @@ MonoBehaviour:
     _unityUpdated: 2026-11-14 11:43 UTC
     _syncedOnce: 1
     _dirtyFields: 0
+  - _id: db4129b8a5df46739f3d5cece96f2ac7
+    _category: 0
+    _area: Blocks
+    _name: GhostCell
+    _description: 
+    _requirements: 
+    _status: 1
+    _notes: 
+    _assetGuid: 2089802d6f2db614eb25f3e620bf7372
+    _assetPath: Assets/_Project/Blocks/Art/GhostCell.png
+    _assetType: Texture2D
+    _unityUpdated: 2026-11-14 12:55 UTC
+    _syncedOnce: 1
+    _dirtyFields: 0
+  - _id: b4041d03874b46f189cc655a256d6877
+    _category: 1
+    _area: Blocks
+    _name: Piece Rotate
+    _description: Plays when the falling piece turns (Q, E or Up arrow), only when the turn succeeds.
+    _requirements: Short click or swish, under 0.15 s, mono. Gets spammed, so it must not tire the ear.
+    _status: 0
+    _notes: 
+    _assetGuid: 
+    _assetPath: 
+    _assetType: 
+    _unityUpdated: 
+    _syncedOnce: 1
+    _dirtyFields: 0
+  - _id: 5803afe6dca34e37b8cb6324e1c284b3
+    _category: 1
+    _area: Blocks
+    _name: Piece Fall
+    _description: Plays each time the falling piece drops one row, from gravity or soft drop.
+    _requirements: Very short soft tick, under 0.08 s, mono. Can fire up to 20 times a second during soft drop, so keep it subtle.
+    _status: 0
+    _notes: 
+    _assetGuid: 
+    _assetPath: 
+    _assetType: 
+    _unityUpdated: 
+    _syncedOnce: 1
+    _dirtyFields: 0
+  - _id: eddd96c051c3416f84333e1c7b3984f7
+    _category: 1
+    _area: Blocks
+    _name: Piece Land
+    _description: Plays when a piece locks into the stack, after resting or a hard drop.
+    _requirements: Solid thud, under 0.3 s, mono.
+    _status: 0
+    _notes: 
+    _assetGuid: 
+    _assetPath: 
+    _assetType: 
+    _unityUpdated: 
+    _syncedOnce: 1
+    _dirtyFields: 0
+  - _id: d974f884d03741d9831a385f61e1916e
+    _category: 1
+    _area: Blocks
+    _name: Row Clear
+    _description: Plays when one or more full rows are cleared.
+    _requirements: Satisfying burst, 0.5 to 1 s. Ideally variants or rising pitch for 1, 2, 3 and 4 rows.
+    _status: 0
+    _notes: 
+    _assetGuid: 
+    _assetPath: 
+    _assetType: 
+    _unityUpdated: 
+    _syncedOnce: 1
+    _dirtyFields: 0
+  - _id: a015d254f4724829adc92ea125d97d08
+    _category: 1
+    _area: Blocks
+    _name: Game Lost
+    _description: Plays when the stack tops out and the GAME OVER panel appears.
+    _requirements: Downbeat sting, 1 to 3 s.
+    _status: 0
+    _notes: 
+    _assetGuid: 
+    _assetPath: 
+    _assetType: 
+    _unityUpdated: 
+    _syncedOnce: 1
+    _dirtyFields: 0
+  - _id: b326f2fb56694e97bd6b222a0c98105e
+    _category: 0
+    _area: Shared/UI
+    _name: HUD Font
+    _description: 'Font for all HUD text: LINES label and count, GAME OVER, restart prompt. Currently Unity''s default UI Toolkit font.'
+    _requirements: TTF or OTF with Latin letters and digits, readable at large and small sizes. Converted to a font asset in Unity.
+    _status: 0
+    _notes: 
+    _assetGuid: 
+    _assetPath: 
+    _assetType: 
+    _unityUpdated: 
+    _syncedOnce: 1
+    _dirtyFields: 0
+  - _id: 9262a1a3e9814bca9f5bce9237d76bf0
+    _category: 0
+    _area: Blocks
+    _name: Lines Counter Panel
+    _description: Backing panel behind the LINES label and count, right of the board. Currently plain text with no panel.
+    _requirements: 9-slice sprite, about 240 x 160 px at 1920 x 1080.
+    _status: 0
+    _notes: 
+    _assetGuid: 
+    _assetPath: 
+    _assetType: 
+    _unityUpdated: 
+    _syncedOnce: 1
+    _dirtyFields: 0
+  - _id: 27408ffdb277431ba0a2351c6f03d992
+    _category: 0
+    _area: Blocks
+    _name: Game Over Panel
+    _description: Panel behind the game over text. Currently a flat dark overlay across the whole screen.
+    _requirements: 9-slice sprite, about 900 x 500 px at 1920 x 1080. Optional full-screen dim texture.
+    _status: 0
+    _notes: 
+    _assetGuid: 
+    _assetPath: 
+    _assetType: 
+    _unityUpdated: 
+    _syncedOnce: 1
+    _dirtyFields: 0
+  - _id: 7075cd6ac73f4268ba35cb52786b7c62
+    _category: 0
+    _area: Blocks
+    _name: Game Over Title
+    _description: The GAME OVER heading. Currently plain red text.
+    _requirements: Wordmark image about 900 x 180 px, or a style using the HUD font.
+    _status: 0
+    _notes: 
+    _assetGuid: 
+    _assetPath: 
+    _assetType: 
+    _unityUpdated: 
+    _syncedOnce: 1
+    _dirtyFields: 0
+  - _id: 50cb7d240e104f6a9de20140689aa318
+    _category: 0
+    _area: Blocks
+    _name: Restart Key Prompt
+    _description: Key icon for the 'Press R to restart' prompt. Currently plain text.
+    _requirements: Keyboard R keycap icon, about 64 x 64 px. Gamepad button icon later.
+    _status: 0
+    _notes: 
+    _assetGuid: 
+    _assetPath: 
+    _assetType: 
+    _unityUpdated: 
+    _syncedOnce: 1
+    _dirtyFields: 0
+  - _id: 696028610d6e47da889bf8836ad1ff43
+    _category: 0
+    _area: Blocks
+    _name: Board Frame
+    _description: Border around the 10 x 20 playfield. Currently there is none.
+    _requirements: 9-slice or tiled border sized for 10 x 20 cells at 32 px per cell.
+    _status: 0
+    _notes: 
+    _assetGuid: 
+    _assetPath: 
+    _assetType: 
+    _unityUpdated: 
+    _syncedOnce: 1
+    _dirtyFields: 0
+  - _id: bf3d26f1cc5146ccbee60db21279f3ea
+    _category: 0
+    _area: Blocks
+    _name: Board Background Cell
+    _description: Empty playfield cell. Currently the block sprite tinted dark grey.
+    _requirements: 32 x 32 px tileable cell sprite, low contrast.
+    _status: 0
+    _notes: 
+    _assetGuid: 
+    _assetPath: 
+    _assetType: 
+    _unityUpdated: 
+    _syncedOnce: 1
+    _dirtyFields: 0
+  - _id: ca1718dd0388449393cdc3a12c2e9a20
+    _category: 0
+    _area: Blocks
+    _name: Game Backdrop
+    _description: Screen background behind the board. Currently a flat near-black camera color.
+    _requirements: 1920 x 1080 image or tileable pattern, low contrast so pieces stand out.
+    _status: 0
+    _notes: 
+    _assetGuid: 
+    _assetPath: 
+    _assetType: 
+    _unityUpdated: 
+    _syncedOnce: 1
+    _dirtyFields: 0
   _removedIds: []
