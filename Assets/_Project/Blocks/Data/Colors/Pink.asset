@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Pink
   m_EditorClassIdentifier: BlockDiggerz.Blocks::BlockDiggerz.Blocks.BlockColor
   <Id>k__BackingField: Pink
-  <Tint>k__BackingField: {r: 0.97, g: 0.56, b: 0.2, a: 1}
-  <Sprite>k__BackingField: {fileID: 3611328583111057198, guid: 51936722d3401d14292cad0c1c2199e0, type: 3}
+  <Tint>k__BackingField: {r: 0.754717, g: 0.4521182, b: 0.7220333, a: 1}
+  <Sprite>k__BackingField: {fileID: 7178029279597677544, guid: 1a45748ed9d185440a9e647320cdd3de, type: 3}
