@@ -5,13 +5,15 @@ namespace BlockDiggerz.Blocks.Tests
 {
     /// <summary>
     /// Builds boards from text for color tests. Rows are given top to bottom; '.' is empty, 'X' an unpainted
-    /// block, and letters R, B, G, Y are blocks of four test colors.
+    /// block, letters R, B, G, Y are blocks of four test colors and D is an obstacle (Dirt) block.
     /// </summary>
     internal sealed class ColorTestBoard
     {
         public const char Empty = '.';
         public const char Unpainted = 'X';
-        private const string Letters = "RBGY";
+        public const char Dirt = 'D';
+        private const string Letters = "RBGYD";
+        private const string ObstacleField = "<IsObstacle>k__BackingField";
 
         public readonly List<BlockColor> Colors = new();
         public readonly PieceDefinition Piece;
@@ -22,6 +24,13 @@ namespace BlockDiggerz.Blocks.Tests
             {
                 var color = ScriptableObject.CreateInstance<BlockColor>();
                 color.name = letter.ToString();
+                if (letter == Dirt)
+                {
+                    var serialized = new UnityEditor.SerializedObject(color);
+                    serialized.FindProperty(ObstacleField).boolValue = true;
+                    serialized.ApplyModifiedPropertiesWithoutUndo();
+                }
+
                 Colors.Add(color);
             }
 

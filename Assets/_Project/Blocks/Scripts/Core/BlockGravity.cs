@@ -5,7 +5,7 @@ namespace BlockDiggerz.Blocks
     /// <summary>
     /// Gravity for locked blocks. Each block is either resting or falling; the state is kept between steps in a
     /// bool array indexed y * width + x (true = falling). Touching blocks of the same color and the same state form a
-    /// group (an unpainted block is a group of its own), so a falling group never joins a resting group of its color
+    /// group (an unpainted or obstacle block is a group of its own), so a falling group never joins a resting group of its color
     /// on the way down. A group rests if any of its blocks is on the floor or directly on a resting block of another
     /// group; every other group falls, including groups on top of falling groups. A falling group that lands this
     /// way becomes resting.
@@ -42,7 +42,7 @@ namespace BlockDiggerz.Blocks
                     int id = count++;
                     groups[index] = id;
                     BlockColor color = board.GetColor(x, y);
-                    if (color == null)
+                    if (!BlockColor.CanMatch(color))
                     {
                         continue;
                     }

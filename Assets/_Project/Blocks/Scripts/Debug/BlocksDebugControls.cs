@@ -48,6 +48,9 @@ namespace BlockDiggerz.Blocks
         /// </summary>
         public const string ColorChainLabel = "Color chain (2 steps)";
 
+        /// <summary>Button that wins the level at once (as if all Dirt were cleared).</summary>
+        public const string WinNowLabel = "Win now";
+
         /// <summary>Label of the button that makes the board one column narrower (restarts the run).</summary>
         public const string WidthDownLabel = "Board width -1";
 
@@ -92,9 +95,14 @@ namespace BlockDiggerz.Blocks
                     .Readout("Can store", () => _game.CanStore ? "yes" : "no")
                     .Readout("Score", () => _game.Score.ToString())
                     .Readout("Color blocks cleared", () => _game.ColorBlocksCleared.ToString())
+                    .Readout("Blocks blasted", () => _game.BlocksBlasted.ToString())
                     .Readout("Settling", DescribeSettling)
                     .Readout("Colors in play", () => _game.ActiveColors.Count.ToString())
                     .Readout("Pieces locked", () => _game.PiecesLocked.ToString())
+                    .Readout("Dirt blocks", () => _game.Board != null ? _game.Board.CountObstacles().ToString() : "-")
+                    .Readout("Run time", () => RunClock.Format(RunClock.WholeSeconds(_game.RunTime)))
+                    .Readout("Gravity speed", () => $"x{_game.GravitySpeedMultiplier:0.0}")
+                    .Button(WinNowLabel, _game.ForceWin)
                     .Toggle(PauseGravityLabel, () => _game.GravityPaused, v => _game.GravityPaused = v)
                     .Readout("Board size", () => $"{_game.BoardWidth} x {_game.VisibleHeight}")
                     .Button(WidthDownLabel, () => _game.SetBoardSize(_game.BoardWidth - 1, _game.VisibleHeight))
@@ -162,11 +170,12 @@ namespace BlockDiggerz.Blocks
                 _game.PlaceBlock(x, BottomRow, filler, first);
             }
 
-            _game.PlaceBlock(MatchLength, BottomRow, filler, second);
             for (int x = 1; x < MatchLength; x++)
             {
                 _game.PlaceBlock(x, BottomRow + 1, filler, second);
             }
+
+            _game.PlaceBlock(MatchLength, BottomRow + 2, filler, second);
 
             _game.ClearBoardNow();
         }

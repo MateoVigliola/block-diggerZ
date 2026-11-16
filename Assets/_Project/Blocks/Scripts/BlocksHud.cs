@@ -5,7 +5,8 @@ namespace BlockDiggerz.Blocks
 {
     /// <summary>
     /// UI Toolkit HUD for the block dropper: the store panel (just left of the board), score and next piece
-    /// (just right of the board, both following the board as it moves or resizes) and the game over panel.
+    /// (just right of the board, both following the board as it moves or resizes), the run timer above the store
+    /// panel, the game over panel and the win panel (time, score, New level and Main menu buttons).
     /// Element names match BlocksHud.uxml. Updates elements only when
     /// the value they show changes.
     /// </summary>
@@ -39,8 +40,37 @@ namespace BlockDiggerz.Blocks
         /// <summary>USS class added to the store panel while storing is locked.</summary>
         public const string StoreLockedClass = "hud-store--locked";
 
+        /// <summary>Name of the label showing the run timer (above STORE).</summary>
+        public const string TimerValueName = "timer-value";
+
+        /// <summary>Name of the win panel.</summary>
+        public const string WinPanelName = "win";
+
+        /// <summary>Name of the label on the win panel showing the final time.</summary>
+        public const string WinTimeName = "win-time";
+
+        /// <summary>Name of the label on the win panel showing the final score.</summary>
+        public const string WinScoreName = "win-score";
+
+        /// <summary>Name of the win panel button that starts a new level.</summary>
+        public const string NewLevelButtonName = "win-new-level";
+
+        /// <summary>Name of the win panel button that loads the main menu.</summary>
+        public const string MainMenuButtonName = "win-main-menu";
+
         [SerializeField, Tooltip("Game the HUD shows.")]
         private BlocksGame _game;
+
+        [SerializeField, Tooltip("Scene the win panel's Main menu button loads. Must be in Build Settings.")]
+        private string _mainMenuScene = "MainMenu";
+
+        private Label _timerValue;
+        private Label _winTime;
+        private Label _winScore;
+        private VisualElement _winPanel;
+        private Button _newLevelButton;
+        private Button _mainMenuButton;
+        private int _shownSeconds = -1;
 
         [SerializeField, Min(0f), Tooltip("Gap in UI pixels (at 1920 x 1080) between the board's edge and the STORE panel on the left and the SCORE / NEXT column on the right.")]
         private float _sideGap = 32f;
@@ -67,6 +97,9 @@ namespace BlockDiggerz.Blocks
 
         /// <summary>True while the game over panel is visible.</summary>
         public bool IsGameOverShown => _gameOverPanel != null && _gameOverPanel.resolvedStyle.display == DisplayStyle.Flex;
+
+        /// <summary>True while the win panel is visible.</summary>
+        public bool IsWinShown => _winPanel != null && _winPanel.resolvedStyle.display == DisplayStyle.Flex;
 
         /// <summary>The piece shown in the next box.</summary>
         public PaintedPiece ShownNextPiece => _nextPreview?.Shown;
@@ -106,10 +139,50 @@ namespace BlockDiggerz.Blocks
             }
 
             RefreshStoreKey();
+
+            _timerValue = root.Q<Label>(TimerValueName);
+            _winTime = root.Q<Label>(WinTimeName);
+            _winScore = root.Q<Label>(WinScoreName);
+            _winPanel = root.Q<VisualElement>(WinPanelName);
+            _shownSeconds = -1;
+            _newLevelButton = root.Q<Button>(NewLevelButtonName);
+            _mainMenuButton = root.Q<Button>(MainMenuButtonName);
+            if (_newLevelButton != null)
+            {
+                _newLevelButton.clicked += OnNewLevelClicked;
+            }
+
+            if (_mainMenuButton != null)
+            {
+                _mainMenuButton.clicked += OnMainMenuClicked;
+            }
+        }
+
+        private void OnNewLevelClicked()
+        {
+            if (_game != null)
+            {
+                _game.StartRun();
+            }
+        }
+
+        private void OnMainMenuClicked()
+        {
+            UnityEngine.SceneManagement.SceneManager.LoadScene(_mainMenuScene);
         }
 
         private void OnDisable()
         {
+            if (_newLevelButton != null)
+            {
+                _newLevelButton.clicked -= OnNewLevelClicked;
+            }
+
+            if (_mainMenuButton != null)
+            {
+                _mainMenuButton.clicked -= OnMainMenuClicked;
+            }
+
             if (_game != null && _game.GameInput != null)
             {
                 _game.GameInput.BindingsChanged -= RefreshStoreKey;
@@ -139,6 +212,7 @@ namespace BlockDiggerz.Blocks
 
             UpdatePlacement();
             UpdateScore();
+            UpdateTimer();
             UpdateState();
             UpdatePieces();
         }
@@ -199,6 +273,32 @@ namespace BlockDiggerz.Blocks
             {
                 _finalScore.text = text;
             }
+
+            if (_winScore != null)
+            {
+                _winScore.text = text;
+            }
+        }
+
+        private void UpdateTimer()
+        {
+            int seconds = RunClock.WholeSeconds(_game.RunTime);
+            if (seconds == _shownSeconds)
+            {
+                return;
+            }
+
+            _shownSeconds = seconds;
+            string text = RunClock.Format(seconds);
+            if (_timerValue != null)
+            {
+                _timerValue.text = text;
+            }
+
+            if (_winTime != null)
+            {
+                _winTime.text = text;
+            }
         }
 
         private void UpdateState()
@@ -213,6 +313,17 @@ namespace BlockDiggerz.Blocks
             if (_gameOverPanel != null)
             {
                 _gameOverPanel.style.display = _shownState == BlocksGameState.GameOver ? DisplayStyle.Flex : DisplayStyle.None;
+            }
+
+            bool won = _shownState == BlocksGameState.Won;
+            if (_winPanel != null)
+            {
+                _winPanel.style.display = won ? DisplayStyle.Flex : DisplayStyle.None;
+            }
+
+            if (won)
+            {
+                _newLevelButton?.Focus();
             }
         }
 

@@ -24,7 +24,7 @@ MonoBehaviour:
     _assetGuid: e3ca962d378332f46a357f69b0db67bb
     _assetPath: Assets/_Project/Blocks/Art/BlockCell.png
     _assetType: Texture2D
-    _unityUpdated: 2026-11-14 11:43 UTC
+    _unityUpdated: 2026-11-16 16:50 UTC
     _syncedOnce: 1
     _dirtyFields: 0
   - _id: db4129b8a5df46739f3d5cece96f2ac7
@@ -38,7 +38,7 @@ MonoBehaviour:
     _assetGuid: 2089802d6f2db614eb25f3e620bf7372
     _assetPath: Assets/_Project/Blocks/Art/GhostCell.png
     _assetType: Texture2D
-    _unityUpdated: 2026-11-14 12:55 UTC
+    _unityUpdated: 2026-11-16 16:50 UTC
     _syncedOnce: 1
     _dirtyFields: 0
   - _id: b4041d03874b46f189cc655a256d6877
@@ -752,7 +752,7 @@ MonoBehaviour:
     _assetGuid: db0d55c61bd69cd4b914c689a72814a2
     _assetPath: Assets/_Project/Blocks/Art/Piece2.png
     _assetType: Texture2D
-    _unityUpdated: 2026-11-14 22:03 UTC
+    _unityUpdated: 2026-11-16 16:50 UTC
     _syncedOnce: 0
     _dirtyFields: 31
   - _id: fb7eb21f24e64363b1f6f8b6e974fcf2
@@ -766,7 +766,7 @@ MonoBehaviour:
     _assetGuid: 0a1666c4de6401c4ea641b7c7bdcd0ad
     _assetPath: Assets/_Project/Blocks/Art/Piece6.png
     _assetType: Texture2D
-    _unityUpdated: 2026-11-14 22:03 UTC
+    _unityUpdated: 2026-11-16 16:50 UTC
     _syncedOnce: 0
     _dirtyFields: 31
   - _id: e83a46d841d64129a3bb6abac757683b
@@ -780,7 +780,7 @@ MonoBehaviour:
     _assetGuid: 1a45748ed9d185440a9e647320cdd3de
     _assetPath: Assets/_Project/Blocks/Art/Piece3.png
     _assetType: Texture2D
-    _unityUpdated: 2026-11-14 22:03 UTC
+    _unityUpdated: 2026-11-16 16:50 UTC
     _syncedOnce: 0
     _dirtyFields: 31
   - _id: aae49a661abb45ec97d36333b2ca6948
@@ -794,7 +794,7 @@ MonoBehaviour:
     _assetGuid: 180f0f97306683b489a375484ce9dc71
     _assetPath: Assets/_Project/Blocks/Art/Piece5.png
     _assetType: Texture2D
-    _unityUpdated: 2026-11-14 22:03 UTC
+    _unityUpdated: 2026-11-16 16:50 UTC
     _syncedOnce: 0
     _dirtyFields: 31
   - _id: 6ee1c7ad0d9c4d76873f6dff99afe519
@@ -808,7 +808,7 @@ MonoBehaviour:
     _assetGuid: 0d5a6dc89d5fdaf41914fcc0014404cd
     _assetPath: Assets/_Project/Blocks/Art/Piece1.png
     _assetType: Texture2D
-    _unityUpdated: 2026-11-14 22:03 UTC
+    _unityUpdated: 2026-11-16 16:50 UTC
     _syncedOnce: 0
     _dirtyFields: 31
   - _id: aadb4ed15e4745a0b011e25f23139f7a
@@ -822,7 +822,63 @@ MonoBehaviour:
     _assetGuid: 51936722d3401d14292cad0c1c2199e0
     _assetPath: Assets/_Project/Blocks/Art/Piece4.png
     _assetType: Texture2D
-    _unityUpdated: 2026-11-14 22:03 UTC
+    _unityUpdated: 2026-11-16 16:50 UTC
+    _syncedOnce: 0
+    _dirtyFields: 31
+  - _id: 2d9abedb5066423e8bc67d3462779cb7
+    _category: 0
+    _area: Blocks
+    _name: DirtA
+    _description: 
+    _requirements: 
+    _status: 1
+    _notes: 
+    _assetGuid: cbfc4e6160eb49849b5c71887fc0a736
+    _assetPath: Assets/_Project/Blocks/Art/DirtA.png
+    _assetType: Texture2D
+    _unityUpdated: 2026-11-16 16:50 UTC
+    _syncedOnce: 0
+    _dirtyFields: 31
+  - _id: 2c224cb34a7847cfb578d23aed505f33
+    _category: 0
+    _area: Blocks
+    _name: DirtD
+    _description: 
+    _requirements: 
+    _status: 1
+    _notes: 
+    _assetGuid: b046c7983f52c7c42b1238f36079ead8
+    _assetPath: Assets/_Project/Blocks/Art/DirtD.png
+    _assetType: Texture2D
+    _unityUpdated: 2026-11-16 16:50 UTC
+    _syncedOnce: 0
+    _dirtyFields: 31
+  - _id: 5079f589e74c42eea672de0e03325869
+    _category: 0
+    _area: Blocks
+    _name: DirtC
+    _description: 
+    _requirements: 
+    _status: 1
+    _notes: 
+    _assetGuid: 914983116634ad14cb71494040270147
+    _assetPath: Assets/_Project/Blocks/Art/DirtC.png
+    _assetType: Texture2D
+    _unityUpdated: 2026-11-16 16:50 UTC
+    _syncedOnce: 0
+    _dirtyFields: 31
+  - _id: a0ada68ea97549599db180dfae6c1403
+    _category: 0
+    _area: Blocks
+    _name: DirtB
+    _description: 
+    _requirements: 
+    _status: 1
+    _notes: 
+    _assetGuid: 259db3d52186969429aed491c6cbbf07
+    _assetPath: Assets/_Project/Blocks/Art/DirtB.png
+    _assetType: Texture2D
+    _unityUpdated: 2026-11-16 16:50 UTC
     _syncedOnce: 0
     _dirtyFields: 31
   _removedIds: []
