@@ -15,6 +15,9 @@ namespace BlockDiggerz.Input
     {
         private const string BindingTextSeparator = " | ";
 
+        /// <summary>Binding group of the on-screen touch controls (<see cref="TouchPadDevice"/>); left out of key hints.</summary>
+        public const string TouchGroup = "Touch";
+
         [SerializeField, Tooltip("Held to move the piece left (auto repeats after a delay).")]
         private InputActionReference _moveLeft;
 
@@ -210,6 +213,11 @@ namespace BlockDiggerz.Input
             return reference != null && reference.action != null && reference.action.WasPressedThisFrame();
         }
 
+        private static bool IsTouchBinding(InputBinding binding)
+        {
+            return !string.IsNullOrEmpty(binding.groups) && binding.groups.Contains(TouchGroup);
+        }
+
         private static string BindingText(InputActionReference reference)
         {
             if (reference == null || reference.action == null)
@@ -222,7 +230,7 @@ namespace BlockDiggerz.Input
             for (int i = 0; i < action.bindings.Count; i++)
             {
                 InputBinding binding = action.bindings[i];
-                if (binding.isPartOfComposite || string.IsNullOrEmpty(binding.effectivePath))
+                if (binding.isPartOfComposite || string.IsNullOrEmpty(binding.effectivePath) || IsTouchBinding(binding))
                 {
                     continue;
                 }

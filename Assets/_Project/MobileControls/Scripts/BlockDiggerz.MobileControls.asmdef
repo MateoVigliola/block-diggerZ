@@ -1,0 +1,19 @@
+{
+    "name": "BlockDiggerz.MobileControls",
+    "rootNamespace": "BlockDiggerz.MobileControls",
+    "references": [
+        "BlockDiggerz.Input",
+        "BlockDiggerz.Blocks",
+        "BlockDiggerz.DebugTools",
+        "Unity.InputSystem"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

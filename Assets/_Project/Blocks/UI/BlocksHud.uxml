@@ -2,11 +2,15 @@
     <Style src="BlocksHud.uss" />
     <ui:VisualElement name="hud-root" picking-mode="Ignore" class="hud-root">
         <ui:VisualElement name="store" picking-mode="Ignore" class="hud-store">
-            <ui:Label text="TIME" class="hud-caption" />
-            <ui:Label text="0:00" name="timer-value" class="hud-value" />
-            <ui:Label text="STORE" class="hud-caption hud-store-caption" />
-            <ui:VisualElement name="store-preview" picking-mode="Ignore" class="hud-piece-box" />
-            <ui:Label text="Space" name="store-key" class="hud-key-hint" />
+            <ui:VisualElement name="timer-group" picking-mode="Ignore" class="hud-store-group hud-timer-group">
+                <ui:Label text="TIME" class="hud-caption" />
+                <ui:Label text="0:00" name="timer-value" class="hud-value" />
+            </ui:VisualElement>
+            <ui:VisualElement name="store-group" picking-mode="Ignore" class="hud-store-group">
+                <ui:Label text="STORE" class="hud-caption hud-store-caption" />
+                <ui:VisualElement name="store-preview" picking-mode="Ignore" class="hud-piece-box" />
+                <ui:Label text="Space" name="store-key" class="hud-key-hint" />
+            </ui:VisualElement>
         </ui:VisualElement>
         <ui:VisualElement name="stats" picking-mode="Ignore" class="hud-stats">
             <ui:Label text="SCORE" class="hud-caption" />
@@ -24,6 +28,10 @@
                 <ui:Label text="0" name="final-score" class="hud-value" />
             </ui:VisualElement>
             <ui:Label text="Press R to restart" class="hud-hint" />
+            <ui:VisualElement picking-mode="Ignore" class="hud-win-buttons">
+                <ui:Button text="Restart" name="game-over-restart" class="hud-win-button" />
+                <ui:Button text="Main menu" name="game-over-main-menu" class="hud-win-button" />
+            </ui:VisualElement>
         </ui:VisualElement>
         <ui:VisualElement name="win" class="hud-game-over hud-win">
             <ui:Label text="LEVEL CLEAR" class="hud-game-over-title hud-win-title" />

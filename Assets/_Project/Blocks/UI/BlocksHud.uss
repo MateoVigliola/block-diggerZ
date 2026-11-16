@@ -19,8 +19,46 @@
     align-items: flex-end;
 }
 
-.hud-store--locked {
+.hud-store-group {
+    align-items: flex-end;
+}
+
+.hud-store--locked .hud-store-group {
     opacity: 0.35;
+}
+
+.hud-store--locked .hud-timer-group {
+    opacity: 1;
+}
+
+.hud-root--portrait .hud-store {
+    flex-direction: column-reverse;
+    justify-content: flex-end;
+    align-items: flex-start;
+}
+
+.hud-root--portrait .hud-store-group {
+    align-items: flex-start;
+}
+
+.hud-root--portrait .hud-store-caption {
+    margin-top: 0;
+}
+
+.hud-root--portrait .hud-timer-group {
+    margin-top: 16px;
+}
+
+.hud-root--portrait .hud-stats {
+    align-items: flex-end;
+}
+
+.hud-root--portrait .hud-key-hint {
+    display: none;
+}
+
+.hud-root--portrait .hud-hint {
+    display: none;
 }
 
 .hud-next-caption {
