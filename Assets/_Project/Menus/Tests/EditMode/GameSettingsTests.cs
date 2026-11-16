@@ -92,5 +92,39 @@ namespace BlockDiggerz.Menus.Tests
             Assert.AreEqual("<Keyboard>/e", _actions.Rotate.bindings[0].effectivePath);
             Assert.IsFalse(_store.Values.ContainsKey(GameSettings.BindingsKey));
         }
+
+        [Test]
+        public void LoadIfMissing_WhenFieldWasCleared_LoadsSettingsAndBindings()
+        {
+            var settings = new GameSettings(_store);
+            settings.SetMusicVolume(30f);
+            BindingSwapper.Assign(_actions.All, _actions.Rotate, 0, "<Keyboard>/w");
+            settings.SaveBindings(_actions.Asset);
+            _actions.Asset.RemoveAllBindingOverrides();
+
+            GameSettings loaded = GameSettings.LoadIfMissing(null, _store, _actions.Asset);
+
+            Assert.IsNotNull(loaded, "a recompile in Play mode nulls the field and skips Awake");
+            Assert.AreEqual(30f, loaded.MusicVolume);
+            Assert.AreEqual("<Keyboard>/w", _actions.Rotate.bindings[0].effectivePath);
+        }
+
+        [Test]
+        public void LoadIfMissing_WhenPresent_KeepsInstanceAndOverrides()
+        {
+            var settings = new GameSettings(_store);
+            BindingSwapper.Assign(_actions.All, _actions.Rotate, 0, "<Keyboard>/f");
+
+            GameSettings kept = GameSettings.LoadIfMissing(settings, _store, _actions.Asset);
+
+            Assert.AreSame(settings, kept);
+            Assert.AreEqual("<Keyboard>/f", _actions.Rotate.bindings[0].effectivePath, "re-enabling must not reload bindings");
+        }
+
+        [Test]
+        public void LoadIfMissing_WithNoActions_StillReturnsSettings()
+        {
+            Assert.IsNotNull(GameSettings.LoadIfMissing(null, _store, null));
+        }
     }
 }

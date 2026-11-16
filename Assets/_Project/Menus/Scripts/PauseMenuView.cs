@@ -52,12 +52,12 @@ namespace BlockDiggerz.Menus
         private void Awake()
         {
             Time.timeScale = NormalTimeScale;
-            _settings = new GameSettings(new PlayerPrefsKeyValueStore());
-            _settings.LoadBindings(_input.Actions);
         }
 
         private void OnEnable()
         {
+            _settings = GameSettings.LoadIfMissing(_settings, new PlayerPrefsKeyValueStore(), _input.Actions);
+
             VisualElement root = GetComponent<UIDocument>().rootVisualElement;
             _overlay = root.Q<VisualElement>(OverlayName);
             _rootPage = root.Q<VisualElement>(RootPageName);
