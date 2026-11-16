@@ -366,3 +366,32 @@ Fix for a NullReferenceException in `SettingsPanelController` when the pause men
   - Notes:
 - [ ] **Main menu too:** in the MainMenu scene, recompile mid-play, then open Settings. Expect no exception.
   - Notes:
+
+## Mobile touch controls, 2026-11-16
+
+Portrait touch layout for mobile browsers (itch.io, CrazyGames). In the Editor, turn it on with the debug menu (backquote, section Touch controls, Force touch controls) or the Force Show box on the MobileControls object in the Game scene, and try it in the Device Simulator (Game view dropdown, Simulator), where it turns on by itself for phones. A mouse works like one finger. Layout sizes are in `Assets/_Project/MobileControls/UI/MobileControls.uss` (top band height, strip width, button sizes); drag and board tunables are on the TouchControls component of `Assets/_Project/MobileControls/Prefabs/MobileControls.prefab` (Drag Cells Per Column, Board Padding, Board Alignment). HUD portrait styles are the `.hud-root--portrait` rules in `Assets/_Project/Blocks/UI/BlocksHud.uss`.
+
+- [ ] **Shows only on mobile:** play on desktop with the force toggle off. Expect the normal desktop layout. In the Device Simulator with a phone selected (or with the toggle on), expect the portrait layout.
+  - Notes:
+- [ ] **Layout:** expect the STORE box top left with TIME under it, the pause button top right with SCORE and NEXT under it, a left and a right arrow strip down both edges, and CCW, DROP, CW right under the board. The board should fill the space between the strips. Try a tall phone (19.5:9) and a 16:9 phone.
+  - Notes:
+- [ ] **Arrow strips:** tap a strip to move one column. Hold it: the piece should keep moving after the same delay and repeat rate as holding a key (Auto Shift Delay and Auto Repeat Interval in `Assets/_Project/Blocks/Data/BlocksRules.asset`).
+  - Notes:
+- [ ] **Drag on the board:** put a finger on the board and slide sideways. Expect the piece to move one column per cell of finger travel, from wherever you touch on the board. Touching outside the board (above it or beside it) should not drag. If it feels too slow or too twitchy, tune Drag Cells Per Column.
+  - Notes:
+- [ ] **Buttons:** CCW and CW rotate, DROP hard drops, tapping the STORE box stores the piece (and does nothing while STORE is dimmed). There is no soft drop on touch.
+  - Notes:
+- [ ] **Two fingers:** hold a strip while tapping a rotate button, or drag with one finger and tap DROP with the other. Expect both to work.
+  - Notes:
+- [ ] **Pause:** tap the pause button. Expect the pause menu, with the touch controls hidden until you Continue. Check that the pause menu and Settings are usable on a portrait phone screen.
+  - Notes:
+- [ ] **Game over and win:** top out, then win a level. Expect the touch controls to hide, and the game over panel to have Restart and Main menu buttons that work by tap (and by mouse on desktop).
+  - Notes:
+- [ ] **Back to desktop:** turn the force toggle off mid-run. Expect the camera, board and HUD to go back to the desktop layout.
+  - Notes:
+- [ ] **Store dimming:** on desktop, store a piece. Expect only the STORE box to dim now, not the TIME above it.
+  - Notes:
+- [ ] **Real phone:** upload a Web build to itch.io (or host it locally) and open it in a phone browser. Expect the same layout as the simulator and responsive touches. Check landscape too.
+  - Notes:
+- [ ] **Readability and feel:** are the strips, buttons and labels big enough and easy to hit? Is the board big enough? Tune the sizes in the USS.
+  - Notes:

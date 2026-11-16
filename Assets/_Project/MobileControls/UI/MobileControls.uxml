@@ -1,0 +1,25 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
+    <Style src="MobileControls.uss" />
+    <ui:VisualElement name="mobile-root" picking-mode="Ignore" class="mobile-root">
+        <ui:VisualElement name="top-band" picking-mode="Ignore" class="mobile-top-band">
+            <ui:VisualElement name="store-slot" class="mobile-store-slot" />
+            <ui:VisualElement picking-mode="Ignore" class="mobile-top-spacer" />
+            <ui:VisualElement picking-mode="Ignore" class="mobile-top-right">
+                <ui:Label text="II" name="pause-button" class="mobile-button mobile-pause" />
+                <ui:VisualElement name="stats-slot" picking-mode="Ignore" class="mobile-stats-slot" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="middle" picking-mode="Ignore" class="mobile-middle">
+            <ui:Label text="&lt;" name="move-left" class="mobile-strip" />
+            <ui:VisualElement name="center" picking-mode="Ignore" class="mobile-center">
+                <ui:VisualElement name="board-area" class="mobile-board-area" />
+                <ui:VisualElement name="bottom-row" picking-mode="Ignore" class="mobile-bottom-row">
+                    <ui:Label text="CCW" name="rotate-ccw" class="mobile-button mobile-rotate" />
+                    <ui:Label text="DROP" name="hard-drop" class="mobile-button mobile-hard-drop" />
+                    <ui:Label text="CW" name="rotate-cw" class="mobile-button mobile-rotate" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:Label text="&gt;" name="move-right" class="mobile-strip" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

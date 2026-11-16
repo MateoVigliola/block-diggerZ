@@ -340,6 +340,72 @@
                     "action": "Restart",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "44444444-0001-4000-8000-000000000001",
+                    "path": "<BlockDiggerzTouchPad>/moveLeft",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Touch",
+                    "action": "MoveLeft",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "44444444-0002-4000-8000-000000000001",
+                    "path": "<BlockDiggerzTouchPad>/moveRight",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Touch",
+                    "action": "MoveRight",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "44444444-0003-4000-8000-000000000001",
+                    "path": "<BlockDiggerzTouchPad>/hardDrop",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Touch",
+                    "action": "HardDrop",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "44444444-0004-4000-8000-000000000001",
+                    "path": "<BlockDiggerzTouchPad>/rotateClockwise",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Touch",
+                    "action": "RotateClockwise",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "44444444-0005-4000-8000-000000000001",
+                    "path": "<BlockDiggerzTouchPad>/rotateCounterClockwise",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Touch",
+                    "action": "RotateCounterClockwise",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "44444444-0006-4000-8000-000000000001",
+                    "path": "<BlockDiggerzTouchPad>/storePiece",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Touch",
+                    "action": "StorePiece",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },
@@ -377,6 +443,17 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
+                    "action": "Pause",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "44444444-0101-4000-8000-000000000001",
+                    "path": "<BlockDiggerzTouchPad>/pause",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Touch",
                     "action": "Pause",
                     "isComposite": false,
                     "isPartOfComposite": false

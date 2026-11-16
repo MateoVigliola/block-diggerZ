@@ -11,7 +11,7 @@ namespace BlockDiggerz.Blocks
     /// color). Blocks about to be cleared are blended toward a
     /// flash color. One board cell is one tilemap cell. Redraws only when
     /// <see cref="BlocksGame.Version"/> changes. The board grid is moved so the visible board is centered on the
-    /// camera, again whenever <see cref="BlocksGame.SetBoardSize"/> changes the size.
+    /// camera's start position, again whenever <see cref="BlocksGame.SetBoardSize"/> changes the size.
     /// </summary>
     public sealed class BoardView : MonoBehaviour
     {
@@ -60,8 +60,13 @@ namespace BlockDiggerz.Blocks
         private readonly HashSet<Vector2Int> _flashing = new();
         private readonly Dictionary<BlockColor, Tile> _colorTiles = new();
         private int _drawnVersion = -1;
+        private Vector2 _anchor;
 
-        /// <summary>Camera the board is centered on; the HUD uses it to place panels beside the board.</summary>
+        /// <summary>
+        /// Camera the board is drawn for; the HUD uses it to place panels beside the board. The board is centered on
+        /// where this camera was at start, so moving or zooming the camera later (the touch layout fits it to the
+        /// screen) never moves the board.
+        /// </summary>
         public Camera ViewCamera => _camera;
 
         /// <summary>World rectangle of the visible board.</summary>
@@ -76,6 +81,8 @@ namespace BlockDiggerz.Blocks
             {
                 _camera = Camera.main;
             }
+
+            _anchor = _camera != null ? (Vector2)_camera.transform.position : Vector2.zero;
         }
 
         private void OnEnable()
@@ -108,8 +115,7 @@ namespace BlockDiggerz.Blocks
 
             GridLayout grid = _blocks.layoutGrid;
             float cellSize = grid != null ? grid.cellSize.x : 1f;
-            Vector2 center = _camera != null ? (Vector2)_camera.transform.position : Vector2.zero;
-            Vector2 origin = BoardLayout.CenteredOrigin(center, _game.BoardWidth, _game.VisibleHeight, cellSize);
+            Vector2 origin = BoardLayout.CenteredOrigin(_anchor,_game.BoardWidth, _game.VisibleHeight, cellSize);
             if (grid != null)
             {
                 Transform root = grid.transform;

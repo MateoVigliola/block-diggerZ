@@ -13,14 +13,14 @@ MonoBehaviour:
   m_Name: BlocksRules
   m_EditorClassIdentifier: BlockDiggerz.Blocks::BlockDiggerz.Blocks.BlocksRules
   <BoardWidth>k__BackingField: 15
-  <VisibleHeight>k__BackingField: 15
+  <VisibleHeight>k__BackingField: 20
   <BufferRows>k__BackingField: 2
-  <GravityInterval>k__BackingField: 1
-  <PlacedFallSpeedMultiplier>k__BackingField: 2
+  <GravityInterval>k__BackingField: 0.7
+  <PlacedFallSpeedMultiplier>k__BackingField: 3
   <SoftDropInterval>k__BackingField: 0.05
   <LockDelay>k__BackingField: 0.5
   <LockExtensionBonus>k__BackingField: 0.25
-  <MaxLockExtensions>k__BackingField: 15
+  <MaxLockExtensions>k__BackingField: 10
   <MaxSidewaysPush>k__BackingField: 2
   <MaxUpPush>k__BackingField: 1
   <AutoShiftDelay>k__BackingField: 0.167
@@ -28,9 +28,20 @@ MonoBehaviour:
   <ColorCount>k__BackingField: 6
   <MinColorMatch>k__BackingField: 3
   <ClearStepDuration>k__BackingField: 0.25
+  <SpeedUpScoreStep>k__BackingField: 200
+  <SpeedUpPerStep>k__BackingField: 0.1
+  <MaxSpeedMultiplier>k__BackingField: 0
+  <HorizontalBlastBase>k__BackingField: 1
+  <HorizontalBlastPerExtraBlock>k__BackingField: 1
+  <VerticalBlastBase>k__BackingField: 1
+  <VerticalBlastPerExtraBlock>k__BackingField: 1
   <StartColumnMinHeight>k__BackingField: 1
   <StartColumnMaxHeight>k__BackingField: 4
   <StartFillDuration>k__BackingField: 3
   <StartFillFallInterval>k__BackingField: 0.02
+  <StartDirtMinPerColumn>k__BackingField: 0
+  <StartDirtMaxPerColumn>k__BackingField: 2
+  <StartDirtSpread>k__BackingField: 0.75
+  <StartDirtBottomFalloff>k__BackingField: 0.5
   <ColorBlockScore>k__BackingField: 10
   <RandomSeed>k__BackingField: 0

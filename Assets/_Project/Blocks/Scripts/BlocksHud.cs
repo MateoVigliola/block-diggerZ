@@ -6,7 +6,9 @@ namespace BlockDiggerz.Blocks
     /// <summary>
     /// UI Toolkit HUD for the block dropper: the store panel (just left of the board), score and next piece
     /// (just right of the board, both following the board as it moves or resizes), the run timer above the store
-    /// panel, the game over panel and the win panel (time, score, New level and Main menu buttons).
+    /// panel, the game over panel (score, Restart and Main menu buttons) and the win panel (time, score, New level
+    /// and Main menu buttons). In the portrait touch layout (<see cref="SetPortraitLayout"/>) the panels sit in
+    /// slots the touch controls give instead.
     /// Element names match BlocksHud.uxml. Updates elements only when
     /// the value they show changes.
     /// </summary>
@@ -61,6 +63,20 @@ namespace BlockDiggerz.Blocks
         /// <summary>Name of the "Clear the dirt!" message shown in the middle of the screen while the level start drops in.</summary>
         public const string LevelIntroName = "level-intro";
 
+        /// <summary>Name of the game over panel button that starts a new run.</summary>
+        public const string RestartButtonName = "game-over-restart";
+
+        /// <summary>Name of the game over panel button that loads the main menu.</summary>
+        public const string GameOverMainMenuButtonName = "game-over-main-menu";
+
+        /// <summary>
+        /// USS class on the HUD root in the portrait touch layout: STORE above TIME, no key hints, panels placed in
+        /// fixed slots (<see cref="SetPanelSlots"/>) instead of beside the board.
+        /// </summary>
+        public const string PortraitClass = "hud-root--portrait";
+
+        private const int PortraitLayoutVersion = int.MinValue;
+
         [SerializeField, Tooltip("Game the HUD shows.")]
         private BlocksGame _game;
 
@@ -73,6 +89,12 @@ namespace BlockDiggerz.Blocks
         private VisualElement _winPanel;
         private Button _newLevelButton;
         private Button _mainMenuButton;
+        private Button _restartButton;
+        private Button _gameOverMainMenuButton;
+        private bool _portrait;
+        private bool _hasSlots;
+        private Rect _storeSlot;
+        private Rect _statsSlot;
         private int _shownSeconds = -1;
         private VisualElement _levelIntro;
         private bool _levelIntroShown;
@@ -118,6 +140,38 @@ namespace BlockDiggerz.Blocks
 
         /// <summary>True while the store panel is dimmed because storing is locked.</summary>
         public bool IsStoreDimmed => _storePanel != null && _storePanel.ClassListContains(StoreLockedClass);
+
+        /// <summary>True while the portrait touch layout is on (<see cref="SetPortraitLayout"/>).</summary>
+        public bool IsPortrait => _portrait;
+
+        /// <summary>
+        /// Switches the portrait touch layout on or off. Off puts the STORE and SCORE / NEXT panels back beside the
+        /// board.
+        /// </summary>
+        public void SetPortraitLayout(bool portrait)
+        {
+            _portrait = portrait;
+            _root?.EnableInClassList(PortraitClass, portrait);
+            if (!portrait)
+            {
+                _hasSlots = false;
+                ClearSlotStyles();
+            }
+
+            _placedLayoutVersion = -1;
+        }
+
+        /// <summary>
+        /// Portrait layout only: places the STORE panel at the top left of <paramref name="storeSlot"/> and the
+        /// SCORE / NEXT panel at the top right of <paramref name="statsSlot"/>, both in panel coordinates.
+        /// </summary>
+        public void SetPanelSlots(Rect storeSlot, Rect statsSlot)
+        {
+            _hasSlots = true;
+            _storeSlot = storeSlot;
+            _statsSlot = statsSlot;
+            _placedLayoutVersion = -1;
+        }
 
         private void Awake()
         {
@@ -167,6 +221,20 @@ namespace BlockDiggerz.Blocks
             {
                 _mainMenuButton.clicked += OnMainMenuClicked;
             }
+
+            _restartButton = root.Q<Button>(RestartButtonName);
+            _gameOverMainMenuButton = root.Q<Button>(GameOverMainMenuButtonName);
+            if (_restartButton != null)
+            {
+                _restartButton.clicked += OnNewLevelClicked;
+            }
+
+            if (_gameOverMainMenuButton != null)
+            {
+                _gameOverMainMenuButton.clicked += OnMainMenuClicked;
+            }
+
+            _root.EnableInClassList(PortraitClass, _portrait);
         }
 
         private void OnNewLevelClicked()
@@ -192,6 +260,16 @@ namespace BlockDiggerz.Blocks
             if (_mainMenuButton != null)
             {
                 _mainMenuButton.clicked -= OnMainMenuClicked;
+            }
+
+            if (_restartButton != null)
+            {
+                _restartButton.clicked -= OnNewLevelClicked;
+            }
+
+            if (_gameOverMainMenuButton != null)
+            {
+                _gameOverMainMenuButton.clicked -= OnMainMenuClicked;
             }
 
             if (_game != null && _game.GameInput != null)
@@ -247,6 +325,12 @@ namespace BlockDiggerz.Blocks
 
         private void UpdatePlacement()
         {
+            if (_portrait)
+            {
+                PlaceInSlots();
+                return;
+            }
+
             if (_boardView == null || _boardView.ViewCamera == null || _root?.panel == null)
             {
                 return;
@@ -280,6 +364,48 @@ namespace BlockDiggerz.Blocks
             {
                 _statsPanel.style.left = topRight.x + _sideGap;
                 _statsPanel.style.top = topRight.y;
+            }
+        }
+
+        private void PlaceInSlots()
+        {
+            if (!_hasSlots || _placedLayoutVersion == PortraitLayoutVersion || _root?.panel == null)
+            {
+                return;
+            }
+
+            float panelWidth = _root.layout.width;
+            if (float.IsNaN(panelWidth) || panelWidth <= 0f)
+            {
+                return;
+            }
+
+            _placedLayoutVersion = PortraitLayoutVersion;
+            if (_storePanel != null)
+            {
+                _storePanel.style.left = _storeSlot.xMin;
+                _storePanel.style.right = StyleKeyword.Auto;
+                _storePanel.style.top = _storeSlot.yMin;
+            }
+
+            if (_statsPanel != null)
+            {
+                _statsPanel.style.left = StyleKeyword.Auto;
+                _statsPanel.style.right = panelWidth - _statsSlot.xMax;
+                _statsPanel.style.top = _statsSlot.yMin;
+            }
+        }
+
+        private void ClearSlotStyles()
+        {
+            if (_storePanel != null)
+            {
+                _storePanel.style.left = StyleKeyword.Null;
+            }
+
+            if (_statsPanel != null)
+            {
+                _statsPanel.style.right = StyleKeyword.Null;
             }
         }
 
