@@ -19,6 +19,7 @@ namespace BlockDiggerz.MobileControls.Tests
         [TestCase(TouchControls.PauseName)]
         [TestCase(TouchControls.StatsSlotName)]
         [TestCase(TouchControls.BoardAreaName)]
+        [TestCase(TouchControls.RotateOverlayName)]
         public void Layout_HasElement(string elementName)
         {
             VisualElement root = LoadLayout();
@@ -32,7 +33,6 @@ namespace BlockDiggerz.MobileControls.Tests
         [TestCase(TouchControls.RotateCounterClockwiseName)]
         [TestCase(TouchControls.StoreSlotName)]
         [TestCase(TouchControls.PauseName)]
-        [TestCase(TouchControls.BoardAreaName)]
         public void TouchTargets_ArePickable(string elementName)
         {
             VisualElement root = LoadLayout();
@@ -49,6 +49,41 @@ namespace BlockDiggerz.MobileControls.Tests
 
             Assert.That(hardDrop.parent.parent, Is.SameAs(parent));
             Assert.That(parent.IndexOf(hardDrop.parent), Is.EqualTo(parent.IndexOf(boardArea) + 1));
+        }
+
+        [Test]
+        public void MoveZones_AreTheLeftAndRightHalvesOfTheBoardArea()
+        {
+            VisualElement root = LoadLayout();
+            VisualElement boardArea = root.Q<VisualElement>(TouchControls.BoardAreaName);
+
+            Assert.That(boardArea.childCount, Is.EqualTo(2));
+            Assert.That(boardArea[0].name, Is.EqualTo(TouchControls.MoveLeftName));
+            Assert.That(boardArea[1].name, Is.EqualTo(TouchControls.MoveRightName));
+            Assert.That(boardArea.pickingMode, Is.EqualTo(PickingMode.Ignore));
+        }
+
+        [Test]
+        public void RotateOverlay_SitsOutsideTheControlsRootAndBlocksTaps()
+        {
+            VisualElement root = LoadLayout();
+            VisualElement overlay = root.Q<VisualElement>(TouchControls.RotateOverlayName);
+            VisualElement controlsRoot = root.Q<VisualElement>(TouchControls.RootName);
+
+            Assert.That(controlsRoot.Contains(overlay), Is.False);
+            Assert.That(overlay.pickingMode, Is.EqualTo(PickingMode.Position));
+        }
+
+        [Test]
+        public void BottomRow_IsRotateDropRotate()
+        {
+            VisualElement root = LoadLayout();
+            VisualElement row = root.Q<VisualElement>(TouchControls.HardDropName).parent;
+
+            Assert.That(row.childCount, Is.EqualTo(3));
+            Assert.That(row[0].name, Is.EqualTo(TouchControls.RotateCounterClockwiseName));
+            Assert.That(row[1].name, Is.EqualTo(TouchControls.HardDropName));
+            Assert.That(row[2].name, Is.EqualTo(TouchControls.RotateClockwiseName));
         }
 
         private static VisualElement LoadLayout()

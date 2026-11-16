@@ -7,14 +7,14 @@ using UnityEngine.UIElements;
 namespace BlockDiggerz.MobileControls
 {
     /// <summary>
-    /// Portrait touch controls for mobile browsers: full-height left and right strips (held, with the keyboard's
-    /// auto repeat), CCW / HARD DROP / CW under the board, STORE in the top left and pause in the top right. They
-    /// press buttons of a virtual <see cref="TouchPadDevice"/>, so the game reads them through
-    /// <see cref="GameInput"/> like keys. A finger that goes down on the board drags the piece sideways, one column
-    /// per board cell of travel. While active the camera is fitted so the board fills the board area, and the HUD
-    /// switches to its portrait layout. Shown only on mobile platforms (<see cref="IsMobilePlatform"/>) or when
-    /// forced for testing. Hidden while the game is not playing or gameplay input is off (pause menu).
-    /// Element names match MobileControls.uxml.
+    /// Portrait touch controls for mobile browsers: the left and right halves of the board area move the piece
+    /// (held, with the keyboard's auto repeat), CCW / HARD DROP / CW under the board, STORE in the top left and
+    /// pause in the top right. They press buttons of a virtual <see cref="TouchPadDevice"/>, so the game reads them
+    /// through <see cref="GameInput"/> like keys. While active the board spans the full width of the board area:
+    /// the visible height is cut to the rows that fit (<see cref="MobileBoardRows"/>, once per activation, which
+    /// restarts the run), the camera is fitted to the board, and the HUD switches to its portrait layout. Shown only
+    /// on mobile platforms (<see cref="IsMobilePlatform"/>) or when forced for testing. Hidden while the game is
+    /// not playing or gameplay input is off (pause menu). Element names match MobileControls.uxml.
     /// </summary>
     [RequireComponent(typeof(UIDocument))]
     public sealed class TouchControls : MonoBehaviour
@@ -22,10 +22,10 @@ namespace BlockDiggerz.MobileControls
         /// <summary>Name of the root element.</summary>
         public const string RootName = "mobile-root";
 
-        /// <summary>Name of the left strip.</summary>
+        /// <summary>Name of the left half of the board area (move left).</summary>
         public const string MoveLeftName = "move-left";
 
-        /// <summary>Name of the right strip.</summary>
+        /// <summary>Name of the right half of the board area (move right).</summary>
         public const string MoveRightName = "move-right";
 
         /// <summary>Name of the hard drop button.</summary>
@@ -46,8 +46,14 @@ namespace BlockDiggerz.MobileControls
         /// <summary>Name of the area under the pause button the HUD's SCORE / NEXT panel is placed in.</summary>
         public const string StatsSlotName = "stats-slot";
 
-        /// <summary>Name of the area the board is fitted into; drags start on the board inside it.</summary>
+        /// <summary>Name of the area the board is fitted into; it holds the two move halves.</summary>
         public const string BoardAreaName = "board-area";
+
+        /// <summary>
+        /// Name of the full-screen "turn your phone upright" message shown on phones held sideways. It sits outside
+        /// the root, so it stays up while the controls are hidden under the pause menu.
+        /// </summary>
+        public const string RotateOverlayName = "rotate-overlay";
 
         [SerializeField, Tooltip("Game the controls move pieces in.")]
         private BlocksGame _game;
@@ -64,14 +70,20 @@ namespace BlockDiggerz.MobileControls
         [SerializeField, Tooltip("Show the touch controls on desktop too, for testing in the Editor or Device Simulator. The debug menu toggles this.")]
         private bool _forceShow;
 
-        [SerializeField, Min(0.1f), Tooltip("Finger travel, in board cells, that moves the piece one column. 1 keeps the piece moving with the finger; lower is more sensitive.")]
-        private float _dragCellsPerColumn = 1f;
+        [SerializeField, Min(0f), Tooltip("Empty space in world units (1 = one cell) kept around the board when it is fitted into the board area. 0 lets the board touch both screen edges.")]
+        private float _boardPadding;
 
-        [SerializeField, Min(0f), Tooltip("Empty space in world units (1 = one cell) kept around the board when it is fitted into the board area.")]
-        private float _boardPadding = 0.25f;
+        [SerializeField, Min(BoardLayout.MinHeight), Tooltip("Fewest visible rows on the touch layout. On short screens the board keeps this many rows and gets narrower than the screen instead.")]
+        private int _minMobileRows = 12;
 
-        [SerializeField, Tooltip("Where the board sits in the board area when it doesn't fill it: x 0 left to 1 right, y 0 bottom to 1 top. Bottom keeps HARD DROP right below the board.")]
-        private Vector2 _boardAlignment = new(0.5f, 0f);
+        [SerializeField, Tooltip("On phones, ask the browser to lock the screen to portrait when the controls turn on and when the game goes fullscreen. Browsers only allow it in fullscreen, and iOS Safari never does; the rotate message covers the rest.")]
+        private bool _requestPortrait = true;
+
+        [SerializeField, Tooltip("On phones held sideways, cover the screen with the rotate message and pause the game.")]
+        private bool _guardPortrait = true;
+
+        [SerializeField, Tooltip("Where the board sits in the board area when it doesn't fill it: x 0 left to 1 right, y 0 bottom to 1 top. The default centers it.")]
+        private Vector2 _boardAlignment = new(0.5f, 0.5f);
 
         private readonly TouchPad _touchPad = new();
         private readonly List<TouchPressManipulator> _presses = new();
@@ -80,8 +92,13 @@ namespace BlockDiggerz.MobileControls
         private VisualElement _boardArea;
         private VisualElement _storeSlot;
         private VisualElement _statsSlot;
-        private BoardDragManipulator _drag;
+        private VisualElement _rotateOverlay;
         private bool _active;
+        private bool _mobileSizeApplied;
+        private bool _landscape;
+        private bool _landscapeKnown;
+        private bool _wasFullScreen;
+        private bool _pauseReleasePending;
         private bool _shown;
         private bool _shownKnown;
         private bool _layoutDirty;
@@ -114,12 +131,13 @@ namespace BlockDiggerz.MobileControls
         /// <summary>The virtual device the controls press.</summary>
         public TouchPad TouchPad => _touchPad;
 
-        /// <summary>The board's rectangle in panel coordinates after the last fit; drags start inside it.</summary>
-        public Rect BoardPanelRect => _boardPanelRect;
+        /// <summary>True while the rotate message covers the screen.</summary>
+        public bool IsRotateMessageShown => _active && _landscapeKnown && _landscape && UsesPortraitGuard;
 
-        /// <summary>Finger travel in panel units that moves the piece one column.</summary>
-        public float DragStepSize =>
-            _game != null && _game.BoardWidth > 0 ? _boardPanelRect.width / _game.BoardWidth * _dragCellsPerColumn : 0f;
+        private bool UsesPortraitGuard => _guardPortrait && IsMobilePlatform;
+
+        /// <summary>The board's rectangle in panel coordinates after the last fit.</summary>
+        public Rect BoardPanelRect => _boardPanelRect;
 
         private void Awake()
         {
@@ -132,6 +150,7 @@ namespace BlockDiggerz.MobileControls
             _boardArea = _document.rootVisualElement.Q<VisualElement>(BoardAreaName);
             _storeSlot = _document.rootVisualElement.Q<VisualElement>(StoreSlotName);
             _statsSlot = _document.rootVisualElement.Q<VisualElement>(StatsSlotName);
+            _rotateOverlay = _document.rootVisualElement.Q<VisualElement>(RotateOverlayName);
 
             AddPress(MoveLeftName, TouchPadButton.MoveLeft);
             AddPress(MoveRightName, TouchPadButton.MoveRight);
@@ -141,12 +160,7 @@ namespace BlockDiggerz.MobileControls
             AddPress(StoreSlotName, TouchPadButton.StorePiece);
             AddPress(PauseName, TouchPadButton.Pause);
 
-            if (_boardArea != null)
-            {
-                _drag = new BoardDragManipulator(IsOnBoard, () => DragStepSize, TryStep);
-                _boardArea.AddManipulator(_drag);
-                _boardArea.RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);
-            }
+            _boardArea?.RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);
 
             _active = false;
             _shownKnown = false;
@@ -155,7 +169,7 @@ namespace BlockDiggerz.MobileControls
 
         private void OnDisable()
         {
-            Deactivate();
+            Deactivate(false);
             _boardArea?.UnregisterCallback<GeometryChangedEvent>(OnGeometryChanged);
             foreach (TouchPressManipulator press in _presses)
             {
@@ -163,11 +177,6 @@ namespace BlockDiggerz.MobileControls
             }
 
             _presses.Clear();
-            if (_drag != null)
-            {
-                _drag.target?.RemoveManipulator(_drag);
-                _drag = null;
-            }
         }
 
         private void AddPress(string elementName, TouchPadButton button)
@@ -194,7 +203,7 @@ namespace BlockDiggerz.MobileControls
                 }
                 else
                 {
-                    Deactivate();
+                    Deactivate(true);
                 }
             }
 
@@ -204,6 +213,7 @@ namespace BlockDiggerz.MobileControls
             }
 
             UpdateShown();
+            UpdateOrientation();
             UpdateFit();
         }
 
@@ -216,9 +226,16 @@ namespace BlockDiggerz.MobileControls
             SetRootDisplay(true);
             _shownKnown = false;
             _layoutDirty = true;
+            _landscapeKnown = false;
+            _wasFullScreen = Screen.fullScreen;
+            RequestPortrait();
         }
 
-        private void Deactivate()
+        /// <summary>
+        /// Turns the touch layout off. <paramref name="restoreBoardSize"/> puts the rules' visible height back
+        /// (restarting the run); it is false while disabling, so tearing down the scene never restarts a run.
+        /// </summary>
+        private void Deactivate(bool restoreBoardSize)
         {
             if (!_active)
             {
@@ -229,6 +246,15 @@ namespace BlockDiggerz.MobileControls
             ReleaseAll();
             _touchPad.Disconnect();
             RestoreCamera();
+            if (restoreBoardSize)
+            {
+                RestoreBoardSize();
+            }
+
+            _mobileSizeApplied = false;
+            _landscapeKnown = false;
+            _pauseReleasePending = false;
+            SetRotateOverlay(false);
             SetHudPortrait(false);
             SetRootDisplay(false);
         }
@@ -254,6 +280,67 @@ namespace BlockDiggerz.MobileControls
             }
         }
 
+        private void UpdateOrientation()
+        {
+            if (_pauseReleasePending)
+            {
+                _pauseReleasePending = false;
+                _touchPad.SetPressed(TouchPadButton.Pause, false);
+            }
+
+            bool fullScreen = Screen.fullScreen;
+            if (fullScreen != _wasFullScreen)
+            {
+                _wasFullScreen = fullScreen;
+                if (fullScreen)
+                {
+                    RequestPortrait();
+                }
+            }
+
+            bool landscape = UsesPortraitGuard && PortraitGuard.IsLandscape(Screen.width, Screen.height);
+            if (_landscapeKnown && landscape == _landscape)
+            {
+                return;
+            }
+
+            if (PortraitGuard.ShouldPause(_landscapeKnown, _landscape, landscape, IsShown))
+            {
+                _touchPad.SetPressed(TouchPadButton.Pause, true);
+                _pauseReleasePending = true;
+            }
+
+            _landscapeKnown = true;
+            _landscape = landscape;
+            SetRotateOverlay(landscape);
+        }
+
+        /// <summary>
+        /// Asks for a portrait lock on phones. On the Web this becomes the browser's screen orientation lock, which
+        /// only takes effect in fullscreen on browsers that support it; elsewhere the request is ignored.
+        /// </summary>
+        private void RequestPortrait()
+        {
+            if (!_requestPortrait || !IsMobilePlatform)
+            {
+                return;
+            }
+
+            Screen.autorotateToPortrait = true;
+            Screen.autorotateToPortraitUpsideDown = false;
+            Screen.autorotateToLandscapeLeft = false;
+            Screen.autorotateToLandscapeRight = false;
+            Screen.orientation = ScreenOrientation.Portrait;
+        }
+
+        private void SetRotateOverlay(bool visible)
+        {
+            if (_rotateOverlay != null)
+            {
+                _rotateOverlay.style.display = visible ? DisplayStyle.Flex : DisplayStyle.None;
+            }
+        }
+
         private void ReleaseAll()
         {
             foreach (TouchPressManipulator press in _presses)
@@ -261,7 +348,6 @@ namespace BlockDiggerz.MobileControls
                 press.Cancel();
             }
 
-            _drag?.Cancel();
             _touchPad.ReleaseAll();
         }
 
@@ -307,6 +393,11 @@ namespace BlockDiggerz.MobileControls
                 return false;
             }
 
+            if (ApplyMobileBoardSize(area))
+            {
+                return false;
+            }
+
             float scaleX = viewport.x / panelRect.width;
             float scaleY = viewport.y / panelRect.height;
             var target = new Rect(area.xMin * scaleX, viewport.y - area.yMax * scaleY, area.width * scaleX, area.height * scaleY);
@@ -338,19 +429,36 @@ namespace BlockDiggerz.MobileControls
             return !float.IsNaN(rect.width) && !float.IsNaN(rect.height) && rect.width > 0f && rect.height > 0f;
         }
 
-        private bool IsOnBoard(Vector2 panelPosition)
+        /// <summary>
+        /// Once per activation, cuts the visible height to the rows that fit the board area at full width (waiting
+        /// while the phone is held sideways, so a landscape screen never picks the row count). Returns
+        /// true when the board was resized (the run restarts and the fit runs again on the next frame).
+        /// </summary>
+        private bool ApplyMobileBoardSize(Rect area)
         {
-            return _boardPanelRect.Contains(panelPosition);
-        }
-
-        private bool TryStep(int direction)
-        {
-            if (_game == null || _game.ActivePiece == null || (_input != null && !_input.GameplayEnabled))
+            if (_mobileSizeApplied || _game == null || _game.Rules == null || IsRotateMessageShown)
             {
                 return false;
             }
 
-            return _game.TryMove(new Vector2Int(direction, 0));
+            _mobileSizeApplied = true;
+            int rows = MobileBoardRows.Fit(area.width, area.height, _game.BoardWidth, _boardPadding, _minMobileRows,
+                _game.Rules.VisibleHeight);
+            if (rows == _game.VisibleHeight)
+            {
+                return false;
+            }
+
+            _game.SetBoardSize(_game.BoardWidth, rows);
+            return true;
+        }
+
+        private void RestoreBoardSize()
+        {
+            if (_mobileSizeApplied && _game != null && _game.Rules != null)
+            {
+                _game.SetBoardSize(_game.BoardWidth, _game.Rules.VisibleHeight);
+            }
         }
 
         private void SetHudPortrait(bool portrait)

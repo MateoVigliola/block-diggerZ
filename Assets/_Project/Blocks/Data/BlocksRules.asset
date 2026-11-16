@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b264f591836a5b346a282043dae2217f, type: 3}
   m_Name: BlocksRules
   m_EditorClassIdentifier: BlockDiggerz.Blocks::BlockDiggerz.Blocks.BlocksRules
-  <BoardWidth>k__BackingField: 15
+  <BoardWidth>k__BackingField: 10
   <VisibleHeight>k__BackingField: 20
   <BufferRows>k__BackingField: 2
   <GravityInterval>k__BackingField: 0.7

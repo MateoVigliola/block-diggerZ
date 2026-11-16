@@ -74,9 +74,11 @@ MonoBehaviour:
   _boardView: {fileID: 0}
   _input: {fileID: 0}
   _forceShow: 0
-  _dragCellsPerColumn: 1
-  _boardPadding: 0.25
-  _boardAlignment: {x: 0.5, y: 0}
+  _boardPadding: 0
+  _minMobileRows: 12
+  _requestPortrait: 1
+  _guardPortrait: 1
+  _boardAlignment: {x: 0.5, y: 0.5}
 --- !u!114 &739388544621440607
 MonoBehaviour:
   m_ObjectHideFlags: 0
