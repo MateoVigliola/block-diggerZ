@@ -59,6 +59,22 @@ namespace BlockDiggerz.Input
             Send();
         }
 
+        /// <summary>
+        /// Sets the buttons in <paramref name="affected"/> to their state in <paramref name="pressed"/> with one
+        /// state event, leaving the others as they are. Ignored while disconnected or unchanged.
+        /// </summary>
+        public void SetButtons(uint affected, uint pressed)
+        {
+            uint next = (_buttons & ~affected) | (pressed & affected);
+            if (next == _buttons || !IsConnected)
+            {
+                return;
+            }
+
+            _buttons = next;
+            Send();
+        }
+
         /// <summary>Releases every button.</summary>
         public void ReleaseAll()
         {

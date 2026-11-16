@@ -12,6 +12,7 @@
         <ui:VisualElement name="board-area" picking-mode="Ignore" class="mobile-board-area">
             <ui:VisualElement name="move-left" class="mobile-tap-zone" />
             <ui:VisualElement name="move-right" class="mobile-tap-zone" />
+            <ui:VisualElement name="gesture-area" class="mobile-gesture-area" />
         </ui:VisualElement>
         <ui:VisualElement name="bottom-row" picking-mode="Ignore" class="mobile-bottom-row">
             <ui:Label text="CCW" name="rotate-ccw" class="mobile-button mobile-rotate" />

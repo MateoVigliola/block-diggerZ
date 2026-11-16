@@ -7,9 +7,11 @@ using UnityEngine.UIElements;
 namespace BlockDiggerz.MobileControls
 {
     /// <summary>
-    /// Portrait touch controls for mobile browsers: the left and right halves of the board area move the piece
-    /// (held, with the keyboard's auto repeat), CCW / HARD DROP / CW under the board, STORE in the top left and
-    /// pause in the top right. They press buttons of a virtual <see cref="TouchPadDevice"/>, so the game reads them
+    /// Portrait touch controls for mobile browsers, in one of two modes picked in Settings
+    /// (<see cref="GameInput.TouchMode"/>). Buttons: the left and right halves of the board area move the piece
+    /// (held, with the keyboard's auto repeat), CCW / HARD DROP / CW under the board. Gestures: dragging on the
+    /// board moves the piece under the finger, tapping the left or right half rotates it counter-clockwise or
+    /// clockwise, and DROP spans the bottom row. Both have STORE in the top left and pause in the top right. They press buttons of a virtual <see cref="TouchPadDevice"/>, so the game reads them
     /// through <see cref="GameInput"/> like keys. While active the board spans the full width of the board area:
     /// the visible height is cut to the rows that fit (<see cref="MobileBoardRows"/>, once per activation, which
     /// restarts the run), the camera is fitted to the board, and the HUD switches to its portrait layout. Shown only
@@ -49,6 +51,12 @@ namespace BlockDiggerz.MobileControls
         /// <summary>Name of the area the board is fitted into; it holds the two move halves.</summary>
         public const string BoardAreaName = "board-area";
 
+        /// <summary>Name of the gesture surface over the board area (gesture mode only).</summary>
+        public const string GestureAreaName = "gesture-area";
+
+        /// <summary>USS class on the root while the touch controls are in gesture mode.</summary>
+        public const string GesturesClass = "mobile-gestures";
+
         /// <summary>
         /// Name of the full-screen "turn your phone upright" message shown on phones held sideways. It sits outside
         /// the root, so it stays up while the controls are hidden under the pause menu.
@@ -85,8 +93,21 @@ namespace BlockDiggerz.MobileControls
         [SerializeField, Tooltip("Where the board sits in the board area when it doesn't fill it: x 0 left to 1 right, y 0 bottom to 1 top. The default centers it.")]
         private Vector2 _boardAlignment = new(0.5f, 0.5f);
 
+        [SerializeField, Min(0f), Tooltip("Gesture mode: how far in panel pixels a finger must travel before a touch counts as a drag (moving the piece) instead of a tap (rotating it).")]
+        private float _dragThreshold = 30f;
+
+        [SerializeField, Min(0f), Tooltip("Gesture mode: longest press in seconds that still counts as a tap. Longer presses that don't drag do nothing.")]
+        private float _tapMaxDuration = 0.3f;
+
+        [SerializeField, Min(1), Tooltip("Gesture mode: most rotations per direction that can wait for the game, so quick taps are not lost; extra taps are dropped.")]
+        private int _maxQueuedTaps = 2;
+
         private readonly TouchPad _touchPad = new();
         private readonly List<TouchPressManipulator> _presses = new();
+        private readonly GesturePulses _pulses = new();
+        private TouchGestureManipulator _gesture;
+        private TouchControlMode _mode;
+        private bool _modeKnown;
         private UIDocument _document;
         private VisualElement _root;
         private VisualElement _boardArea;
@@ -131,6 +152,12 @@ namespace BlockDiggerz.MobileControls
         /// <summary>The virtual device the controls press.</summary>
         public TouchPad TouchPad => _touchPad;
 
+        /// <summary>The touch control mode the layout is showing.</summary>
+        public TouchControlMode Mode => _input != null ? _input.TouchMode : GameInput.DefaultTouchMode;
+
+        /// <summary>True while a finger drags on the gesture area.</summary>
+        public bool IsDragging => _gesture != null && _gesture.IsDragging;
+
         /// <summary>True while the rotate message covers the screen.</summary>
         public bool IsRotateMessageShown => _active && _landscapeKnown && _landscape && UsesPortraitGuard;
 
@@ -160,9 +187,18 @@ namespace BlockDiggerz.MobileControls
             AddPress(StoreSlotName, TouchPadButton.StorePiece);
             AddPress(PauseName, TouchPadButton.Pause);
 
+            VisualElement gestureArea = _document.rootVisualElement.Q<VisualElement>(GestureAreaName);
+            if (gestureArea != null)
+            {
+                _gesture = new TouchGestureManipulator();
+                _gesture.Tapped += OnTapped;
+                gestureArea.AddManipulator(_gesture);
+            }
+
             _boardArea?.RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);
 
             _active = false;
+            _modeKnown = false;
             _shownKnown = false;
             SetRootDisplay(false);
         }
@@ -177,6 +213,21 @@ namespace BlockDiggerz.MobileControls
             }
 
             _presses.Clear();
+
+            if (_gesture != null)
+            {
+                _gesture.Tapped -= OnTapped;
+                _gesture.target?.RemoveManipulator(_gesture);
+                _gesture = null;
+            }
+        }
+
+        private void OnTapped(TouchTap tap)
+        {
+            if (IsShown && Mode == TouchControlMode.Gestures)
+            {
+                _pulses.QueueTap(tap);
+            }
         }
 
         private void AddPress(string elementName, TouchPadButton button)
@@ -212,9 +263,56 @@ namespace BlockDiggerz.MobileControls
                 return;
             }
 
+            UpdateMode();
             UpdateShown();
             UpdateOrientation();
             UpdateFit();
+            UpdateGestures();
+        }
+
+        private void UpdateMode()
+        {
+            TouchControlMode mode = Mode;
+            if (_modeKnown && mode == _mode)
+            {
+                return;
+            }
+
+            _modeKnown = true;
+            _mode = mode;
+            ReleaseAll();
+            _root?.EnableInClassList(GesturesClass, mode == TouchControlMode.Gestures);
+        }
+
+        /// <summary>
+        /// Gesture mode: presses the touch pad for queued tap rotations and steps the falling piece one column at a
+        /// time toward the dragging finger, each as a one-frame press (<see cref="GesturePulses"/>).
+        /// </summary>
+        private void UpdateGestures()
+        {
+            if (!IsShown || Mode != TouchControlMode.Gestures || _gesture == null)
+            {
+                return;
+            }
+
+            _gesture.DragThreshold = _dragThreshold;
+            _gesture.TapMaxDuration = _tapMaxDuration;
+            _pulses.MaxQueuedTaps = _maxQueuedTaps;
+
+            uint pressed = _pulses.Next(DragStep());
+            _touchPad.SetButtons(GesturePulses.Buttons, pressed);
+        }
+
+        private int DragStep()
+        {
+            if (!_gesture.IsDragging || _game == null || _game.ActivePiece == null || _boardPanelRect.width <= 0f)
+            {
+                return 0;
+            }
+
+            float finger = DragFollow.FingerCell(_gesture.Position.x, _boardPanelRect, _game.BoardWidth);
+            float piece = DragFollow.PieceCenter(_game.ActiveCells, _game.ActivePosition.x);
+            return DragFollow.StepDirection(finger, piece);
         }
 
         private void Activate()
@@ -348,6 +446,8 @@ namespace BlockDiggerz.MobileControls
                 press.Cancel();
             }
 
+            _gesture?.Cancel();
+            _pulses.Clear();
             _touchPad.ReleaseAll();
         }
 

@@ -57,10 +57,22 @@ namespace BlockDiggerz.MobileControls.Tests
             VisualElement root = LoadLayout();
             VisualElement boardArea = root.Q<VisualElement>(TouchControls.BoardAreaName);
 
-            Assert.That(boardArea.childCount, Is.EqualTo(2));
             Assert.That(boardArea[0].name, Is.EqualTo(TouchControls.MoveLeftName));
             Assert.That(boardArea[1].name, Is.EqualTo(TouchControls.MoveRightName));
             Assert.That(boardArea.pickingMode, Is.EqualTo(PickingMode.Ignore));
+        }
+
+        [Test]
+        public void GestureArea_IsInsideTheBoardAreaAndPickable()
+        {
+            VisualElement root = LoadLayout();
+            VisualElement boardArea = root.Q<VisualElement>(TouchControls.BoardAreaName);
+            VisualElement gestureArea = root.Q<VisualElement>(TouchControls.GestureAreaName);
+
+            Assert.That(gestureArea, Is.Not.Null);
+            Assert.That(gestureArea.parent, Is.SameAs(boardArea));
+            Assert.That(gestureArea.pickingMode, Is.EqualTo(PickingMode.Position));
+            Assert.That(boardArea.childCount, Is.EqualTo(3));
         }
 
         [Test]

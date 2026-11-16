@@ -168,6 +168,15 @@
     border-color: rgb(240, 200, 120);
 }
 
+.touch-mode-row {
+    height: 64px;
+    margin-bottom: 8px;
+}
+
+.touch-mode-option {
+    margin: 0 6px;
+}
+
 .settings-slider {
     margin: 16px 0;
     font-size: 24px;

@@ -27,6 +27,28 @@ namespace BlockDiggerz.MobileControls.Tests
         }
 
         [Test]
+        public void SetButtons_ChangesOnlyAffectedButtons()
+        {
+            var pad = new TouchPad();
+            pad.Connect();
+            try
+            {
+                pad.SetPressed(TouchPadButton.HardDrop, true);
+                pad.SetPressed(TouchPadButton.MoveLeft, true);
+
+                pad.SetButtons(GesturePulses.Buttons, TouchPadMask.Bit(TouchPadButton.RotateClockwise));
+
+                Assert.That(TouchPadMask.IsPressed(pad.Buttons, TouchPadButton.HardDrop), Is.True);
+                Assert.That(TouchPadMask.IsPressed(pad.Buttons, TouchPadButton.MoveLeft), Is.False);
+                Assert.That(TouchPadMask.IsPressed(pad.Buttons, TouchPadButton.RotateClockwise), Is.True);
+            }
+            finally
+            {
+                pad.Disconnect();
+            }
+        }
+
+        [Test]
         public void Device_EachBit_PressesItsOwnControl()
         {
             TouchPadDevice.RegisterLayout();

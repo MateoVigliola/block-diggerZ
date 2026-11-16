@@ -122,6 +122,34 @@ namespace BlockDiggerz.Menus.Tests
         }
 
         [Test]
+        public void TouchMode_DefaultsToGestures_WhenNothingSaved()
+        {
+            var settings = new GameSettings(_store);
+
+            Assert.AreEqual(BlockDiggerz.Input.TouchControlMode.Gestures, settings.TouchMode);
+            Assert.AreEqual(BlockDiggerz.Input.GameInput.DefaultTouchMode, settings.TouchMode);
+        }
+
+        [Test]
+        public void TouchMode_IsSavedAndReloaded()
+        {
+            var settings = new GameSettings(_store);
+            settings.SetTouchMode(BlockDiggerz.Input.TouchControlMode.Buttons);
+
+            var reloaded = new GameSettings(_store);
+
+            Assert.AreEqual(BlockDiggerz.Input.TouchControlMode.Buttons, reloaded.TouchMode);
+        }
+
+        [TestCase("")]
+        [TestCase("Swipes")]
+        [TestCase("7")]
+        public void ParseTouchMode_UnknownText_GivesDefault(string text)
+        {
+            Assert.AreEqual(BlockDiggerz.Input.GameInput.DefaultTouchMode, GameSettings.ParseTouchMode(text));
+        }
+
+        [Test]
         public void LoadIfMissing_WithNoActions_StillReturnsSettings()
         {
             Assert.IsNotNull(GameSettings.LoadIfMissing(null, _store, null));
