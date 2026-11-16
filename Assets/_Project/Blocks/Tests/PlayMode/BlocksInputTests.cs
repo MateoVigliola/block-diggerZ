@@ -154,8 +154,8 @@ namespace BlockDiggerz.Blocks.Tests
                 blocks += _game.Board.IsOccupied(x, 0) ? 1 : 0;
             }
 
-            Assert.AreEqual(_game.Board.Width - _game.ColorBlocksCleared, blocks,
-                "the full row is not cleared; only blocks in a color match (if the I's colors made one) are gone");
+            Assert.GreaterOrEqual(blocks, _game.Board.Width - _game.ColorBlocksCleared - _game.BlocksBlasted,
+                "the full row is not cleared; only blocks in a color match or its blast (if the I's colors made one) are gone");
             Label score = HudRoot().Q<Label>(BlocksHud.ScoreValueName);
             Assert.AreEqual(_game.Score.ToString(), score.text);
         }

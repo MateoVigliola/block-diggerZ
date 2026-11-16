@@ -12,12 +12,22 @@ namespace BlockDiggerz.Blocks
     {
         /// <summary>
         /// Writes each matched cell once into <paramref name="cells"/> and returns the number of scored blocks (the
-        /// summed length of every run, so crossing blocks count twice). Unpainted blocks never match, nor do cells
+        /// summed length of every run, so crossing blocks count twice). Unpainted and obstacle blocks never match, nor do cells
         /// marked in <paramref name="excluded"/> (indexed y * width + x; falling blocks).
         /// </summary>
         public static int Find(BoardGrid board, int minLength, List<Vector2Int> cells, bool[] excluded = null)
         {
+            return Find(board, minLength, cells, null, excluded);
+        }
+
+        /// <summary>
+        /// Like the other overload, and also writes every run into <paramref name="runs"/> (cleared first) when given.
+        /// </summary>
+        public static int Find(BoardGrid board, int minLength, List<Vector2Int> cells, List<ColorRun> runs,
+            bool[] excluded)
+        {
             cells.Clear();
+            runs?.Clear();
             var marked = new bool[board.Width, board.Height];
             int scored = 0;
 
@@ -31,7 +41,7 @@ namespace BlockDiggerz.Blocks
                         continue;
                     }
 
-                    scored += MarkRun(board, excluded, minLength, cells, marked, runStart, y, x - runStart, Vector2Int.right);
+                    scored += MarkRun(board, excluded, minLength, cells, runs, marked, runStart, y, x - runStart, Vector2Int.right);
                     runStart = x;
                 }
             }
@@ -46,7 +56,7 @@ namespace BlockDiggerz.Blocks
                         continue;
                     }
 
-                    scored += MarkRun(board, excluded, minLength, cells, marked, x, runStart, y - runStart, Vector2Int.up);
+                    scored += MarkRun(board, excluded, minLength, cells, runs, marked, x, runStart, y - runStart, Vector2Int.up);
                     runStart = y;
                 }
             }
@@ -57,7 +67,8 @@ namespace BlockDiggerz.Blocks
         private static BlockColor ColorAt(BoardGrid board, bool[] excluded, int x, int y)
         {
             bool skip = excluded != null && excluded[y * board.Width + x];
-            return skip ? null : board.GetColor(x, y);
+            BlockColor color = skip ? null : board.GetColor(x, y);
+            return BlockColor.CanMatch(color) ? color : null;
         }
 
         private static bool SameColor(BoardGrid board, bool[] excluded, int ax, int ay, int bx, int by)
@@ -66,13 +77,15 @@ namespace BlockDiggerz.Blocks
             return a != null && a == ColorAt(board, excluded, bx, by);
         }
 
-        private static int MarkRun(BoardGrid board, bool[] excluded, int minLength, List<Vector2Int> cells, bool[,] marked,
-            int startX, int startY, int length, Vector2Int step)
+        private static int MarkRun(BoardGrid board, bool[] excluded, int minLength, List<Vector2Int> cells,
+            List<ColorRun> runs, bool[,] marked, int startX, int startY, int length, Vector2Int step)
         {
             if (length < minLength || ColorAt(board, excluded, startX, startY) == null)
             {
                 return 0;
             }
+
+            runs?.Add(new ColorRun(new Vector2Int(startX, startY), length, step == Vector2Int.right));
 
             for (int i = 0; i < length; i++)
             {

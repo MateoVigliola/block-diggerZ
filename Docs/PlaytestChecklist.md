@@ -279,3 +279,68 @@ Tunables in `Assets/_Project/Blocks/Data/BlocksRules.asset`, Level start: Start 
   - Notes:
 - [ ] **Pause during drop-in:** press Esc while columns drop. Expect them to freeze, and Continue to carry on.
   - Notes:
+
+## Dirt obstacles, 2026-11-16
+
+Tunables in `Assets/_Project/Blocks/Data/BlocksRules.asset`, Level start Dirt: Start Dirt Min Per Column (1), Start Dirt Max Per Column (3), Start Dirt Spread (0.75, bell curve width), Start Dirt Bottom Falloff (0.5; 0 = always at the bottom, 1 = mixed in evenly). Dirt looks are the BlocksGame prefab's Start Dirt list (`Assets/_Project/Blocks/Data/Dirt/DirtA-D.asset`). The debug menu shows a Dirt blocks count.
+
+- [ ] **Dirt in every column:** start a run. Expect every column to get 1 to 3 Dirt blocks on top of its 1 to 4 colored blocks, 2 most often, with the four Dirt looks mixed.
+  - Notes:
+- [ ] **Mostly at the bottom:** expect Dirt to sit on the floor most of the time, sometimes between or above colored blocks. Too scattered or too tidy? Tune Start Dirt Bottom Falloff.
+  - Notes:
+- [ ] **Dirt never clears:** line up 3 or more Dirt in a row or column (they often touch along the floor). Expect nothing to flash or clear.
+  - Notes:
+- [ ] **Dirt breaks lines:** expect two same-colored blocks with Dirt between them never to count as a line.
+  - Notes:
+- [ ] **Dirt falls alone:** clear colored blocks under a Dirt block. Expect it to drop as a single block, not dragging touching Dirt with it.
+  - Notes:
+- [ ] **Only at level start:** play several pieces. Expect Dirt to appear only in the starting drop-in, never on pieces or in NEXT and STORE.
+  - Notes:
+- [ ] **Looks:** Dirt sprites now import at 32 pixels per unit like the colored blocks. Do they fit the cells?
+  - Notes:
+- [ ] **Amount:** does 1 to 3 per column feel right, and does the curve favor 2 enough? Tune Start Dirt Spread (smaller means more 2s).
+  - Notes:
+
+## Match blasts, 2026-11-16
+
+Tunables in `Assets/_Project/Blocks/Data/BlocksRules.asset`, Match blasts: Horizontal Blast Base (1), Horizontal Blast Per Extra Block (1), Vertical Blast Base (1), Vertical Blast Per Extra Block (1). The debug menu shows a Blocks blasted count; "Color chain (2 steps)" was rebuilt so the blast doesn't break it.
+
+- [ ] **Row of 3:** match 3 in a row with blocks on both sides. Expect the 3 plus 1 block left and 1 block right to flash and vanish.
+  - Notes:
+- [ ] **Row of 4 and 5:** expect 2 cells each side for 4, 3 each side for 5.
+  - Notes:
+- [ ] **Column of 3:** match 3 stacked. Expect the 3 plus 1 block directly below to vanish; nothing above is blasted (it falls instead).
+  - Notes:
+- [ ] **Column of 4 and 5:** expect 2 cells below for 4, 3 below for 5.
+  - Notes:
+- [ ] **Digging Dirt:** make a match next to or above Dirt. Expect the Dirt to be blasted away; this is the only way to remove Dirt.
+  - Notes:
+- [ ] **Gaps use up reach:** match 3 in a row with an empty cell right beside it and a block after that. Expect that block to stay.
+  - Notes:
+- [ ] **Score:** expect only the matched blocks to score (10 each); blasted blocks give nothing.
+  - Notes:
+- [ ] **Chains:** expect blasts to open space, blocks to fall into it and new matches to blast again. Press the debug "Color chain (2 steps)" button and expect 2 clear steps.
+  - Notes:
+- [ ] **Power:** do blasts feel too strong or too weak, sideways and downward? Tune the four Match blasts values.
+  - Notes:
+
+## Timer, speed-up and Dirt win, 2026-11-16
+
+Tunables in `Assets/_Project/Blocks/Data/BlocksRules.asset`, Speed-up: Speed Up Score Step (200), Speed Up Per Step (0.1), Max Speed Multiplier (0 = no cap). Main menu scene name on the BlocksHud prefab (Main Menu Scene). Debug menu: Run time, Gravity speed readouts and a Win now button.
+
+- [ ] **Timer:** start a run. Expect TIME above STORE, right-aligned like SCORE on the other side, showing 0:00 through the drop-in and starting when the first piece appears, in minutes:seconds.
+  - Notes:
+- [ ] **Timer pauses and stops:** press Esc: expect the timer to freeze. Lose or win: expect it to stop. Press R: expect 0:00 again.
+  - Notes:
+- [ ] **Speed-up:** score 200 points. Expect the piece to fall a bit faster (debug Gravity speed x1.1), x1.2 at 400, and so on. Soft drop and settling blocks keep their speed.
+  - Notes:
+- [ ] **Speed curve:** does the game get too fast too soon, or not soon enough? Tune Speed Up Score Step, Speed Up Per Step and Max Speed Multiplier.
+  - Notes:
+- [ ] **Win by digging:** blast away every Dirt block. Expect the board to finish settling, then a LEVEL CLEAR screen with your Time and Score, and no new piece.
+  - Notes:
+- [ ] **Win buttons:** on the win screen, expect New level to start a fresh run (new board, timer 0:00, score 0) and Main menu to load the main menu. R also starts a new level. Try mouse and keyboard (New level starts focused).
+  - Notes:
+- [ ] **Win now:** press the debug Win now button mid-run. Expect the win screen at once.
+  - Notes:
+- [ ] **Readability:** is the win screen clear and does it look right over the board? Do the TIME and STORE boxes still fit beside the board at small board heights?
+  - Notes:
