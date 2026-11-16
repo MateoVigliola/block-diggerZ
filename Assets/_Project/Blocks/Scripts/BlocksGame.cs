@@ -32,6 +32,9 @@ namespace BlockDiggerz.Blocks
         [SerializeField, Tooltip("Piece the starting rubble blocks count as (for tags). Empty uses the first piece of the piece set.")]
         private PieceDefinition _startBlockPiece;
 
+        [SerializeField, Tooltip("Dirt looks mixed into the starting columns (each an obstacle Block Color); each Dirt block picks one evenly. Empty means no Dirt. Counts and placement are in Blocks Rules.")]
+        private List<BlockColor> _startDirt = new();
+
         private readonly List<List<BlockColor>> _startColumns = new();
         private int _startColumnsPlaced;
         private float _startFillTimer;
@@ -67,6 +70,27 @@ namespace BlockDiggerz.Blocks
 
         /// <summary>Raised when the run ends.</summary>
         public event Action GameOver;
+
+        /// <summary>Raised when the level is won (every starting Dirt block cleared).</summary>
+        public event Action Won;
+
+        /// <summary>
+        /// Seconds of play this run: counts from the first piece spawn (after the drop-in) until the run is won or
+        /// lost, scaled time (so it stops while paused).
+        /// </summary>
+        public float RunTime { get; private set; }
+
+        /// <summary>Dirt blocks the level started with (counted when the starting columns are rolled).</summary>
+        public int StartDirtCount { get; private set; }
+
+        /// <summary>Current speed multiplier of the falling piece, from the score (<see cref="GravitySpeed"/>).</summary>
+        public float GravitySpeedMultiplier =>
+            GravitySpeed.Multiplier(Score, _rules.SpeedUpScoreStep, _rules.SpeedUpPerStep, _rules.MaxSpeedMultiplier);
+
+        /// <summary>Seconds per row the falling piece drops on its own: gravity interval divided by the speed multiplier.</summary>
+        public float PieceFallInterval => _rules.GravityInterval / GravitySpeedMultiplier;
+
+        private bool _clockRunning;
 
         /// <summary>Raised when a new run starts.</summary>
         public event Action RunStarted;
@@ -107,8 +131,11 @@ namespace BlockDiggerz.Blocks
         /// <summary>Points this run.</summary>
         public int Score { get; private set; }
 
-        /// <summary>Blocks deleted by color matches this run.</summary>
+        /// <summary>Blocks deleted by color matches this run (not counting blasted blocks).</summary>
         public int ColorBlocksCleared { get; private set; }
+
+        /// <summary>Blocks removed by match blasts this run (<see cref="MatchBlast"/>), Dirt included.</summary>
+        public int BlocksBlasted { get; private set; }
 
         /// <summary>
         /// True from a lock until the board has settled: placed blocks are falling or matches are flashing, and the
@@ -180,7 +207,7 @@ namespace BlockDiggerz.Blocks
             Vector2Int size = BoardLayout.ClampSize(_rules.BoardWidth, _rules.VisibleHeight);
             CreateBoard(size.x, size.y);
             _bag = new PieceBag(_pieceSet.Pieces, PickSeed());
-            _resolver = new ClearResolver(_rules.ColorBlockScore, _rules.MinColorMatch);
+            _resolver = new ClearResolver(_rules.ColorBlockScore, _rules.MinColorMatch, _rules.Blast);
         }
 
         /// <summary>
@@ -221,7 +248,7 @@ namespace BlockDiggerz.Blocks
 
         private void Update()
         {
-            if (State == BlocksGameState.GameOver)
+            if (State != BlocksGameState.Playing)
             {
                 if (_input != null && _input.RestartPressed)
                 {
@@ -229,6 +256,11 @@ namespace BlockDiggerz.Blocks
                 }
 
                 return;
+            }
+
+            if (_clockRunning)
+            {
+                RunTime += Time.deltaTime;
             }
 
             if (_settling)
@@ -281,6 +313,9 @@ namespace BlockDiggerz.Blocks
             PiecesLocked = 0;
             Score = 0;
             ColorBlocksCleared = 0;
+            BlocksBlasted = 0;
+            RunTime = 0f;
+            _clockRunning = false;
             _settling = false;
             _flashing = false;
             _fallingChecked = false;
@@ -307,13 +342,18 @@ namespace BlockDiggerz.Blocks
             _startColumnsPlaced = 0;
             _startFillTimer = 0f;
             int forced = StartColumnsGenerator.Generate(BoardWidth, _rules.StartColumnMinHeight,
-                _rules.StartColumnMaxHeight, VisibleHeight, _rules.MinColorMatch, _activeColors, _paintRandom,
-                _startColumns);
+                _rules.StartColumnMaxHeight, VisibleHeight, _rules.MinColorMatch, _activeColors, _startDirt,
+                _rules.StartDirt, _paintRandom, _startColumns);
             StartBlocksWithoutSafeColor = forced;
             _startingFill = false;
+            StartDirtCount = 0;
             foreach (List<BlockColor> column in _startColumns)
             {
                 _startingFill |= column.Count > 0;
+                foreach (BlockColor color in column)
+                {
+                    StartDirtCount += color != null && color.IsObstacle ? 1 : 0;
+                }
             }
         }
 
@@ -374,11 +414,12 @@ namespace BlockDiggerz.Blocks
         /// </summary>
         public void SpawnPiece(PaintedPiece piece)
         {
-            if (piece == null || State == BlocksGameState.GameOver || _settling)
+            if (piece == null || State != BlocksGameState.Playing || _settling)
             {
                 return;
             }
 
+            _clockRunning = true;
             PieceDefinition definition = piece.Definition;
             _active = piece;
             ActiveRotation = 0;
@@ -551,6 +592,15 @@ namespace BlockDiggerz.Blocks
             BeginSettling(resume);
         }
 
+        /// <summary>Wins the level at once, as if all Dirt were cleared. Debug and tests.</summary>
+        public void ForceWin()
+        {
+            if (State == BlocksGameState.Playing)
+            {
+                WinLevel();
+            }
+        }
+
         /// <summary>Ends the run as if the stack had reached the top. Debug and tests.</summary>
         public void ForceGameOver()
         {
@@ -622,7 +672,8 @@ namespace BlockDiggerz.Blocks
                 return;
             }
 
-            float interval = softDrop ? Mathf.Min(_rules.SoftDropInterval, _rules.GravityInterval) : _rules.GravityInterval;
+            float gravity = PieceFallInterval;
+            float interval = softDrop ? Mathf.Min(_rules.SoftDropInterval, gravity) : gravity;
             _fallTimer = Mathf.Min(_fallTimer, interval) + deltaTime;
             while (_fallTimer >= interval)
             {
@@ -714,7 +765,8 @@ namespace BlockDiggerz.Blocks
         {
             _resolver.Apply(Board, _clearStep);
             Score += _clearStep.Score;
-            ColorBlocksCleared += _clearStep.Cells.Count;
+            ColorBlocksCleared += _clearStep.MatchedBlocks;
+            BlocksBlasted += _clearStep.BlastedBlocks;
             int scored = _clearStep.ScoredBlocks;
             _clearStep.Reset();
             _flashing = false;
@@ -729,6 +781,13 @@ namespace BlockDiggerz.Blocks
             _startingFill = false;
             _flashing = false;
             _clearStep.Reset();
+            if (LevelGoal.IsCleared(StartDirtCount, Board.CountObstacles()))
+            {
+                _resumePiece = null;
+                WinLevel();
+                return;
+            }
+
             PaintedPiece piece = _resumePiece ?? TakeNext();
             _resumePiece = null;
             SpawnPiece(piece);
@@ -750,8 +809,20 @@ namespace BlockDiggerz.Blocks
         private void EndRun()
         {
             State = BlocksGameState.GameOver;
+            _clockRunning = false;
             Version++;
             GameOver?.Invoke();
+        }
+
+        private void WinLevel()
+        {
+            State = BlocksGameState.Won;
+            _clockRunning = false;
+            _active = null;
+            _settling = false;
+            _flashing = false;
+            Version++;
+            Won?.Invoke();
         }
 
         private void ResetTimers()

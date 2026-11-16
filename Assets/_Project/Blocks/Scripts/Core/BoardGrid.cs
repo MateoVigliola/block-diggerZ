@@ -117,6 +117,21 @@ namespace BlockDiggerz.Blocks
             }
         }
 
+        /// <summary>Number of obstacle blocks (Dirt, see <see cref="BlockColor.IsObstacle"/>) on the board.</summary>
+        public int CountObstacles()
+        {
+            int count = 0;
+            for (int i = 0; i < _colors.Length; i++)
+            {
+                if (_cells[i] != null && _colors[i] != null && _colors[i].IsObstacle)
+                {
+                    count++;
+                }
+            }
+
+            return count;
+        }
+
         /// <summary>Empties the whole board.</summary>
         public void Clear()
         {

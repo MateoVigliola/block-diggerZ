@@ -1,0 +1,14 @@
+﻿{
+  "name": "BlockDiggerz",
+  "slug": "blockdiggerz",
+  "engine": "unity",
+  "platforms": ["shorts", "devlog", "itch"],
+  "pitch": "A 2D falling-block roguelike: stack and match colored blocks, chain clears, and pick upgrades between rounds.",
+  "cycleStart": "2026-11-14",
+  "cycleWeeks": 5,
+  "release": "",
+  "audience": "",
+  "hashtags": [],
+  "ignore": [],
+  "active": true
+}

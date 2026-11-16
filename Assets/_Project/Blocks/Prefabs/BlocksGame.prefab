@@ -224,6 +224,12 @@ MonoBehaviour:
   _rules: {fileID: 11400000, guid: c0763a6d24019ac40acb6d584bfab57e, type: 2}
   _pieceSet: {fileID: 11400000, guid: d4f7ba90177a0534780d6e80391a8e0b, type: 2}
   _palette: {fileID: 11400000, guid: 60c6ad24e54ebad46a0e3aff4f044e80, type: 2}
+  _startBlockPiece: {fileID: 0}
+  _startDirt:
+  - {fileID: 11400000, guid: dfa6ab8094e8f6346b15387fac02cc8e, type: 2}
+  - {fileID: 11400000, guid: 3739731931f7d3d43a693c1795579733, type: 2}
+  - {fileID: 11400000, guid: 17c08d0e6fa7abe4dbe1e3e09a1f12c2, type: 2}
+  - {fileID: 11400000, guid: f324cf8575192464dba8ff7c633645dc, type: 2}
   _input: {fileID: 0}
 --- !u!114 &2244446747927611551
 MonoBehaviour:
@@ -262,6 +268,7 @@ MonoBehaviour:
   _unpaintedColor: {r: 0.6, g: 0.6, b: 0.65, a: 1}
   _clearFlashColor: {r: 1, g: 1, b: 1, a: 1}
   _clearFlashAmount: 0.6
+  _camera: {fileID: 0}
 --- !u!1 &4273816091179968729
 GameObject:
   m_ObjectHideFlags: 0

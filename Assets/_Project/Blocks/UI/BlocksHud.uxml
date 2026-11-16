@@ -2,7 +2,9 @@
     <Style src="BlocksHud.uss" />
     <ui:VisualElement name="hud-root" picking-mode="Ignore" class="hud-root">
         <ui:VisualElement name="store" picking-mode="Ignore" class="hud-store">
-            <ui:Label text="STORE" class="hud-caption" />
+            <ui:Label text="TIME" class="hud-caption" />
+            <ui:Label text="0:00" name="timer-value" class="hud-value" />
+            <ui:Label text="STORE" class="hud-caption hud-store-caption" />
             <ui:VisualElement name="store-preview" picking-mode="Ignore" class="hud-piece-box" />
             <ui:Label text="Space" name="store-key" class="hud-key-hint" />
         </ui:VisualElement>
@@ -12,6 +14,9 @@
             <ui:Label text="NEXT" class="hud-caption hud-next-caption" />
             <ui:VisualElement name="next-preview" picking-mode="Ignore" class="hud-piece-box" />
         </ui:VisualElement>
+        <ui:VisualElement name="level-intro" picking-mode="Ignore" class="hud-level-intro">
+            <ui:Label text="Clear the dirt!" picking-mode="Ignore" class="hud-level-intro-text" />
+        </ui:VisualElement>
         <ui:VisualElement name="game-over" picking-mode="Ignore" class="hud-game-over">
             <ui:Label text="GAME OVER" class="hud-game-over-title" />
             <ui:VisualElement picking-mode="Ignore" class="hud-game-over-row">
@@ -19,6 +24,21 @@
                 <ui:Label text="0" name="final-score" class="hud-value" />
             </ui:VisualElement>
             <ui:Label text="Press R to restart" class="hud-hint" />
+        </ui:VisualElement>
+        <ui:VisualElement name="win" class="hud-game-over hud-win">
+            <ui:Label text="LEVEL CLEAR" class="hud-game-over-title hud-win-title" />
+            <ui:VisualElement picking-mode="Ignore" class="hud-game-over-row">
+                <ui:Label text="Time" class="hud-caption" />
+                <ui:Label text="0:00" name="win-time" class="hud-value" />
+            </ui:VisualElement>
+            <ui:VisualElement picking-mode="Ignore" class="hud-game-over-row">
+                <ui:Label text="Score" class="hud-caption" />
+                <ui:Label text="0" name="win-score" class="hud-value" />
+            </ui:VisualElement>
+            <ui:VisualElement picking-mode="Ignore" class="hud-win-buttons">
+                <ui:Button text="New level" name="win-new-level" class="hud-win-button" />
+                <ui:Button text="Main menu" name="win-main-menu" class="hud-win-button" />
+            </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

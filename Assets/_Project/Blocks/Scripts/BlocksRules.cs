@@ -62,6 +62,33 @@ namespace BlockDiggerz.Blocks
         [field: SerializeField, Min(0f), Tooltip("Seconds matched blocks flash before they are removed, per clear step (each chain step flashes again). 0 clears instantly.")]
         public float ClearStepDuration { get; private set; } = 0.25f;
 
+        [field: Header("Speed-up")]
+        [field: SerializeField, Min(0), Tooltip("Points per speed-up step. Every full step adds Speed Up Per Step to the falling piece's speed multiplier (the fall interval is divided by it). 0 turns the speed-up off.")]
+        public int SpeedUpScoreStep { get; private set; } = 200;
+
+        [field: SerializeField, Min(0f), Tooltip("Flat amount added to the falling piece's speed multiplier per Speed Up Score Step points (0.1: 1.0, 1.1, 1.2 ...). Settling blocks are not affected.")]
+        public float SpeedUpPerStep { get; private set; } = 0.1f;
+
+        [field: SerializeField, Min(0f), Tooltip("Highest speed multiplier the speed-up can reach. 0 means no cap.")]
+        public float MaxSpeedMultiplier { get; private set; }
+
+        [field: Header("Match blasts")]
+        [field: SerializeField, Min(0), Tooltip("Cells a shortest row match (Min Color Match blocks) blasts past each end, left and right. Blasted blocks are removed whatever they are, Dirt included, and don't score. Empty cells use up reach.")]
+        public int HorizontalBlastBase { get; private set; } = 1;
+
+        [field: SerializeField, Min(0), Tooltip("Extra cells a row match blasts on each side per block beyond the shortest match (with 1: 3 blocks reach 1, 4 reach 2, 5 reach 3).")]
+        public int HorizontalBlastPerExtraBlock { get; private set; } = 1;
+
+        [field: SerializeField, Min(0), Tooltip("Cells a shortest column match (Min Color Match blocks) blasts below its bottom block. Empty cells use up reach.")]
+        public int VerticalBlastBase { get; private set; } = 1;
+
+        [field: SerializeField, Min(0), Tooltip("Extra cells a column match blasts downward per block beyond the shortest match.")]
+        public int VerticalBlastPerExtraBlock { get; private set; } = 1;
+
+        /// <summary>Blast settings for <see cref="ClearResolver"/>.</summary>
+        public BlastSettings Blast => new(HorizontalBlastBase, HorizontalBlastPerExtraBlock, VerticalBlastBase,
+            VerticalBlastPerExtraBlock);
+
         [field: Header("Level start")]
         [field: SerializeField, Min(0), Tooltip("Fewest single blocks a column starts with. 0 allows empty columns.")]
         public int StartColumnMinHeight { get; private set; } = 1;
@@ -74,6 +101,23 @@ namespace BlockDiggerz.Blocks
 
         [field: SerializeField, Min(0.005f), Tooltip("Seconds per row the starting blocks fall while dropping in.")]
         public float StartFillFallInterval { get; private set; } = 0.02f;
+
+        [field: Header("Level start Dirt")]
+        [field: SerializeField, Min(0), Tooltip("Fewest Dirt blocks a column starts with, on top of its colored blocks. Dirt never matches.")]
+        public int StartDirtMinPerColumn { get; private set; } = 1;
+
+        [field: SerializeField, Min(0), Tooltip("Most Dirt blocks a column starts with. The count is rolled from a bell curve centered between min and max.")]
+        public int StartDirtMaxPerColumn { get; private set; } = 3;
+
+        [field: SerializeField, Min(0f), Tooltip("Width (standard deviation) of the Dirt count bell curve. Smaller makes the middle count more common; 0 always gives the middle.")]
+        public float StartDirtSpread { get; private set; } = 0.75f;
+
+        [field: SerializeField, Range(0f, 1f), Tooltip("How likely each Dirt block is to sit one row higher in its column, compared to the row below. 0 puts all Dirt at the bottom, 1 mixes it in evenly.")]
+        public float StartDirtBottomFalloff { get; private set; } = 0.5f;
+
+        /// <summary>Starting Dirt settings for <see cref="StartColumnsGenerator"/>.</summary>
+        public StartDirtSettings StartDirt => new(StartDirtMinPerColumn, StartDirtMaxPerColumn, StartDirtSpread,
+            StartDirtBottomFalloff);
 
         [field: Header("Scoring")]
         [field: SerializeField, Min(0), Tooltip("Points per block deleted by a color match. A block in a cross counts for both lines.")]
