@@ -9,17 +9,17 @@
                 <ui:VisualElement name="stats-slot" picking-mode="Ignore" class="mobile-stats-slot" />
             </ui:VisualElement>
         </ui:VisualElement>
-        <ui:VisualElement name="middle" picking-mode="Ignore" class="mobile-middle">
-            <ui:Label text="&lt;" name="move-left" class="mobile-strip" />
-            <ui:VisualElement name="center" picking-mode="Ignore" class="mobile-center">
-                <ui:VisualElement name="board-area" class="mobile-board-area" />
-                <ui:VisualElement name="bottom-row" picking-mode="Ignore" class="mobile-bottom-row">
-                    <ui:Label text="CCW" name="rotate-ccw" class="mobile-button mobile-rotate" />
-                    <ui:Label text="DROP" name="hard-drop" class="mobile-button mobile-hard-drop" />
-                    <ui:Label text="CW" name="rotate-cw" class="mobile-button mobile-rotate" />
-                </ui:VisualElement>
-            </ui:VisualElement>
-            <ui:Label text="&gt;" name="move-right" class="mobile-strip" />
+        <ui:VisualElement name="board-area" picking-mode="Ignore" class="mobile-board-area">
+            <ui:VisualElement name="move-left" class="mobile-tap-zone" />
+            <ui:VisualElement name="move-right" class="mobile-tap-zone" />
         </ui:VisualElement>
+        <ui:VisualElement name="bottom-row" picking-mode="Ignore" class="mobile-bottom-row">
+            <ui:Label text="CCW" name="rotate-ccw" class="mobile-button mobile-rotate" />
+            <ui:Label text="DROP" name="hard-drop" class="mobile-button mobile-hard-drop" />
+            <ui:Label text="CW" name="rotate-cw" class="mobile-button mobile-rotate" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+    <ui:VisualElement name="rotate-overlay" class="mobile-rotate-overlay">
+        <ui:Label text="Turn your phone upright to play" class="mobile-rotate-overlay-text" />
     </ui:VisualElement>
 </ui:UXML>

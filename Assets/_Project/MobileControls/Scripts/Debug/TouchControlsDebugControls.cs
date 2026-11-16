@@ -44,7 +44,8 @@ namespace BlockDiggerz.MobileControls
                     .Readout("Touch pad", () => _controls.TouchPad.IsConnected ? "connected" : "not connected")
                     .Readout("Pressed", DescribePressed)
                     .Readout("Board on screen", DescribeBoardRect)
-                    .Readout("Drag step", () => _controls.IsActive ? $"{_controls.DragStepSize:0.0}" : NoValue);
+                    .Readout("Screen orientation", () => Screen.orientation.ToString())
+                    .Readout("Rotate message", () => _controls.IsRotateMessageShown ? Yes : No);
             });
         }
 

@@ -395,3 +395,33 @@ Portrait touch layout for mobile browsers (itch.io, CrazyGames). In the Editor, 
   - Notes:
 - [ ] **Readability and feel:** are the strips, buttons and labels big enough and easy to hit? Is the board big enough? Tune the sizes in the USS.
   - Notes:
+
+## Full-width mobile board and tap to move, 2026-11-16
+
+Drag gestures and the side strips are gone on mobile. The board spans the screen width, its visible rows are cut to what fits (between Min Mobile Rows and the rules' Visible Height), and tapping or holding the left or right half of the board moves the piece. Desktop is unchanged and the rules board is 10 x 20 again (it was 15 wide). Tunables: Board Padding, Min Mobile Rows and Board Alignment on the TouchControls component of `Assets/_Project/MobileControls/Prefabs/MobileControls.prefab`; top band, bottom row and button sizes in `Assets/_Project/MobileControls/UI/MobileControls.uss`; Board Width / Visible Height in `Assets/_Project/Blocks/Data/BlocksRules.asset`.
+
+- [ ] **Board edge to edge:** in the Device Simulator (or with Force touch controls on), expect the board to touch both sides of the screen, STORE / TIME and pause / SCORE / NEXT above it, and CCW, DROP, CW below it, with nothing overlapping. Try a 19.5:9 and a 16:9 phone; the 16:9 one should get fewer rows (about 12, the 19.5:9 one about 15).
+  - Notes:
+- [ ] **Tap to move:** tap the left half of the board to move one column left, the right half to move right. Hold to keep moving with the keyboard's repeat delay and rate. Swiping should do nothing beyond that press.
+  - Notes:
+- [ ] **Run restart on layout switch:** the run restarts once when the touch layout turns on (the board gets its mobile height) and once more when it turns off. On a phone this happens during the opening drop-in, so it should not be noticeable.
+  - Notes:
+- [ ] **Desktop board:** on desktop expect 10 columns and 20 rows.
+  - Notes:
+- [ ] **Feel:** is the shorter mobile board too cramped? To fit more rows, shrink the top band or the bottom row in the USS.
+  - Notes:
+
+## Portrait on phones, 2026-11-16
+
+The previous itch.io build opened in landscape on a phone. Fix in two parts: itch's embed settings (Edit game, Embed options: tick "Mobile friendly", orientation Portrait, then save), and in game a portrait lock request plus a rotate message. Tunables: Request Portrait and Guard Portrait on the TouchControls component of `Assets/_Project/MobileControls/Prefabs/MobileControls.prefab`; message look in `.mobile-rotate-overlay` / `.mobile-rotate-overlay-text` in `Assets/_Project/MobileControls/UI/MobileControls.uss`.
+
+- [ ] **itch settings:** after setting Mobile friendly + Portrait on itch, open the page on a phone and tap Run game. Expect the game fullscreen and upright with the touch layout.
+  - Notes:
+- [ ] **Android lock:** on Android Chrome, once the game is fullscreen, rotate the phone sideways. Expect the screen to stay portrait (the browser lock). If it still rotates, expect the rotate message instead.
+  - Notes:
+- [ ] **Rotate message:** on any phone (iPhone Safari included) or in the Device Simulator with a phone turned sideways (rotate button in the Simulator toolbar), expect a dark screen with "Turn your phone upright to play", and the game paused underneath. Turn it upright: the message goes and the pause menu is there; tap Continue.
+  - Notes:
+- [ ] **Starting sideways:** open the game with the phone already sideways. Expect the message right away; turning upright should give the full-width board with the right row count for portrait.
+  - Notes:
+- [ ] **Desktop untouched:** on desktop, and in the Editor with Force touch controls on, expect no rotate message and no orientation change.
+  - Notes:

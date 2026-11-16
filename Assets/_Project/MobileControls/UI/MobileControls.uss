@@ -38,33 +38,18 @@
     margin-top: 12px;
 }
 
-.mobile-middle {
+.mobile-board-area {
     flex-grow: 1;
     flex-direction: row;
 }
 
-.mobile-strip {
-    width: 110px;
-    flex-shrink: 0;
-    font-size: 72px;
-    -unity-font-style: bold;
-    -unity-text-align: middle-center;
-    color: rgba(240, 240, 250, 0.7);
-    background-color: rgba(255, 255, 255, 0.05);
-}
-
-.mobile-strip.mobile-pressed {
-    color: rgb(255, 255, 255);
-    background-color: rgba(255, 255, 255, 0.18);
-}
-
-.mobile-center {
+.mobile-tap-zone {
     flex-grow: 1;
-    flex-direction: column;
+    flex-basis: 0;
 }
 
-.mobile-board-area {
-    flex-grow: 1;
+.mobile-tap-zone.mobile-pressed {
+    background-color: rgba(255, 255, 255, 0.08);
 }
 
 .mobile-bottom-row {
@@ -97,8 +82,29 @@
     font-size: 48px;
 }
 
+.mobile-rotate-overlay {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(10, 10, 18, 0.94);
+}
+
+.mobile-rotate-overlay-text {
+    font-size: 48px;
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+    white-space: normal;
+    color: rgb(240, 240, 250);
+    padding: 32px;
+}
+
 .mobile-rotate {
-    width: 150px;
+    width: 180px;
 }
 
 .mobile-hard-drop {
