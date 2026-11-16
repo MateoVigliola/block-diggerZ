@@ -21,6 +21,15 @@ namespace BlockDiggerz.Menus
         /// <summary>Name of the Sound tab button.</summary>
         public const string SoundTabName = "tab-sound";
 
+        /// <summary>Name of the touch control mode row (shown only while the touch layout can be in use).</summary>
+        public const string TouchModeRowName = "touch-mode-row";
+
+        /// <summary>Name of the button that picks gesture touch controls.</summary>
+        public const string TouchGesturesName = "touch-mode-gestures";
+
+        /// <summary>Name of the button that picks button touch controls.</summary>
+        public const string TouchButtonsName = "touch-mode-buttons";
+
         private const string ControlsPageName = "page-controls";
         private const string SoundPageName = "page-sound";
         private const string ControlsListName = "controls-list";
@@ -56,6 +65,9 @@ namespace BlockDiggerz.Menus
         private readonly ScrollView _controlsList;
         private readonly Slider _musicSlider;
         private readonly Slider _sfxSlider;
+        private readonly VisualElement _touchModeRow;
+        private readonly Button _touchGestures;
+        private readonly Button _touchButtons;
         private readonly List<(Button button, InputAction action, int index)> _keyButtons = new();
         private InputActionRebindingExtensions.RebindingOperation _rebind;
         private int _lastRebindEndFrame = -1;
@@ -76,6 +88,11 @@ namespace BlockDiggerz.Menus
             _controlsList = root.Q<ScrollView>(ControlsListName);
             _musicSlider = root.Q<Slider>(MusicSliderName);
             _sfxSlider = root.Q<Slider>(SfxSliderName);
+            _touchModeRow = root.Q<VisualElement>(TouchModeRowName);
+            _touchGestures = root.Q<Button>(TouchGesturesName);
+            _touchButtons = root.Q<Button>(TouchButtonsName);
+            OnClick(_touchGestures, () => SetTouchMode(TouchControlMode.Gestures));
+            OnClick(_touchButtons, () => SetTouchMode(TouchControlMode.Buttons));
 
             OnClick(_controlsTab, () => SelectTab(true));
             OnClick(_soundTab, () => SelectTab(false));
@@ -106,6 +123,8 @@ namespace BlockDiggerz.Menus
         {
             SelectTab(true);
             RefreshKeyLabels();
+            MenuUi.SetVisible(_touchModeRow, GameInput.TouchLayoutInUse);
+            RefreshTouchMode();
             _musicSlider?.SetValueWithoutNotify(_settings.MusicVolume);
             _sfxSlider?.SetValueWithoutNotify(_settings.SfxVolume);
             _controlsTab?.Focus();
@@ -277,6 +296,19 @@ namespace BlockDiggerz.Menus
             _settings.ResetBindings(_input.Actions);
             _input.NotifyBindingsChanged();
             RefreshKeyLabels();
+        }
+
+        private void SetTouchMode(TouchControlMode mode)
+        {
+            _settings.SetTouchMode(mode);
+            _input?.SetTouchMode(mode);
+            RefreshTouchMode();
+        }
+
+        private void RefreshTouchMode()
+        {
+            _touchGestures?.EnableInClassList(SelectedTabClass, _settings.TouchMode == TouchControlMode.Gestures);
+            _touchButtons?.EnableInClassList(SelectedTabClass, _settings.TouchMode == TouchControlMode.Buttons);
         }
 
         private void ResetVolumes()

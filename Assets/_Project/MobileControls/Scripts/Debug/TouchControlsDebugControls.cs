@@ -41,6 +41,8 @@ namespace BlockDiggerz.MobileControls
                     .Readout("Mobile platform", () => TouchControls.IsMobilePlatform ? Yes : No)
                     .Readout("Active", () => _controls.IsActive ? Yes : No)
                     .Readout("Shown", () => _controls.IsShown ? Yes : No)
+                    .Readout("Mode", () => _controls.Mode.ToString())
+                    .Readout("Dragging", () => _controls.IsDragging ? Yes : No)
                     .Readout("Touch pad", () => _controls.TouchPad.IsConnected ? "connected" : "not connected")
                     .Readout("Pressed", DescribePressed)
                     .Readout("Board on screen", DescribeBoardRect)

@@ -1,3 +1,5 @@
+using System;
+using BlockDiggerz.Input;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -5,7 +7,7 @@ namespace BlockDiggerz.Menus
 {
     /// <summary>
     /// Player settings that persist between sessions: music and sound effect volumes (placeholders until audio
-    /// exists) and keyboard binding overrides (saved as the Input System's override JSON).
+    /// exists), the touch control mode, and keyboard binding overrides (saved as the Input System's override JSON).
     /// </summary>
     public sealed class GameSettings
     {
@@ -17,6 +19,9 @@ namespace BlockDiggerz.Menus
 
         /// <summary>Storage key for the binding overrides JSON.</summary>
         public const string BindingsKey = "BlockDiggerz.Settings.Bindings";
+
+        /// <summary>Storage key for the touch control mode (saved as the <see cref="TouchControlMode"/> name).</summary>
+        public const string TouchModeKey = "BlockDiggerz.Settings.TouchMode";
 
         /// <summary>Lowest volume value.</summary>
         public const float MinVolume = 0f;
@@ -35,6 +40,7 @@ namespace BlockDiggerz.Menus
             _store = store;
             MusicVolume = Clamp(store.GetFloat(MusicVolumeKey, DefaultVolume));
             SfxVolume = Clamp(store.GetFloat(SfxVolumeKey, DefaultVolume));
+            TouchMode = ParseTouchMode(store.GetString(TouchModeKey, string.Empty));
         }
 
         /// <summary>
@@ -60,6 +66,27 @@ namespace BlockDiggerz.Menus
 
         /// <summary>Sound effect volume, 0 to 100.</summary>
         public float SfxVolume { get; private set; }
+
+        /// <summary>How the touch controls work. <see cref="GameInput.DefaultTouchMode"/> until the player picks one.</summary>
+        public TouchControlMode TouchMode { get; private set; }
+
+        /// <summary>Sets and saves the touch control mode.</summary>
+        public void SetTouchMode(TouchControlMode mode)
+        {
+            TouchMode = mode;
+            _store.SetString(TouchModeKey, mode.ToString());
+            _store.Save();
+        }
+
+        /// <summary>
+        /// Reads a saved mode name. Empty or unknown text (nothing saved yet, a renamed mode) gives
+        /// <see cref="GameInput.DefaultTouchMode"/>.
+        /// </summary>
+        public static TouchControlMode ParseTouchMode(string text)
+        {
+            bool known = Enum.TryParse(text, false, out TouchControlMode mode) && Enum.IsDefined(typeof(TouchControlMode), mode);
+            return known ? mode : GameInput.DefaultTouchMode;
+        }
 
         /// <summary>Sets and saves the music volume (clamped to 0 to 100).</summary>
         public void SetMusicVolume(float value)

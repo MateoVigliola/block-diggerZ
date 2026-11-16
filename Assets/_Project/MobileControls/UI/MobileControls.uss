@@ -52,6 +52,32 @@
     background-color: rgba(255, 255, 255, 0.08);
 }
 
+.mobile-gesture-area {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    display: none;
+}
+
+.mobile-gestures .mobile-gesture-area {
+    display: flex;
+}
+
+.mobile-gestures .mobile-tap-zone {
+    display: none;
+}
+
+.mobile-gestures .mobile-rotate {
+    display: none;
+}
+
+.mobile-gestures .mobile-hard-drop {
+    margin-left: 0;
+    margin-right: 0;
+}
+
 .mobile-bottom-row {
     flex-direction: row;
     flex-shrink: 0;

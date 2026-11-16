@@ -425,3 +425,24 @@ The previous itch.io build opened in landscape on a phone. Fix in two parts: itc
   - Notes:
 - [ ] **Desktop untouched:** on desktop, and in the Editor with Force touch controls on, expect no rotate message and no orientation change.
   - Notes:
+
+## Gesture touch controls, 2026-11-17
+
+Touch controls now have two modes, picked in Settings, Controls tab, "Touch controls" row (only shown on mobile, or with Force touch controls on in the debug menu). Gestures is the default; Buttons is the previous layout, unchanged. Debug menu, Touch controls section, shows Mode and Dragging. Tunables: Drag Threshold, Tap Max Duration and Max Queued Taps on the TouchControls component of `Assets/_Project/MobileControls/Prefabs/MobileControls.prefab`; gesture layout rules (`.mobile-gestures ...`) in `Assets/_Project/MobileControls/UI/MobileControls.uss`; settings row look in `.touch-mode-row` / `.touch-mode-option` in `Assets/_Project/Menus/UI/Menus.uss`.
+
+- [ ] **Default mode:** on a fresh install (or after clearing PlayerPrefs), start a run on a phone or the Device Simulator. Expect gesture mode: no CCW / CW buttons, DROP spanning the bottom row, STORE and pause as before.
+  - Notes:
+- [ ] **Drag to move:** put a finger on the board and drag sideways. Expect the piece to slide column by column until it sits under the finger, and to follow as the finger moves. Dragging toward a wall or the stack stops it there. Lifting the finger leaves the piece where it is.
+  - Notes:
+- [ ] **Tap to rotate:** tap the left half of the board. Expect a counter-clockwise turn; the right half turns clockwise. Two quick taps should give two turns. A long press without moving should do nothing.
+  - Notes:
+- [ ] **Tap vs drag:** small finger wobbles during a tap should still rotate, not move. If taps turn into drags too often, raise Drag Threshold; if drags feel slow to start, lower it. If quick taps get missed, raise Tap Max Duration.
+  - Notes:
+- [ ] **Drop while dragging:** drag with one finger and tap DROP with another. Expect the piece to hard drop and the next piece to follow the dragging finger.
+  - Notes:
+- [ ] **Switch mode:** pause, Settings, Controls, pick Buttons, go back. Expect the previous layout (tap halves to move, CCW / DROP / CW). Pick Gestures again and the layout switches back. The choice should survive a reload and a return to the main menu.
+  - Notes:
+- [ ] **Desktop:** on desktop without Force touch controls, expect no Touch controls row in Settings.
+  - Notes:
+- [ ] **Feel:** does the piece follow the finger fast enough? It moves one column every other frame (about 30 columns a second at 60 fps). Is the finger hiding the piece too much?
+  - Notes:

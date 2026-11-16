@@ -18,6 +18,9 @@ namespace BlockDiggerz.Input
         /// <summary>Binding group of the on-screen touch controls (<see cref="TouchPadDevice"/>); left out of key hints.</summary>
         public const string TouchGroup = "Touch";
 
+        /// <summary>Touch control mode before the player picks one in Settings.</summary>
+        public const TouchControlMode DefaultTouchMode = TouchControlMode.Gestures;
+
         [SerializeField, Tooltip("Held to move the piece left (auto repeats after a delay).")]
         private InputActionReference _moveLeft;
 
@@ -50,6 +53,16 @@ namespace BlockDiggerz.Input
 
         /// <summary>Raised after bindings change (rebinding or reset), so key hints can refresh.</summary>
         public event Action BindingsChanged;
+
+        /// <summary>How the touch controls work (gestures or buttons). The menus apply the saved choice.</summary>
+        public TouchControlMode TouchMode { get; private set; } = DefaultTouchMode;
+
+        /// <summary>
+        /// True when the touch layout can be in use: on mobile platforms, or while the touch pad device is
+        /// connected (touch controls forced on for testing).
+        /// </summary>
+        public static bool TouchLayoutInUse =>
+            UnityEngine.Device.Application.isMobilePlatform || InputSystem.GetDevice<TouchPadDevice>() != null;
 
         /// <summary>True while the move left action is held.</summary>
         public bool MoveLeftHeld => IsHeld(_moveLeft);
@@ -164,6 +177,12 @@ namespace BlockDiggerz.Input
         public void NotifyBindingsChanged()
         {
             BindingsChanged?.Invoke();
+        }
+
+        /// <summary>Sets <see cref="TouchMode"/>; the touch controls switch layout on their next frame.</summary>
+        public void SetTouchMode(TouchControlMode mode)
+        {
+            TouchMode = mode;
         }
 
         private void AddGameplay(InputActionReference reference)

@@ -57,6 +57,7 @@ namespace BlockDiggerz.Menus
         private void OnEnable()
         {
             _settings = GameSettings.LoadIfMissing(_settings, new PlayerPrefsKeyValueStore(), _input.Actions);
+            _input.SetTouchMode(_settings.TouchMode);
 
             VisualElement root = GetComponent<UIDocument>().rootVisualElement;
             _overlay = root.Q<VisualElement>(OverlayName);

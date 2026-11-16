@@ -10,8 +10,10 @@ Namespace `BlockDiggerz.MobileControls`, asmdef `BlockDiggerz.MobileControls` (r
 ## Input path
 - Buttons press a virtual Input System device, `BlockDiggerz.Input.TouchPadDevice` (layout `BlockDiggerzTouchPad`, state `TouchPadState`, one bit per `TouchPadButton`), through `TouchPad` (queues state events). GameControls binds each button in group `Touch` (MoveLeft, MoveRight, HardDrop, RotateClockwise, RotateCounterClockwise, StorePiece, Pause), so `BlocksGame` and `PauseMenuView` read touch through `GameInput` like keys, auto repeat included. Touch bindings are left out of key hints (`GameInput.TouchGroup`) and the rebinding page (keyboard group only).
 - `TouchPressManipulator`: one per button element; a pointer down captures that pointer and holds the button until it lifts, cancels or loses capture; USS class `mobile-pressed` while held. Several elements can be held at once (multi-touch).
-- Moving: `move-left` / `move-right` are the left and right halves of `board-area` (invisible, over the board). Tapping or holding one is a held MoveLeft / MoveRight button, auto repeat included.
-- No drag gestures and no soft drop on touch (decided).
+- Two modes, `GameInput.TouchMode` (`BlockDiggerz.Input.TouchControlMode`), picked in Settings (Controls tab, row shown only while `GameInput.TouchLayoutInUse`) and saved by `GameSettings`; default Gestures (`GameInput.DefaultTouchMode`). The menus apply the saved mode to `GameInput` in their `OnEnable`. `TouchControls.UpdateMode` toggles USS class `mobile-gestures` on `mobile-root` and releases everything on a switch.
+- Buttons mode: `move-left` / `move-right` are the left and right halves of `board-area` (invisible, over the board). Tapping or holding one is a held MoveLeft / MoveRight button, auto repeat included. CCW / DROP / CW bottom row.
+- Gestures mode: `gesture-area` (absolute, fills `board-area`; the move halves and rotate buttons are hidden by USS, DROP spans the bottom row) carries a `TouchGestureManipulator` following one finger through `Core/GestureTracker`. A finger that travels `_dragThreshold` panel pixels is a drag: each frame the piece steps one column toward the column under the finger (`Core/DragFollow`: finger cell from `BoardPanelRect`, piece center from `ActiveCells`, step when more than half a cell away). A finger that lifts sooner, within `_tapMaxDuration`, is a tap: left half CCW, right half CW (queued, at most `_maxQueuedTaps` per direction). `Core/GesturePulses` turns both into one-frame touch pad presses with a release frame between (`TouchPad.SetButtons`), so moves never auto repeat and the game still reads everything through `GameInput`.
+- No soft drop on touch (decided).
 
 ## Layout
 - `UI/MobileControls.uxml` + `.uss`, on the same `BlocksPanelSettings` as the HUD (one panel, sort order above the HUD). Top band: `store-slot` (STORE tap area; the HUD's STORE box and TIME are placed in it) and `pause-button` with `stats-slot` under it (HUD SCORE / NEXT placed there, right-aligned). Middle: `board-area`, full screen width, holding the two move halves. Bottom row: `rotate-ccw`, `hard-drop`, `rotate-cw`.
@@ -27,8 +29,8 @@ Namespace `BlockDiggerz.MobileControls`, asmdef `BlockDiggerz.MobileControls` (r
 - `Prefabs/MobileControls.prefab`: UIDocument (MobileControls.uxml, BlocksPanelSettings, sort order 1), `TouchControls`, `TouchControlsDebugControls`. The Game scene has one instance wired to BlocksGame, BlocksHud, BoardView and GameInput.
 
 ## Debug menu section "Touch controls"
-Toggle: Force touch controls. Readouts: Mobile platform, Active, Shown, Touch pad, Pressed, Board on screen, Screen orientation, Rotate message.
+Toggle: Force touch controls. Readouts: Mobile platform, Active, Shown, Mode, Dragging, Touch pad, Pressed, Board on screen, Screen orientation, Rotate message.
 
 ## Tests
-- `Tests/EditMode`: `BoardFitTests`, `MobileBoardRowsTests`, `PortraitGuardTests`, `TouchPadTests` (mask, device controls per bit, GameControls touch bindings), `TouchControlsLayoutTests` (UXML names, pickable touch targets, DROP below the board area, move halves inside the board area, CCW / DROP / CW bottom row, rotate overlay outside the root).
-- Not covered automatically: real touch events, multi-touch, the camera fit and board resize on screen, the HUD in portrait. See the playtest checklist.
+- `Tests/EditMode`: `BoardFitTests`, `MobileBoardRowsTests`, `PortraitGuardTests`, `TouchPadTests` (mask, device controls per bit, `SetButtons`, GameControls touch bindings), `TouchControlsLayoutTests` (UXML names, pickable touch targets, DROP below the board area, move halves and gesture area inside the board area, CCW / DROP / CW bottom row, rotate overlay outside the root), `GestureTrackerTests`, `DragFollowTests`, `GesturePulsesTests`.
+- Not covered automatically: real touch events, multi-touch, the mode switch on screen, drag feel, the camera fit and board resize on screen, the HUD in portrait. See the playtest checklist.

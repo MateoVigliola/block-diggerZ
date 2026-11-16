@@ -3,6 +3,7 @@
     "rootNamespace": "BlockDiggerz.Menus.Tests",
     "references": [
         "BlockDiggerz.Menus",
+        "BlockDiggerz.Input",
         "Unity.InputSystem",
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner"
