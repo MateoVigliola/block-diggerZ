@@ -39,14 +39,10 @@ namespace BlockDiggerz.Menus
 
         private GameSettings _settings;
 
-        private void Awake()
-        {
-            _settings = new GameSettings(new PlayerPrefsKeyValueStore());
-            _settings.LoadBindings(_input.Actions);
-        }
-
         private void OnEnable()
         {
+            _settings = GameSettings.LoadIfMissing(_settings, new PlayerPrefsKeyValueStore(), _input.Actions);
+
             VisualElement root = GetComponent<UIDocument>().rootVisualElement;
             _rootPage = root.Q<VisualElement>(RootPageName);
             _settingsPage = root.Q<VisualElement>(SettingsPageName);

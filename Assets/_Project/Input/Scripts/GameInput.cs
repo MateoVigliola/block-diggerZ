@@ -81,8 +81,22 @@ namespace BlockDiggerz.Input
         /// <summary>True on the frame the pause action was pressed.</summary>
         public bool PausePressed => WasPressed(_pause);
 
-        /// <summary>Gameplay actions in display order; the controls page lets players rebind these.</summary>
-        public IReadOnlyList<InputAction> GameplayActions => _gameplayActions;
+        /// <summary>
+        /// Gameplay actions in display order; the controls page lets players rebind these. Refilled on demand
+        /// because a script recompile during Play mode empties the list without calling Awake again.
+        /// </summary>
+        public IReadOnlyList<InputAction> GameplayActions
+        {
+            get
+            {
+                if (_gameplayActions.Count == 0)
+                {
+                    CollectGameplayActions();
+                }
+
+                return _gameplayActions;
+            }
+        }
 
         /// <summary>The actions asset every action belongs to; binding overrides are saved from and loaded into it.</summary>
         public InputActionAsset Actions => _pause != null && _pause.action != null ? _pause.action.actionMap.asset : null;
@@ -98,6 +112,12 @@ namespace BlockDiggerz.Input
 
         private void Awake()
         {
+            CollectGameplayActions();
+        }
+
+        private void CollectGameplayActions()
+        {
+            _gameplayActions.Clear();
             AddGameplay(_moveLeft);
             AddGameplay(_moveRight);
             AddGameplay(_softDrop);

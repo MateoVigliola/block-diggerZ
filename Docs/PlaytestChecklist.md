@@ -355,3 +355,14 @@ Look in `Assets/_Project/Blocks/UI/BlocksHud.uss` (`.hud-level-intro-text`: font
   - Notes:
 - [ ] **Readability:** is the message easy to read over the board and dropping blocks, and does it stay on screen long enough? Tune the USS style or Start Fill Duration.
   - Notes:
+
+## Pause menu after a mid-play recompile, 2026-11-16
+
+Fix for a NullReferenceException in `SettingsPanelController` when the pause menu re-enabled after scripts recompiled during Play mode. No tunables.
+
+- [ ] **Pause after recompile:** play the Game scene, then save any script change (or let another session edit one) while still playing. After the recompile, press Esc. Expect the pause menu to open with no NullReferenceException in the Console, and Settings to show the sliders and key rows.
+  - Notes:
+- [ ] **Bindings kept:** rebind a key in Settings, recompile mid-play as above, then open Settings again. Expect the new key to still show and work.
+  - Notes:
+- [ ] **Main menu too:** in the MainMenu scene, recompile mid-play, then open Settings. Expect no exception.
+  - Notes:

@@ -37,6 +37,24 @@ namespace BlockDiggerz.Menus
             SfxVolume = Clamp(store.GetFloat(SfxVolumeKey, DefaultVolume));
         }
 
+        /// <summary>
+        /// Returns <paramref name="current"/> when it exists; otherwise reads new settings from
+        /// <paramref name="store"/> and applies the saved bindings to <paramref name="actions"/>. Menu screens call
+        /// this from OnEnable, because a script recompile during Play mode clears their non-serialized fields and
+        /// calls OnEnable again without Awake.
+        /// </summary>
+        public static GameSettings LoadIfMissing(GameSettings current, IKeyValueStore store, InputActionAsset actions)
+        {
+            if (current != null)
+            {
+                return current;
+            }
+
+            var settings = new GameSettings(store);
+            settings.LoadBindings(actions);
+            return settings;
+        }
+
         /// <summary>Music volume, 0 to 100.</summary>
         public float MusicVolume { get; private set; }
 
