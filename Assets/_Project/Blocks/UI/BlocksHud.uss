@@ -94,6 +94,26 @@
     color: rgb(240, 240, 250);
 }
 
+.hud-level-intro {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    align-items: center;
+    justify-content: center;
+    display: none;
+}
+
+.hud-level-intro-text {
+    font-size: 96px;
+    -unity-font-style: bold;
+    color: rgb(240, 200, 120);
+    -unity-text-outline-width: 2px;
+    -unity-text-outline-color: rgb(20, 15, 10);
+    text-shadow: 4px 4px 0 rgba(0, 0, 0, 0.6);
+}
+
 .hud-game-over {
     position: absolute;
     left: 0;

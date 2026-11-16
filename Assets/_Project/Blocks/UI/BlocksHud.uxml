@@ -14,6 +14,9 @@
             <ui:Label text="NEXT" class="hud-caption hud-next-caption" />
             <ui:VisualElement name="next-preview" picking-mode="Ignore" class="hud-piece-box" />
         </ui:VisualElement>
+        <ui:VisualElement name="level-intro" picking-mode="Ignore" class="hud-level-intro">
+            <ui:Label text="Clear the dirt!" picking-mode="Ignore" class="hud-level-intro-text" />
+        </ui:VisualElement>
         <ui:VisualElement name="game-over" picking-mode="Ignore" class="hud-game-over">
             <ui:Label text="GAME OVER" class="hud-game-over-title" />
             <ui:VisualElement picking-mode="Ignore" class="hud-game-over-row">

@@ -58,6 +58,9 @@ namespace BlockDiggerz.Blocks
         /// <summary>Name of the win panel button that loads the main menu.</summary>
         public const string MainMenuButtonName = "win-main-menu";
 
+        /// <summary>Name of the "Clear the dirt!" message shown in the middle of the screen while the level start drops in.</summary>
+        public const string LevelIntroName = "level-intro";
+
         [SerializeField, Tooltip("Game the HUD shows.")]
         private BlocksGame _game;
 
@@ -71,6 +74,9 @@ namespace BlockDiggerz.Blocks
         private Button _newLevelButton;
         private Button _mainMenuButton;
         private int _shownSeconds = -1;
+        private VisualElement _levelIntro;
+        private bool _levelIntroShown;
+        private bool _levelIntroKnown;
 
         [SerializeField, Min(0f), Tooltip("Gap in UI pixels (at 1920 x 1080) between the board's edge and the STORE panel on the left and the SCORE / NEXT column on the right.")]
         private float _sideGap = 32f;
@@ -100,6 +106,9 @@ namespace BlockDiggerz.Blocks
 
         /// <summary>True while the win panel is visible.</summary>
         public bool IsWinShown => _winPanel != null && _winPanel.resolvedStyle.display == DisplayStyle.Flex;
+
+        /// <summary>True while the "Clear the dirt!" level start message is visible.</summary>
+        public bool IsLevelIntroShown => _levelIntro != null && _levelIntro.resolvedStyle.display == DisplayStyle.Flex;
 
         /// <summary>The piece shown in the next box.</summary>
         public PaintedPiece ShownNextPiece => _nextPreview?.Shown;
@@ -145,6 +154,8 @@ namespace BlockDiggerz.Blocks
             _winScore = root.Q<Label>(WinScoreName);
             _winPanel = root.Q<VisualElement>(WinPanelName);
             _shownSeconds = -1;
+            _levelIntro = root.Q<VisualElement>(LevelIntroName);
+            _levelIntroKnown = false;
             _newLevelButton = root.Q<Button>(NewLevelButtonName);
             _mainMenuButton = root.Q<Button>(MainMenuButtonName);
             if (_newLevelButton != null)
@@ -215,6 +226,23 @@ namespace BlockDiggerz.Blocks
             UpdateTimer();
             UpdateState();
             UpdatePieces();
+            UpdateLevelIntro();
+        }
+
+        private void UpdateLevelIntro()
+        {
+            bool show = _game.IsStartingFill;
+            if (_levelIntroKnown && show == _levelIntroShown)
+            {
+                return;
+            }
+
+            _levelIntroKnown = true;
+            _levelIntroShown = show;
+            if (_levelIntro != null)
+            {
+                _levelIntro.style.display = show ? DisplayStyle.Flex : DisplayStyle.None;
+            }
         }
 
         private void UpdatePlacement()

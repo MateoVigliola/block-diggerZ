@@ -344,3 +344,14 @@ Tunables in `Assets/_Project/Blocks/Data/BlocksRules.asset`, Speed-up: Speed Up 
   - Notes:
 - [ ] **Readability:** is the win screen clear and does it look right over the board? Do the TIME and STORE boxes still fit beside the board at small board heights?
   - Notes:
+
+## Clear the dirt! message, 2026-11-16
+
+Look in `Assets/_Project/Blocks/UI/BlocksHud.uss` (`.hud-level-intro-text`: font size, color, outline, shadow); the text itself is in `Assets/_Project/Blocks/UI/BlocksHud.uxml` (`level-intro`). How long it shows follows Start Fill Duration in `Assets/_Project/Blocks/Data/BlocksRules.asset`.
+
+- [ ] **Shows at level start:** start a run. Expect "Clear the dirt!" in the middle of the screen while the starting columns drop in, gone as soon as the first piece appears.
+  - Notes:
+- [ ] **Every new level:** press R, use New level on the win screen and change the board size from the debug menu. Expect the message each time the columns drop in again.
+  - Notes:
+- [ ] **Readability:** is the message easy to read over the board and dropping blocks, and does it stay on screen long enough? Tune the USS style or Start Fill Duration.
+  - Notes:
